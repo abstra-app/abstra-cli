@@ -1,13 +1,12 @@
 import fire
 
+from .login import login
+
 
 class CLI(object):
 
-    def double(self, number):
-        return 2 * number
-
-    def hello(self, name="World"):
-        return "Hello %s!" % name
+    def login(self):
+        return login()
 
 
 def main():
