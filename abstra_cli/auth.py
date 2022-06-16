@@ -1,7 +1,6 @@
-from email import header
 import requests
 
-from abstra_cli.utils import read_user_config, save_user_config
+from .utils import read_user_config, save_user_config
 
 
 def refresh_config():
@@ -24,3 +23,5 @@ def refresh_config():
         'access_token': new_tokens['access_token'],
         'refresh_token': new_tokens['refresh_token']
     })
+
+    return read_user_config()

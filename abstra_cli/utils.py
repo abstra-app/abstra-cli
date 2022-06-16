@@ -23,5 +23,9 @@ def save_user_config(data):
 
 def read_user_config():
     path = rebase_path("/user.json")
+
+    if not os.path.exists(path):
+        return None
+
     with open(path) as f:
         return json.load(f)
