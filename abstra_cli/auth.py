@@ -1,10 +1,10 @@
 import requests
 
-from .utils import read_user_config, save_user_config
+from .utils import read_config, save_config
 
 
 def refresh_config():
-    config = read_user_config()
+    config = read_config()
     # { client_id, authority, access_token, refresh_token }
     data = {
         "grant_type": "refresh_token",
@@ -18,10 +18,10 @@ def refresh_config():
                       "/oauth/token", data=data, headers=headers)
 
     new_tokens = r.json()
-    save_user_config({
+    save_config({
         **config,
         'access_token': new_tokens['access_token'],
         'refresh_token': new_tokens['refresh_token']
     })
 
-    return read_user_config()
+    return read_config()

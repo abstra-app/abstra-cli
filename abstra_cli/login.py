@@ -1,12 +1,12 @@
 import webbrowser
 from simple_websocket_server import WebSocketServer, WebSocket
 
-from .utils import save_user_config
+from .utils import save_config
 
 
 class LoginServer(WebSocket):
     def handle(self):
-        save_user_config(self.data)
+        save_config(self.data)
         print("Saved user config")
         exit(0)
 
