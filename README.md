@@ -1,5 +1,13 @@
 # abstra-cli
 
+## Install
+Download from pip (preferably using pipx):
+```sh
+pip[x] install abstra-cli
+```
+
+
+
 ## Commands
 
 ### Login
