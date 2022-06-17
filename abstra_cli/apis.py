@@ -1,11 +1,11 @@
 import json
 import requests
 
-from .utils import read_user_config
+from .utils import read_config
 
 
 def upload_file(workspace_id, filepath, file):
-    access_token = read_user_config()['access_token']
+    access_token = read_config()['access_token']
     response = requests.post(
         f"https://hackerforms-api.abstra.cloud/workspaces/{workspace_id}/put-url",
         data=json.dumps({'filepath': filepath}),
