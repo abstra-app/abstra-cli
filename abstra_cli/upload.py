@@ -12,7 +12,8 @@ def upload(directory):
 
     files = [path for path in Path(directory).rglob('*') if path.is_file()]
     for path in files:
-        ok = upload_file(workspace_id, path.as_posix(), path.open(), api_token)
+        filename = path.as_posix().removeprefix(directory)
+        ok = upload_file(workspace_id, filename, path.open(), api_token)
         if not ok:
             print(f"Error uploading file {path.as_posix()}")
             return False
