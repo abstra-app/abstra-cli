@@ -1,22 +1,18 @@
 import fire
 
-from .auth import refresh_config
-from .utils import read_config
-from .login import login
-from .sync import sync
+from .utils_config import config_check
+from .configure import configure
+from .upload import upload
 
 
 class CLI(object):
 
-    def login(self):
-        return login()
+    def configure(self, api_token):
+        return configure(api_token)
 
-    def sync(self, workspace_id, directory):
-        if not read_config():
-            return print("Please login first")
-
-        refresh_config()
-        return sync(workspace_id, directory)
+    @config_check
+    def upload(self, directory):
+        return upload(directory)
 
 
 def main():

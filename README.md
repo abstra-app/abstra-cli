@@ -10,14 +10,14 @@ pip[x] install abstra-cli
 
 ## Commands
 
-### Login
+### Configure
 ``` sh
-abstra-cli login
+abstra-cli configure API_TOKEN
 ```
-Authenticates the CLI with the browser. Stores credentials at `~/.abstra/config.json`.
+Authenticates the CLI with the token. Stores credentials at `~/.abstra/config.json`.
 
-### Sync
+### Upload
 ``` sh
-abstra-cli sync WORKSPACE_ID DIRECTORY
+abstra-cli upload DIRECTORY
 ```
 Uploads the contents of the directory to the workspace. 
