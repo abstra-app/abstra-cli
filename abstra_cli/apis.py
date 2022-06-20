@@ -1,5 +1,7 @@
 import json
 import requests
+import urllib.request
+import urllib.response
 
 
 def upload_file(workspace_id, filepath, file, api_token):
@@ -10,8 +12,12 @@ def upload_file(workspace_id, filepath, file, api_token):
                  'API-Authorization': api_token}
     )
     response_json = response.json()
-    r = requests.put(url=response_json["putURL"], data=file)
-    return r.ok
+    req = urllib.request.Request(
+            url=response_json["putURL"],
+            method='PUT',
+            data=file.read())
+    res = urllib.request.urlopen(req)
+    return res.status < 400
 
 
 def get_workspace_from_token(api_token):
