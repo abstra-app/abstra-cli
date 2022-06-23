@@ -7,7 +7,8 @@ from .apis import upload_file, get_workspace_from_token
 
 def should_ignore(ignored_paths, _path):
     path = str(_path)
-    for ignored_path in ignored_paths:
+    for _ignored_path in ignored_paths:
+        ignored_path = normalize_path(_ignored_path)
         if fnmatch.fnmatch(path, ignored_path):
             return True
         if fnmatch.fnmatch(path, ignored_path + "/*"):
@@ -15,12 +16,15 @@ def should_ignore(ignored_paths, _path):
     return False
 
 def normalize_path(path):
+    path = str(path)
     if path.endswith("/"):
-        return path[:-1]
+        path = path[:-1]
+    if path.startswith("./"):
+        path = path[2:]
     return path
 
 def files_from_directory(directory):
-    ignorefile = directory + "/.abstraignore"
+    ignorefile = normalize_path(directory + "/.abstraignore")
     if os.path.exists(ignorefile):
         with open(ignorefile, "r") as f:
             ignored = [directory + "/" + normalize_path(path) for path in f.read().split("\n")]
