@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import fnmatch
 from .utils_config import get_api_token
 from .apis import upload_file, get_workspace_from_token
 
@@ -7,9 +8,9 @@ from .apis import upload_file, get_workspace_from_token
 def should_ignore(ignored_paths, _path):
     path = str(_path)
     for ignored_path in ignored_paths:
-        if ignored_path == path:
+        if fnmatch.fnmatch(path, ignored_path):
             return True
-        if path.startswith(ignored_path + "/"):
+        if fnmatch.fnmatch(path, ignored_path + "/*"):
             return True
     return False
 

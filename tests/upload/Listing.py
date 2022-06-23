@@ -62,5 +62,13 @@ class TestListing(unittest.TestCase):
         files = files_from_directory(path)
         self.assertEqual(files, [PosixPath(tracked)])
 
+    def test_ignore_wildcard(self):
+        path = generate_random_folder()
+        add_file(path, "ignored.ipynb", "foo")
+        tracked = add_file(path, "tracked", "bar")
+        filepath = add_file(path, ".abstraignore", "*.ipynb")
+        files = files_from_directory(path)
+        self.assertEqual(files, [PosixPath(tracked)])
+
 if __name__ == '__main__':
     unittest.main()
