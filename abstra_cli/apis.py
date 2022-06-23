@@ -21,9 +21,10 @@ def upload_file(workspace_id, filepath, file, api_token):
 
 
 def get_workspace_from_token(api_token):
-    response = requests.get(
+    response = requests.post(
         f"https://auth.abstra.cloud/abstra-cloud",
-        headers={'content-type': 'application/json','API-Authorization': api_token}
+        data=json.dumps({'headers': {'API-Authorization': api_token}}),
+        headers={'content-type': 'application/json'}
     )
     response_json = response.json()
     workspaces = response_json.get('workspaces', [{}])
