@@ -24,18 +24,19 @@ def normalize_path(path):
     return path
 
 def files_from_directory(directory):
-    ignorefile = normalize_path(directory + "/.abstraignore")
+    ignorefile = os.path.join(directory, ".abstraignore")
     if os.path.exists(ignorefile):
         with open(ignorefile, "r") as f:
-            ignored = [directory + "/" + normalize_path(path) for path in f.read().split("\n")]
+            ignored = [os.path.join(directory, path) for path in f.read().split("\n")]
     else:
         ignored = []
+    ignored.append(ignorefile)
 
     paths = Path(directory).rglob('*')
     paths =  [
         path
         for path in paths
-        if path.is_file() and not should_ignore(ignored, path) and (str(path) != ignorefile)
+        if path.is_file() and not should_ignore(ignored, path)
     ]
     return paths
 
