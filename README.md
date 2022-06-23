@@ -23,5 +23,15 @@ Optionally, you can set the `ABSTRA_API_TOKEN` environment variable.
 ``` sh
 abstra-cli upload DIRECTORY
 ```
+
+### Ignoring files
+
+you can ignore files placing a `.abstraignore` at the beginning of the filea:
+```
+__pycache__
+tests/
+*.ipynb
+```
+
 **Requires authentication**  
 Uploads the contents of the directory to the workspace. 
