@@ -13,11 +13,16 @@ def should_ignore(ignored_paths, _path):
             return True
     return False
 
+def normalize_path(path):
+    if path.endswith("/"):
+        return path[:-1]
+    return path
+
 def files_from_directory(directory):
     ignorefile = directory + "/.abstraignore"
     if os.path.exists(ignorefile):
         with open(ignorefile, "r") as f:
-            ignored = [directory + "/" + path for path in f.read().split(" ")]
+            ignored = [directory + "/" + normalize_path(path) for path in f.read().split("\n")]
     else:
         ignored = []
 

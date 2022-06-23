@@ -53,10 +53,12 @@ class TestListing(unittest.TestCase):
     def test_ignore_folder(self):
         path = generate_random_folder()
         ignored = add_folder(path, "ignored")
-        add_file(ignored, 'ignored', 'foo')
+        add_file(ignored, 'abc', 'foo')
+        ignored2 = add_folder(path, "ignored2")
+        add_file(ignored2, 'xyz', 'foo')
         folder = add_folder(path, "tracked")
         tracked = add_file(folder, 'tracked', 'tracked')
-        filepath = add_file(path, ".abstraignore", "ignored")
+        filepath = add_file(path, ".abstraignore", "ignored\nignored2/")
         files = files_from_directory(path)
         self.assertEqual(files, [PosixPath(tracked)])
 
