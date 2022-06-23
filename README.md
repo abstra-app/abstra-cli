@@ -33,5 +33,7 @@ tests/
 *.ipynb
 ```
 
+`.abstraignore` itself will always be ignored
+
 **Requires authentication**  
 Uploads the contents of the directory to the workspace. 
