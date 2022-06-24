@@ -26,7 +26,7 @@ abstra-cli upload DIRECTORY
 
 ### Ignoring files
 
-you can ignore files placing a `.abstraignore` at the beginning of the filea:
+You can ignore files placing a `.abstraignore` at the directory that will be uploaded:
 ```
 __pycache__
 tests/
