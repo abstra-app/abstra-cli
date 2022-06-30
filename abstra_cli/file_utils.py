@@ -37,3 +37,6 @@ def files_from_directory(directory):
         if path.is_file() and not should_ignore(ignored, path)
     ]
     return paths
+
+def remove_filepath_prefix(filepath, prefix):
+    return normalize_path(filepath).removeprefix(normalize_path(prefix) + "/")

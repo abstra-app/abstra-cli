@@ -2,7 +2,7 @@ import fire
 
 from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
-from .file_utils import files_from_directory
+from .file_utils import files_from_directory, remove_filepath_prefix
 
 class CLI(object):
 
@@ -18,7 +18,7 @@ class CLI(object):
 
         files = files_from_directory(directory)
         for path in files:
-            filename = path.as_posix().removeprefix(directory)
+            filename = remove_filepath_prefix(path.as_posix(), directory)
             ok = upload_file(workspace_id, filename, path.open("rb"), api_token)
             if not ok:
                 print(f"Error uploading file {filename}")
