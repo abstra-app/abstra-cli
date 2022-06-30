@@ -2,6 +2,7 @@ import os
 import json
 
 from .utils import create_abstra_dir
+from .apis import get_workspace_from_token
 
 
 def save_config(data):
@@ -23,12 +24,18 @@ def read_config():
 
 
 def get_api_token():
-    return os.getenv('ABSTRA_API_TOKEN') or read_config()['api_token']
+    return os.getenv('ABSTRA_API_TOKEN') or read_config().get('api_token')
+
+
+def get_auth_config():
+    api_token = get_api_token()
+    workspace_id = get_workspace_from_token(api_token)
+    return api_token, workspace_id
 
 
 def config_check(f):
     def wrapper(*args):
         if not get_api_token():
-            return print("Please configure the CLI first")
+            raise Exception("No API token configured")
         return f(*args)
     return wrapper

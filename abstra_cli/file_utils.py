@@ -1,8 +1,6 @@
 from pathlib import Path
 import os
 import fnmatch
-from .utils_config import get_api_token
-from .apis import upload_file, get_workspace_from_token
 
 
 def should_ignore(ignored_paths, _path):
@@ -39,19 +37,3 @@ def files_from_directory(directory):
         if path.is_file() and not should_ignore(ignored, path)
     ]
     return paths
-
-def upload(directory):
-    api_token = get_api_token()
-    workspace_id = get_workspace_from_token(api_token)
-    if workspace_id is None:
-        return print("Bad API token")
-
-    files = files_from_directory(directory)
-    for path in files:
-        filename = path.as_posix().removeprefix(directory)
-        ok = upload_file(workspace_id, filename, path.open("rb"), api_token)
-        if not ok:
-            print(f"Error uploading file {filename}")
-            return False
-        else:
-            print(f"Uploaded file {filename}")

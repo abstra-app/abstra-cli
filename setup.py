@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name='abstra-cli',
-    version='0.1.2',
+    version='0.2.0',
     description='Abstra CLI',
     long_description=README,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
                       'fire', 'simple_websocket_server'],
     entry_points={
         'console_scripts': [
-            'abstra-cli=abstra_cli:main',
+            'abstra-cli=abstra_cli.cli:main',
         ],
     },
 )

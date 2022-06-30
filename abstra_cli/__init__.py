@@ -1,19 +1,8 @@
-import fire
-
-from .utils_config import config_check
-from .configure import configure
-from .upload import upload
+from .utils_config import config_check, get_auth_config
+from .apis import get_file_signed_url
 
 
-class CLI(object):
-
-    def configure(self, api_token):
-        return configure(api_token)
-
-    @config_check
-    def upload(self, directory):
-        return upload(directory)
-
-
-def main():
-    fire.Fire(CLI)
+@config_check
+def get_file_url(filepath):
+    api_token, workspace_id = get_auth_config()
+    return get_file_signed_url(workspace_id, filepath, api_token)

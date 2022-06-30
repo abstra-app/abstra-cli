@@ -1,4 +1,4 @@
-from abstra_cli.upload import files_from_directory
+from abstra_cli.file_utils import files_from_directory
 import unittest
 import random
 import os
