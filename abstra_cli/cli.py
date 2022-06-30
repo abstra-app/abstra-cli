@@ -1,9 +1,8 @@
 import fire
-from pathlib import Path
 
 from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
-
+from .file_utils import files_from_directory, remove_filepath_prefix
 
 class CLI(object):
 
@@ -17,11 +16,10 @@ class CLI(object):
         if workspace_id is None:
             return print("Bad API token")
 
-        files = [path for path in Path(directory).rglob('*') if path.is_file()]
+        files = files_from_directory(directory)
         for path in files:
-            filename = path.as_posix().removeprefix(directory)
-            ok = upload_file(workspace_id, filename,
-                             path.open("rb"), api_token)
+            filename = remove_filepath_prefix(path.as_posix(), directory)
+            ok = upload_file(workspace_id, filename, path.open("rb"), api_token)
             if not ok:
                 print(f"Error uploading file {filename}")
                 return False
