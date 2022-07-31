@@ -17,7 +17,7 @@ setup(
     license='MIT',
     packages=['abstra_cli'],
     install_requires=['setuptools', 'requests',
-                      'fire', 'simple_websocket_server'],
+                      'fire', 'simple_websocket_server', 'progress'],
     entry_points={
         'console_scripts': [
             'abstra=abstra_cli.cli:main',

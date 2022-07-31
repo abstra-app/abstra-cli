@@ -1,4 +1,5 @@
 import fire
+from progress.bar import FillingSquaresBar
 
 from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
@@ -13,12 +14,14 @@ class CLI(object):
         print("API Token saved")
 
     @config_check
-    def upload(self, directory):
+    def upload(self, directory: str):
         api_token, workspace_id = get_auth_config()
         if workspace_id is None:
-            return print("Bad API token")
+            return print("abstra: error: Bad API token")
 
         files = files_from_directory(directory)
+        bar = FillingSquaresBar('Uploading files', suffix='%(percent)d%%', max=len(files))
+
         for path in files:
             filename = remove_filepath_prefix(path.as_posix(), directory)
             ok = upload_file(workspace_id, filename, path.open("rb"), api_token)
@@ -26,8 +29,9 @@ class CLI(object):
                 print(f"Error uploading file {filename}")
                 return False
             else:
-                print(f"Uploaded file {filename}")
-
+                bar.next()
+        bar.finish()
+        print("All files were uploaded!")
 
 def main():
     fire.Fire(CLI)
