@@ -20,7 +20,7 @@ setup(
                       'fire', 'simple_websocket_server'],
     entry_points={
         'console_scripts': [
-            'abstra-cli=abstra_cli.cli:main',
+            'abstra=abstra_cli.cli:main',
         ],
     },
 )
