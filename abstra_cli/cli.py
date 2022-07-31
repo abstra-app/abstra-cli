@@ -3,10 +3,12 @@ import fire
 from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
 from .file_utils import files_from_directory, remove_filepath_prefix
-
+from .cli_helpers import request_api_token_from_user
 class CLI(object):
-
-    def configure(self, api_token):
+    def configure(self, api_token=None):
+        if not api_token:
+            request_api_token_from_user()
+            return
         save_config({'api_token': api_token})
         print("Done!")
 
