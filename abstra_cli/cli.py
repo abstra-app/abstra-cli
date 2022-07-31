@@ -10,7 +10,7 @@ class CLI(object):
             request_api_token_from_user()
             return
         save_config({'api_token': api_token})
-        print("Done!")
+        print("API Token saved")
 
     @config_check
     def upload(self, directory):
