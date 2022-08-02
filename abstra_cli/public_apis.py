@@ -5,7 +5,6 @@ from functools import cache
 
 @cache
 def get_workspace_from_token(api_token):
-    print("Getting workspace from token")
     response = requests.post(
         f"https://auth.abstra.cloud/abstra-cloud",
         data=json.dumps({"headers": {"API-Authorization": api_token}}),
