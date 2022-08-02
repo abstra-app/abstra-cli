@@ -14,7 +14,7 @@ Most commands are authenticated. To authenticate you need to generate an API Tok
 ``` sh
 abstra configure [API_TOKEN]
 ```
-Configures the current working directory credentials stored at `.abstra/credentials`.  
+Configures the current working directory credentials. Credentials are stored at `.abstra/credentials`.  
 Optionally, you can set the `ABSTRA_API_TOKEN` environment variable when using the CLI.
 
 ### Upload
