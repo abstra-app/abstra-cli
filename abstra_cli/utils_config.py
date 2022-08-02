@@ -1,20 +1,33 @@
 import os
 import json
 
-from .utils import create_abstra_dir
+from .utils import rebase_path
 from .apis import get_workspace_from_token
+
+ABSTRA_FOLDER = "./abstra"
+CONFIG_FILE = "/config.json"
+
+
+def create_abstra_dir():
+    path = rebase_path(ABSTRA_FOLDER)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+
+def config_file_path():
+    return create_abstra_dir() + CONFIG_FILE
 
 
 def save_config(data):
     if isinstance(data, dict):
         data = json.dumps(data)
-    path = create_abstra_dir() + "/config.json"
-    with open(path, "w") as f:
+    with open(config_file_path(), "w") as f:
         f.write(data)
 
 
-def read_config():
-    path = create_abstra_dir() + "/config.json"
+def get_config():
+    path = config_file_path()
 
     if not os.path.exists(path):
         return {}
@@ -24,7 +37,11 @@ def read_config():
 
 
 def get_api_token():
-    return os.getenv("ABSTRA_API_TOKEN") or read_config().get("api_token")
+    return os.getenv("ABSTRA_API_TOKEN") or get_config().get("api_token")
+
+
+def save_api_token(api_token):
+    save_config({"api_token": api_token})
 
 
 def get_auth_config():
@@ -35,7 +52,7 @@ def get_auth_config():
     return api_token, workspace_id
 
 
-def config_check(f):
+def token_check(f):
     def wrapper(*args):
         if not get_api_token():
             raise Exception("No API token configured")

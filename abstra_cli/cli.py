@@ -3,15 +3,15 @@ import fire
 from .apis import upload_file
 from .cli_helpers import read_api_token, show_progress
 from .file_utils import files_from_directory, remove_filepath_prefix
-from .utils_config import get_auth_config, config_check, save_config
+from .utils_config import get_auth_config, token_check, save_api_token
 
 
 class CLI(object):
     def configure(self, api_token=None):
-        save_config({"api_token": api_token or read_api_token()})
+        save_api_token(api_token or read_api_token())
         print("Done!")
 
-    @config_check
+    @token_check
     def upload(self, directory):
         api_token, workspace_id = get_auth_config()
         if workspace_id is None:

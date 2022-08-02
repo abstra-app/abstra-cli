@@ -1,10 +1,10 @@
 # import requests
 
-# from ..utils_config import read_config, save_config
+# from ..utils_config import get_config, save_config
 
 
 # def refresh_config():
-#     config = read_config()
+#     config = get_config()
 #     # { client_id, authority, access_token, refresh_token }
 #     data = {
 #         "grant_type": "refresh_token",
@@ -24,4 +24,4 @@
 #         'refresh_token': new_tokens['refresh_token']
 #     })
 
-#     return read_config()
+#     return get_config()
