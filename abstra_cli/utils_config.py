@@ -1,43 +1,44 @@
 import os
-import json
 
-from .utils import create_abstra_dir
 from .apis import get_workspace_from_token
 
-
-def save_config(data):
-    if isinstance(data, dict):
-        data = json.dumps(data)
-    path = create_abstra_dir() + "/config.json"
-    with open(path, "w") as f:
-        f.write(data)
+ABSTRA_FOLDER = ".abstra"
+CREDENTIALS_FILE = ".abstra/credentials"
 
 
-def read_config():
-    path = create_abstra_dir() + "/config.json"
-
-    if not os.path.exists(path):
-        return {}
-
-    with open(path) as f:
-        return json.load(f)
+def create_abstra_dir():
+    if not os.path.exists(ABSTRA_FOLDER):
+        os.makedirs(ABSTRA_FOLDER)
 
 
-def get_api_token():
-    return os.getenv("ABSTRA_API_TOKEN") or read_config().get("api_token")
+def save_credentials(api_token: str):
+    create_abstra_dir()
+    with open(CREDENTIALS_FILE, "w") as f:
+        f.write(api_token.strip())
 
 
-def get_auth_config():
-    api_token = get_api_token()
+def get_credentials():
+    if os.getenv("ABSTRA_API_TOKEN"):
+        return os.getenv("ABSTRA_API_TOKEN")
+
+    if not os.path.exists(CREDENTIALS_FILE):
+        return None
+
+    with open(CREDENTIALS_FILE) as f:
+        return f.read().strip()
+
+
+def get_auth_info():
+    api_token = get_credentials()
     if not api_token:
         return None, None
     workspace_id = get_workspace_from_token(api_token)
     return api_token, workspace_id
 
 
-def config_check(f):
+def credentials_check(f):
     def wrapper(*args):
-        if not get_api_token():
+        if not get_credentials():
             raise Exception("No API token configured")
         return f(*args)
 
