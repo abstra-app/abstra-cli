@@ -1,6 +1,6 @@
 import os
 
-from .apis import get_workspace_from_token
+from .public_apis import get_workspace_from_token
 
 ABSTRA_FOLDER = ".abstra"
 CREDENTIALS_FILE = ".abstra/credentials"
@@ -37,9 +37,12 @@ def get_auth_info():
 
 
 def credentials_check(f):
-    def wrapper(*args):
-        if not get_credentials():
+    def wrapper(*args, **kwargs):
+        api_token, workspace_id = get_auth_info()
+        if not api_token:
             raise Exception("No API token configured")
-        return f(*args)
+        if not workspace_id:
+            raise Exception("Bad token: no workspace found")
+        return f(*args, **kwargs)
 
     return wrapper

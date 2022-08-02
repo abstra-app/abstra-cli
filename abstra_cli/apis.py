@@ -3,8 +3,11 @@ import requests
 import urllib.request
 import urllib.response
 
+from .utils_config import get_auth_info
 
-def upload_file(workspace_id, filepath, file, api_token):
+
+def upload_file(filepath, file):
+    api_token, workspace_id = get_auth_info()
     response = requests.post(
         f"https://hackerforms-api.abstra.cloud/workspaces/{workspace_id}/put-url",
         data=json.dumps({"filepath": filepath}),
@@ -18,7 +21,8 @@ def upload_file(workspace_id, filepath, file, api_token):
     return res.status < 400
 
 
-def get_file_signed_url(workspace_id, filepath, api_token):
+def get_file_signed_url(filepath):
+    api_token, workspace_id = get_auth_info()
     response = requests.post(
         f"https://hackerforms-api.abstra.cloud/workspaces/{workspace_id}/get-url",
         data=json.dumps({"filepath": filepath}),
@@ -26,16 +30,3 @@ def get_file_signed_url(workspace_id, filepath, api_token):
     )
     response_json = response.json()
     return response_json.get("getURL")
-
-
-def get_workspace_from_token(api_token):
-    response = requests.post(
-        f"https://auth.abstra.cloud/abstra-cloud",
-        data=json.dumps({"headers": {"API-Authorization": api_token}}),
-        headers={"content-type": "application/json"},
-    )
-    response_json = response.json()
-    workspaces = response_json.get("workspaces", [{}])
-    if len(workspaces) == 0:
-        return None
-    return workspaces[0].get("id")
