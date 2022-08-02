@@ -32,6 +32,7 @@ def files_from_directory(directory):
     else:
         ignored = []
     ignored.append(ignorefile)
+    ignored.append(os.path.join(directory, ".abstra/"))
 
     paths = Path(directory).rglob("*")
     paths = [
