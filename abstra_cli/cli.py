@@ -10,7 +10,7 @@ from .cli_helpers import read_api_token
 class CLI(object):
     def configure(self, api_token=None):
         save_config({"api_token": api_token or read_api_token()})
-        print("Saved API token")
+        print("Done!")
 
     @config_check
     def upload(self, directory: str):
