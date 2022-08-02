@@ -1,10 +1,10 @@
 import fire
 from progress.bar import FillingSquaresBar
 
-from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
-from .file_utils import files_from_directory, remove_filepath_prefix
 from .cli_helpers import read_api_token
+from .file_utils import files_from_directory, remove_filepath_prefix
+from .utils_config import get_auth_config, config_check, save_config
 
 
 class CLI(object):
