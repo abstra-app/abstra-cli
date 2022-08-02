@@ -1,6 +1,6 @@
 import os
 
-from .apis import get_workspace_from_token
+from .public_apis import get_workspace_from_token
 
 ABSTRA_FOLDER = ".abstra"
 CREDENTIALS_FILE = ".abstra/credentials"
@@ -32,6 +32,7 @@ def get_auth_info():
     api_token = get_credentials()
     if not api_token:
         return None, None
+    print("call")
     workspace_id = get_workspace_from_token(api_token)
     return api_token, workspace_id
 
