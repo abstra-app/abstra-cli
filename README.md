@@ -12,7 +12,7 @@ Most commands are authenticated. To authenticate you need to generate an API Tok
 
 ### Configure
 ``` sh
-abstra configure API_TOKEN
+abstra configure [API_TOKEN]
 ```
 Authenticates the CLI with the token. Stores credentials at `~/.abstra/config.json`.  
 Optionally, you can set the `ABSTRA_API_TOKEN` environment variable.
