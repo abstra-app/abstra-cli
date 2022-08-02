@@ -22,7 +22,7 @@ Configures the current working directory credentials. Credentials are stored at 
 ``` sh
 abstra upload [DIRECTORY="."]
 ```
-Uploads the current directory files (and recursively) in the configured workspace.
+Uploads the current directory files (and recursively) in the configured workspace.   
 Optionally, you can specify a directory to upload.
 
 ### Ignoring files
