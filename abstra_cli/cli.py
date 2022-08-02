@@ -4,10 +4,10 @@ from .utils_config import get_auth_config, config_check, save_config
 from .apis import upload_file
 from .file_utils import files_from_directory, remove_filepath_prefix
 
-class CLI(object):
 
+class CLI(object):
     def configure(self, api_token):
-        save_config({'api_token': api_token})
+        save_config({"api_token": api_token})
         print("Done!")
 
     @config_check

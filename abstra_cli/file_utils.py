@@ -13,6 +13,7 @@ def should_ignore(ignored_paths, _path):
             return True
     return False
 
+
 def normalize_path(path):
     path = str(path)
     if path.endswith("/"):
@@ -20,6 +21,7 @@ def normalize_path(path):
     if path.startswith("./"):
         path = path[2:]
     return path
+
 
 def files_from_directory(directory):
     ignorefile = os.path.join(directory, ".abstraignore")
@@ -30,13 +32,12 @@ def files_from_directory(directory):
         ignored = []
     ignored.append(ignorefile)
 
-    paths = Path(directory).rglob('*')
-    paths =  [
-        path
-        for path in paths
-        if path.is_file() and not should_ignore(ignored, path)
+    paths = Path(directory).rglob("*")
+    paths = [
+        path for path in paths if path.is_file() and not should_ignore(ignored, path)
     ]
     return paths
+
 
 def remove_filepath_prefix(filepath, prefix):
     return normalize_path(filepath).removeprefix(normalize_path(prefix) + "/")

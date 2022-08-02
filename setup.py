@@ -16,19 +16,18 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(
-    name='abstra-cli',
+    name="abstra-cli",
     version=version,
-    description='Abstra CLI',
+    description="Abstra CLI",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/abstra-app/abstra-cli",
-    license='MIT',
-    packages=['abstra_cli'],
-    install_requires=['setuptools', 'requests',
-                      'fire', 'simple_websocket_server'],
+    license="MIT",
+    packages=["abstra_cli"],
+    install_requires=["setuptools", "requests", "fire", "simple_websocket_server"],
     entry_points={
-        'console_scripts': [
-            'abstra-cli=abstra_cli.cli:main',
+        "console_scripts": [
+            "abstra-cli=abstra_cli.cli:main",
         ],
     },
 )

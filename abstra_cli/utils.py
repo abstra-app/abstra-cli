@@ -2,7 +2,7 @@ import os
 
 
 def create_abstra_dir():
-    path = rebase_path('/.abstra')
+    path = rebase_path("/.abstra")
     if not os.path.exists(path):
         os.makedirs(path)
     return path

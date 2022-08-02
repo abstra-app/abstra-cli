@@ -24,7 +24,7 @@ def read_config():
 
 
 def get_api_token():
-    return os.getenv('ABSTRA_API_TOKEN') or read_config().get('api_token')
+    return os.getenv("ABSTRA_API_TOKEN") or read_config().get("api_token")
 
 
 def get_auth_config():
@@ -38,4 +38,5 @@ def config_check(f):
         if not get_api_token():
             raise Exception("No API token configured")
         return f(*args)
+
     return wrapper
