@@ -14,13 +14,15 @@ Most commands are authenticated. To authenticate you need to generate an API Tok
 ``` sh
 abstra configure [API_TOKEN]
 ```
-Authenticates the CLI with the token. Stores credentials at `~/.abstra/config.json`.  
-Optionally, you can set the `ABSTRA_API_TOKEN` environment variable.
+Configures the current working directory credentials stored at `.abstra/credentials`.  
+Optionally, you can set the `ABSTRA_API_TOKEN` environment variable when using the CLI.
 
 ### Upload
 ``` sh
-abstra upload DIRECTORY
+abstra upload [DIRECTORY]
 ```
+Uploads the current directory files (and recursively) in the configured workspace.
+Optionally, you can specify a directory to upload.
 
 ### Ignoring files
 
