@@ -1,3 +1,6 @@
+from progress.bar import FillingSquaresBar
+
+
 def read_api_token():
     print(
         "Abstra API Tokens can be found in your workspace or at https://forms.abstra.run/737986ce-a8ed-4c7b-bd7e-5f0b11331b66."
@@ -6,3 +9,7 @@ def read_api_token():
     if not api_token:
         raise Exception("No API token configured")
     return api_token
+
+
+def show_progress(bar, message, max):
+    return FillingSquaresBar(message, suffix="%(percent)d%%", max=max)

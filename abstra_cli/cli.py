@@ -2,7 +2,7 @@ import fire
 from progress.bar import FillingSquaresBar
 
 from .apis import upload_file
-from .cli_helpers import read_api_token
+from .cli_helpers import read_api_token, show_progress
 from .file_utils import files_from_directory, remove_filepath_prefix
 from .utils_config import get_auth_config, config_check, save_config
 
@@ -16,12 +16,10 @@ class CLI(object):
     def upload(self, directory: str):
         api_token, workspace_id = get_auth_config()
         if workspace_id is None:
-            return print("abstra: error: Bad API token")
+            return print("abstra: Error: Bad API token")
 
         files = files_from_directory(directory)
-        bar = FillingSquaresBar(
-            "Uploading files", suffix="%(percent)d%%", max=len(files)
-        )
+        bar = show_progress("Uploading files", len(files))
 
         for path in files:
             filename = remove_filepath_prefix(path.as_posix(), directory)
