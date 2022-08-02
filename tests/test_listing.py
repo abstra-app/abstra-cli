@@ -1,11 +1,11 @@
-from abstra_cli.file_utils import files_from_directory
-import random
 import os
+from uuid import uuid4
 from pathlib import PosixPath
+from abstra_cli.file_utils import files_from_directory
 
 
 def generate_random_folder():
-    name = "dir-" + random.randbytes(5).hex()
+    name = "dir-" + uuid4().hex
     path = "/tmp/" + name
     os.mkdir(path)
     return path
