@@ -1,5 +1,4 @@
 import fire
-from progress.bar import FillingSquaresBar
 
 from .apis import upload_file
 from .cli_helpers import read_api_token, show_progress
@@ -13,10 +12,10 @@ class CLI(object):
         print("Done!")
 
     @config_check
-    def upload(self, directory: str):
+    def upload(self, directory):
         api_token, workspace_id = get_auth_config()
         if workspace_id is None:
-            return print("abstra: Error: Bad API token")
+            return print("Error: Bad API token")
 
         files = files_from_directory(directory)
         bar = show_progress("Uploading files", len(files))
