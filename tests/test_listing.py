@@ -1,12 +1,11 @@
-from abstra_cli.file_utils import files_from_directory
-import unittest
-import random
 import os
+from uuid import uuid4
 from pathlib import PosixPath
+from abstra_cli.file_utils import files_from_directory
 
 
 def generate_random_folder():
-    name = "dir-" + random.randbytes(5).hex()
+    name = "dir-" + uuid4().hex
     path = "/tmp/" + name
     os.mkdir(path)
     return path
@@ -25,17 +24,17 @@ def add_folder(path, name):
     return folderpath
 
 
-class TestListing(unittest.TestCase):
+class TestListing:
     def test_empty_directory(self):
         path = generate_random_folder()
         files = files_from_directory(path)
-        self.assertEqual(files, [])
+        assert files == []
 
     def test_no_ignore(self):
         path = generate_random_folder()
         filepath = add_file(path, "foo", "bar")
         files = files_from_directory(path)
-        self.assertEqual(files, [PosixPath(filepath)])
+        assert files == [PosixPath(filepath)]
 
     def test_ignore_file(self):
         path = generate_random_folder()
@@ -43,7 +42,7 @@ class TestListing(unittest.TestCase):
         tracked = add_file(path, "tracked", "bar")
         filepath = add_file(path, ".abstraignore", "ignored")
         files = files_from_directory(path)
-        self.assertEqual(files, [PosixPath(tracked)])
+        assert files == [PosixPath(tracked)]
 
     def test_ignore_empty(self):
         path = generate_random_folder()
@@ -51,7 +50,7 @@ class TestListing(unittest.TestCase):
         add_folder(path, "empty")
         filepath = add_file(path, ".abstraignore", "ignored")
         files = files_from_directory(path)
-        self.assertEqual(files, [])
+        assert files == []
 
     def test_ignore_folder(self):
         path = generate_random_folder()
@@ -63,7 +62,7 @@ class TestListing(unittest.TestCase):
         tracked = add_file(folder, "tracked", "tracked")
         filepath = add_file(path, ".abstraignore", "ignored\nignored2/")
         files = files_from_directory(path)
-        self.assertEqual(files, [PosixPath(tracked)])
+        assert files == [PosixPath(tracked)]
 
     def test_ignore_wildcard(self):
         path = generate_random_folder()
@@ -71,8 +70,4 @@ class TestListing(unittest.TestCase):
         tracked = add_file(path, "tracked", "bar")
         filepath = add_file(path, ".abstraignore", "*.ipynb")
         files = files_from_directory(path)
-        self.assertEqual(files, [PosixPath(tracked)])
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert files == [PosixPath(tracked)]

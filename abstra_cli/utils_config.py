@@ -29,6 +29,8 @@ def get_api_token():
 
 def get_auth_config():
     api_token = get_api_token()
+    if not api_token:
+        return None, None
     workspace_id = get_workspace_from_token(api_token)
     return api_token, workspace_id
 

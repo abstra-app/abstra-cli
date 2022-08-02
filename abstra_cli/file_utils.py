@@ -1,6 +1,7 @@
-from pathlib import Path
 import os
 import fnmatch
+from pathlib import Path
+from .utils import remove_prefix
 
 
 def should_ignore(ignored_paths, _path):
@@ -40,4 +41,4 @@ def files_from_directory(directory):
 
 
 def remove_filepath_prefix(filepath, prefix):
-    return normalize_path(filepath).removeprefix(normalize_path(prefix) + "/")
+    return remove_prefix(normalize_path(filepath), normalize_path(prefix) + "/")

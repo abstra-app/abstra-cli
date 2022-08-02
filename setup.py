@@ -24,10 +24,16 @@ setup(
     url="https://github.com/abstra-app/abstra-cli",
     license="MIT",
     packages=["abstra_cli"],
-    install_requires=["setuptools", "requests", "fire", "simple_websocket_server"],
+    install_requires=[
+        "setuptools",
+        "requests",
+        "fire",
+        "simple_websocket_server",
+        "progress",
+    ],
     entry_points={
         "console_scripts": [
-            "abstra-cli=abstra_cli.cli:main",
+            "abstra=abstra_cli.cli:main",
         ],
     },
 )
