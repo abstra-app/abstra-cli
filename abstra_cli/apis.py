@@ -48,7 +48,9 @@ def hf_hasura_runner(query, variables={}):
         data=json.dumps({"query": query, "variables": variables}),
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
-    return response.json()["data"]
+    jsond = response.json()
+    print(jsond)
+    return jsond["data"]
 
 
 def list_workspace_packages():

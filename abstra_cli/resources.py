@@ -78,10 +78,14 @@ class Vars(Resource):
                 vars.extend([v for v in f.read().split("\n") if v])
 
         processed_vars = []
+        processed_names = []
         for var in vars:
             name, value = parse_env_var(var)
             if not name or not value:
                 print(f"Invalid variable: {var}")
+                return False
+            if name in processed_names:
+                print(f"Duplicate variable: {var}")
                 return False
             processed_vars.append({"name": name, "value": value})
 
@@ -114,10 +118,14 @@ class Packages(Resource):
                 packages.extend([p for p in f.read().split("\n") if p])
 
         processed_packages = []
+        processed_names = []
         for pkg in packages:
             name, version = parse_package(pkg)
             if not name:
                 print(f"Invalid package: {pkg}")
+                return False
+            if name in processed_names:
+                print(f"Duplicate package: {pkg}")
                 return False
             processed_packages.append({"name": name, "version": version})
 
