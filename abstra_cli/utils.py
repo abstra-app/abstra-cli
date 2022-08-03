@@ -3,8 +3,10 @@ def remove_prefix(text, prefix):
         return text[len(prefix) :]
     return text
 
+
 def digits(n):
     return len(str(n))
 
-def format_digits (n, d): 
+
+def format_digits(n, d):
     return " " * (d - digits(n)) + str(n)
