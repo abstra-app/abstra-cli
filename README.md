@@ -18,16 +18,9 @@ abstra configure [API_TOKEN]
 ```
 Configures the current working directory credentials. Credentials are stored at `.abstra/credentials`.   
 
-## Upload
-``` sh
-abstra upload [DIRECTORY="."]
-```
-Uploads the current directory files (and recursively) in the configured workspace.   
-Optionally, you can specify a directory to upload.
+## Ignoring files
 
-### Ignoring files
-
-You can ignore files placing a `.abstraignore` at the directory that will be uploaded:
+You can ignore files placing a `.abstraignore` at the root directory:
 ```
 __pycache__
 tests/

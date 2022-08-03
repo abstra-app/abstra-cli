@@ -39,15 +39,15 @@ class CLI(object):
     def upload(self, *args):
         if not len(args):
             args = ["."]
-        self.add('files', *args)
+        self.add("files", *args)
 
     @credentials_check
     def ls(self):
-        self.list('files')
+        self.list("files")
 
     @credentials_check
     def install(self, *args, **kwargs):
-        self.add('packages', *args, **kwargs)
+        self.add("packages", *args, **kwargs)
 
 
 def main():

@@ -1,5 +1,7 @@
 from progress.bar import FillingSquaresBar
 
+from .utils import format_digits
+
 
 def read_credentials():
     print(
@@ -11,5 +13,17 @@ def read_credentials():
     return credentials
 
 
-def show_progress(message, max):
+def show_progress(message, max) -> FillingSquaresBar:
     return FillingSquaresBar(message, suffix="%(percent)d%%", max=max)
+
+
+def print_file(file, max_d):
+    print(f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}")
+
+
+def print_var(var):
+    print(f"{var['name']}={var['value']}")
+
+
+def print_package(pkg):
+    print(f"{pkg['name']}{'==' + pkg['version'] if pkg['version'] else ''}")
