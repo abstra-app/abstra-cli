@@ -34,6 +34,7 @@ setup(
     entry_points={
         "console_scripts": [
             "abstra=abstra_cli.cli:main",
+            "abstra-cli=abstra_cli.cli:main",
         ],
     },
 )
