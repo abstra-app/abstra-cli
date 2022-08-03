@@ -1,10 +1,7 @@
 from abc import ABC, abstractmethod
 
+from .utils import format_digits, digits
 from .apis import list_workspace_files, list_workspace_vars, list_workspace_packages
-
-
-digits = lambda n: len(str(n))
-format_digits = lambda n, d: " " * (d - digits(n)) + str(n)
 
 
 class Resource(ABC):
