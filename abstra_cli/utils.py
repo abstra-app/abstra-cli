@@ -25,7 +25,9 @@ def parse_env_var(var):
 def parse_package(pkg):
     # https://peps.python.org/pep-0440/#version-specifiers
 
-    match = re.search("(([\w\.\-]+)\s*)(~=|===|>=|<=|==)(\s*([^\[\]\,\;\>\<\s]+))", pkg)
+    match = re.search(
+        "^(([\w\.\-]+)\s*)(~=|===|>=|<=|==)(\s*([^\[\]\,\;\>\<\s]+))$", pkg
+    )
     if match:
         name = match.group(2)
         version = match.group(5)

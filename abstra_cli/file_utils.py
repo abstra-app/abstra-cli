@@ -1,7 +1,19 @@
 import os
 import fnmatch
 from pathlib import Path
+
 from .utils import remove_prefix
+from .utils_config import ABSTRA_FOLDER
+
+
+def get_ignore_files(dir):
+    IGNOREFILE = os.path.join(dir, ".abstraignore")
+    abstra_path = os.path.join(dir, ABSTRA_FOLDER)
+    ignored = [IGNOREFILE, abstra_path]
+    if os.path.exists(IGNOREFILE):
+        with open(IGNOREFILE, "r") as f:
+            ignored.extend([os.path.join(dir, f) for f in f.read().split("\n") if f])
+    return ignored
 
 
 def should_ignore(ignored_paths, _path):
@@ -25,15 +37,8 @@ def normalize_path(path):
 
 
 def files_from_directory(directory):
-    ignorefile = ".abstraignore"
-    if os.path.exists(ignorefile):
-        with open(ignorefile, "r") as f:
-            ignored = f.read().split("\n")
-    else:
-        ignored = []
-    ignored.append(ignorefile)
-    ignored.append(os.path.join(directory, ".abstra/"))
-
+    ignored = [*get_ignore_files(directory), *get_ignore_files(os.getcwd())]
+    print(ignored)
     paths = Path(directory).rglob("*")
     paths = [
         path for path in paths if path.is_file() and not should_ignore(ignored, path)
