@@ -4,6 +4,11 @@ from .apis import upload_file
 from .cli_helpers import read_credentials, show_progress
 from .file_utils import files_from_directory, remove_filepath_prefix
 from .utils_config import credentials_check, save_credentials
+from .resources import Files, Vars, Packages
+
+
+def not_implemented(*args, **kwargs):
+    print("Not implemented yet")
 
 
 class CLI(object):
@@ -26,6 +31,16 @@ class CLI(object):
                 bar.next()
         bar.finish()
         print("All files were uploaded!")
+
+    @credentials_check
+    def list(self, resource, *args, **kwargs):
+        list_func = {
+            "files": Files.list,
+            "vars": Vars.list,
+            "packages": Packages.list,
+        }.get(resource, not_implemented)
+
+        list_func(*args, **kwargs)
 
 
 def main():
