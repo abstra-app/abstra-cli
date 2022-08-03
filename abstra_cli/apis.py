@@ -5,15 +5,22 @@ import urllib.response
 
 from .utils_config import get_auth_info
 
+HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
 
-def upload_file(filepath, file):
+
+def hf_api_runner(method, path, data=None):
     api_token, workspace_id = get_auth_info()
-    response = requests.post(
-        f"https://hackerforms-api.abstra.cloud/workspaces/{workspace_id}/put-url",
-        data=json.dumps({"filepath": filepath}),
+    response = requests.request(
+        method,
+        f"{HACKERFORMS_API_URL}/workspaces/{workspace_id}/{path}",
+        data=json.dumps(data) if data else None,
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
-    response_json = response.json()
+    return response.json()
+
+
+def upload_file(filepath, file):
+    response_json = hf_api_runner("POST", "put-url", {"filepath": filepath})
     req = urllib.request.Request(
         url=response_json["putURL"], method="PUT", data=file.read()
     )
@@ -22,11 +29,17 @@ def upload_file(filepath, file):
 
 
 def get_file_signed_url(filepath):
-    api_token, workspace_id = get_auth_info()
-    response = requests.post(
-        f"https://hackerforms-api.abstra.cloud/workspaces/{workspace_id}/get-url",
-        data=json.dumps({"filepath": filepath}),
-        headers={"content-type": "application/json", "API-Authorization": api_token},
-    )
-    response_json = response.json()
+    response_json = hf_api_runner("POST", "get-url", {"filepath": filepath})
     return response_json.get("getURL")
+
+
+def list_workspace_files():
+    return hf_api_runner("GET", "files")
+
+
+def list_workspace_packages():
+    return hf_api_runner("GET", "packages")
+
+
+def list_workspace_vars():
+    return hf_api_runner("GET", "vars")
