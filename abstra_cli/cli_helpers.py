@@ -18,7 +18,9 @@ def show_progress(message, max) -> FillingSquaresBar:
 
 
 def print_file(file, max_d):
-    print(f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}")
+    print(
+        f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}"
+    )
 
 
 def print_var(var):
