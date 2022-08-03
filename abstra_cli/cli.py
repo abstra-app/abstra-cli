@@ -1,8 +1,6 @@
 import fire
 
-from .apis import upload_file
-from .cli_helpers import read_credentials, show_progress
-from .file_utils import files_from_directory, remove_filepath_prefix
+from .cli_helpers import read_credentials
 from .utils_config import credentials_check, save_credentials
 from .resources import Files, Vars, Packages
 
@@ -17,22 +15,6 @@ class CLI(object):
         print("Done!")
 
     @credentials_check
-    def upload(self, directory="."):
-        files = files_from_directory(directory)
-        bar = show_progress("Uploading files", len(files))
-
-        for path in files:
-            filename = remove_filepath_prefix(path.as_posix(), directory)
-            ok = upload_file(filename, path.open("rb"))
-            if not ok:
-                print(f"Error uploading file {filename}")
-                return False
-            else:
-                bar.next()
-        bar.finish()
-        print("All files were uploaded!")
-
-    @credentials_check
     def list(self, resource, *args, **kwargs):
         list_func = {
             "files": Files.list,
@@ -41,6 +23,31 @@ class CLI(object):
         }.get(resource, not_implemented)
 
         list_func(*args, **kwargs)
+
+    @credentials_check
+    def add(self, resource, *args, **kwargs):
+        add_func = {
+            "files": Files.add,
+            "vars": Vars.add,
+            "packages": Packages.add,
+        }.get(resource, not_implemented)
+
+        add_func(*args, **kwargs)
+
+    # Aliases
+    @credentials_check
+    def upload(self, *args):
+        if not len(args):
+            args = ["."]
+        self.add('files', *args)
+
+    @credentials_check
+    def ls(self):
+        self.list('files')
+
+    @credentials_check
+    def install(self, *args, **kwargs):
+        self.add('packages', *args, **kwargs)
 
 
 def main():

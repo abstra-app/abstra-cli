@@ -41,10 +41,45 @@ tests/
 Remote resources can be `files`, `vars` or `packages`.   
 You can manage remote resources with the following commands:
 
-## List resources
+### List resources
 ``` sh
 abstra list RESOURCE
 ```
 List remote resources on your workspace.   
+Example:
+``` sh
+abstra list packages
+```
 
+### Add resource
+``` sh
+abstra add RESOURCE [...OPTIONS]
+```
+Adds remote resources on your workspace.   
+Example:
+``` sh
+abstra add files test.txt
+abstra add vars ENVIROMENT=production VERSION=1.0.0
+abstra add packages pandas numpy=1.0.1
+```
 
+### Aliases
+Some commands have aliases.   
+
+#### upload
+``` sh
+# Alias for `abstra add files` with default argument `.`
+abstra upload [FILES or DIRECTORIES, default: .]
+```
+
+#### ls
+``` sh
+# Alias for `abstra list files`
+abstra ls
+```
+
+#### install
+``` sh
+# Alias for `abstra add packages`
+abstra install [PACKAGES]
+```

@@ -25,10 +25,10 @@ def normalize_path(path):
 
 
 def files_from_directory(directory):
-    ignorefile = os.path.join(directory, ".abstraignore")
+    ignorefile = ".abstraignore"
     if os.path.exists(ignorefile):
         with open(ignorefile, "r") as f:
-            ignored = [os.path.join(directory, path) for path in f.read().split("\n")]
+            ignored = f.read().split("\n")
     else:
         ignored = []
     ignored.append(ignorefile)
