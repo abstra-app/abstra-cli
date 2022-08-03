@@ -11,8 +11,8 @@ def generate_random_folder():
     os.mkdir(path)
     return path
 
-class TestListing:
 
+class TestListing:
     def add_file(self, name, content, path=None):
         filepath = (path or self.path) + "/" + name
         with open(filepath, "w", encoding="utf-8") as f:
