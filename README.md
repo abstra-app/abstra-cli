@@ -18,16 +18,9 @@ abstra configure [API_TOKEN]
 ```
 Configures the current working directory credentials. Credentials are stored at `.abstra/credentials`.   
 
-## Upload
-``` sh
-abstra upload [DIRECTORY="."]
-```
-Uploads the current directory files (and recursively) in the configured workspace.   
-Optionally, you can specify a directory to upload.
+## Ignoring files
 
-### Ignoring files
-
-You can ignore files placing a `.abstraignore` at the directory that will be uploaded:
+You can ignore files placing a `.abstraignore` at the target directory:
 ```
 __pycache__
 tests/
@@ -41,10 +34,59 @@ tests/
 Remote resources can be `files`, `vars` or `packages`.   
 You can manage remote resources with the following commands:
 
-## List resources
+### List resources
 ``` sh
 abstra list RESOURCE
 ```
 List remote resources on your workspace.   
+Examples:
+``` sh
+abstra list packages
+abstra list vars
+abstra list files
+```
 
+### Add resource
+``` sh
+abstra add RESOURCE [...OPTIONS]
+```
+Adds remote resources on your workspace.   
+Examples:
+``` sh
+# Files
+abstra add files test.txt bar.log
+abstra add files foo/ ./
 
+# Vars
+abstra add vars ENVIROMENT=production VERSION=1.0.0
+abstra add vars -f .env
+abstra add vars --file .env
+
+# Packages
+abstra add packages pandas numpy=1.0.1 scipy>=1.0.1
+abstra add packages -f requirements.txt
+abstra add packages -r requirements.txt
+abstra add packages --file requirements.txt
+abstra add packages --requirement requirements.txt
+```
+
+### Aliases
+Some commands have aliases.   
+
+#### upload
+``` sh
+# Alias for `abstra add files` with default argument `.`
+abstra upload [FILES or DIRECTORIES, default: .]
+```
+
+#### ls
+``` sh
+# Alias for `abstra list files`
+abstra ls
+```
+
+#### install
+``` sh
+# Alias for `abstra add packages`
+abstra install [PACKAGES]
+```

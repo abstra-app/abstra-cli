@@ -3,7 +3,8 @@ import requests
 import urllib.request
 import urllib.response
 
-from .utils_config import get_auth_info
+from .utils_config import get_auth_info, get_credentials
+
 
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
 
@@ -37,9 +38,98 @@ def list_workspace_files():
     return hf_api_runner("GET", "files")
 
 
+HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
+
+
+def hf_hasura_runner(query, variables={}):
+    api_token = get_credentials()
+    response = requests.post(
+        HACKERFORMS_HASURA_URL,
+        data=json.dumps({"query": query, "variables": variables}),
+        headers={"content-type": "application/json", "API-Authorization": api_token},
+    )
+    jsond = response.json()
+    print(jsond)
+    return jsond["data"]
+
+
 def list_workspace_packages():
-    return hf_api_runner("GET", "packages")
+    query = """
+        query GetPackages {
+            packages {
+                name
+                version
+            }
+        }
+    """
+    return hf_hasura_runner(query).get("packages", [])
 
 
 def list_workspace_vars():
-    return hf_api_runner("GET", "vars")
+    query = """
+        query GetVars {
+            environment_variables {
+                name
+                value
+            }
+        }
+    """
+    return hf_hasura_runner(query).get("environment_variables", [])
+
+
+def add_workspace_vars(raw_vars):
+    _, workspace_id = get_auth_info()
+    vars = [
+        {"name": v["name"], "value": v["value"], "workspace_id": workspace_id}
+        for v in raw_vars
+    ]
+    query = """
+        mutation InsertVars($vars: [environment_variables_insert_input!]!) {
+            insert_environment_variables(
+                objects: $vars
+                on_conflict: {
+                    constraint: environment_variables_name_workspace_id_key
+                    update_columns: [value, name]
+                }
+            ) {
+                returning {
+                    name
+                    value
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"vars": vars})
+        .get("insert_environment_variables", {})
+        .get("returning", [])
+    )
+
+
+def add_workspace_packages(raw_packages):
+    _, workspace_id = get_auth_info()
+    packages = [
+        {"name": p["name"], "version": p["version"], "workspace_id": workspace_id}
+        for p in raw_packages
+    ]
+    query = """
+        mutation InsertPackages($packages: [packages_insert_input!]!) {
+            insert_packages(
+                objects: $packages
+                on_conflict: {
+                    constraint: packages_workspace_id_name_key  
+                    update_columns: [version]
+                }
+            ) {
+                returning {
+                    name
+                    version
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"packages": packages})
+        .get("insert_packages", {})
+        .get("returning", [])
+    )
