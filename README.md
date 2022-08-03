@@ -20,7 +20,7 @@ Configures the current working directory credentials. Credentials are stored at 
 
 ## Ignoring files
 
-You can ignore files placing a `.abstraignore` at the root directory:
+You can ignore files placing a `.abstraignore` at the target directory:
 ```
 __pycache__
 tests/
@@ -39,9 +39,11 @@ You can manage remote resources with the following commands:
 abstra list RESOURCE
 ```
 List remote resources on your workspace.   
-Example:
+Examples:
 ``` sh
 abstra list packages
+abstra list vars
+abstra list files
 ```
 
 ### Add resource
@@ -49,11 +51,23 @@ abstra list packages
 abstra add RESOURCE [...OPTIONS]
 ```
 Adds remote resources on your workspace.   
-Example:
+Examples:
 ``` sh
-abstra add files test.txt
+# Files
+abstra add files test.txt bar.log
+abstra add files foo/ ./
+
+# Vars
 abstra add vars ENVIROMENT=production VERSION=1.0.0
-abstra add packages pandas numpy=1.0.1
+abstra add vars -f .env
+abstra add vars --file .env
+
+# Packages
+abstra add packages pandas numpy=1.0.1 scipy>=1.0.1
+abstra add packages -f requirements.txt
+abstra add packages -r requirements.txt
+abstra add packages --file requirements.txt
+abstra add packages --requirement requirements.txt
 ```
 
 ### Aliases
