@@ -1,6 +1,6 @@
 from progress.bar import FillingSquaresBar
 
-from .utils import format_digits
+from .utils import digits, format_digits
 
 
 def read_credentials():
@@ -17,15 +17,20 @@ def show_progress(message, max) -> FillingSquaresBar:
     return FillingSquaresBar(message, suffix="%(percent)d%%", max=max)
 
 
-def print_file(file, max_d):
-    print(
-        f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}"
-    )
+def print_files(files):
+    files.sort(key=lambda x: x["Key"])
+    max_d = digits(max([f["Size"] for f in files]))
+    for file in files:
+        print(f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}")
 
 
-def print_var(var):
-    print(f"{var['name']}={var['value']}")
+def print_vars(vars):
+    vars.sort(key=lambda x: x["name"])
+    for var in vars:
+        print(f"{var['name']}={var['value']}")
 
 
-def print_package(pkg):
-    print(f"{pkg['name']}{'==' + pkg['version'] if pkg['version'] else ''}")
+def print_packages(packages):
+    packages.sort(key=lambda x: x["name"])
+    for pkg in packages:
+        print(f"{pkg['name']}{'==' + pkg['version'] if pkg['version'] else ''}")

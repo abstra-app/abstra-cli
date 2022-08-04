@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 from abc import ABC, abstractmethod
 
-from .cli_helpers import print_file, print_package, print_var, show_progress
+from .cli_helpers import print_files, print_packages, print_vars, show_progress
 from .file_utils import files_from_directory
-from .utils import digits, parse_env_var, parse_package
+from .utils import parse_env_var, parse_package
 from .apis import (
     add_workspace_packages,
     add_workspace_vars,
@@ -39,10 +39,7 @@ class Files(Resource):
     @staticmethod
     def list(*args, **kwargs):
         files = list_workspace_files()
-        files.sort(key=lambda x: x["Key"])
-        max_digits = digits(max([f["Size"] for f in files]))
-        for file in files:
-            print_file(file, max_digits)
+        print_files(files)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -84,9 +81,7 @@ class Vars(Resource):
     @staticmethod
     def list(*args, **kwargs):
         vars = list_workspace_vars()
-        vars.sort(key=lambda x: x["name"])
-        for var in vars:
-            print_var(var)
+        print_vars(vars)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -109,17 +104,13 @@ class Vars(Resource):
             processed_vars.append({"name": name, "value": value})
 
         added_vars = add_workspace_vars(processed_vars)
-        added_vars.sort(key=lambda x: x["name"])
-        for var in added_vars:
-            print_var(var)
+        print_vars(added_vars)
         print(f"\nAdded {len(added_vars)} enviroment variables")
 
     @staticmethod
     def remove(*args, **kwargs):
         deleted_vars = delete_workspace_vars(args)
-        deleted_vars.sort(key=lambda x: x["name"])
-        for var in deleted_vars:
-            print_var(var)
+        print_vars(deleted_vars)
         print(f"\nDeleted {len(deleted_vars)} vars")
 
 
@@ -127,9 +118,7 @@ class Packages(Resource):
     @staticmethod
     def list(*args, **kwargs):
         packages = list_workspace_packages()
-        packages.sort(key=lambda x: x["name"])
-        for pkg in packages:
-            print_package(pkg)
+        print_packages(packages)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -157,15 +146,11 @@ class Packages(Resource):
             processed_packages.append({"name": name, "version": version})
 
         added_packages = add_workspace_packages(processed_packages)
-        added_packages.sort(key=lambda x: x["name"])
-        for pkg in added_packages:
-            print_package(pkg)
+        print_packages(added_packages)
         print(f"\nAdded {len(added_packages)} packages")
 
     @staticmethod
     def remove(*args, **kwargs):
         deleted_packages = delete_workspace_packages(args)
-        deleted_packages.sort(key=lambda x: x["name"])
-        for pkg in deleted_packages:
-            print_package(pkg)
+        print_packages(deleted_packages)
         print(f"\nDeleted {len(deleted_packages)} packages")

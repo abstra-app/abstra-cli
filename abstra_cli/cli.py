@@ -6,7 +6,7 @@ from .resources import Files, Vars, Packages
 
 
 def not_implemented(*args, **kwargs):
-    print("Not implemented yet")
+    print("Invalid command")
 
 
 class CLI(object):
