@@ -17,8 +17,8 @@ class CLI(object):
     @credentials_check
     def list(self, resource, *args, **kwargs):
         list_func = {
-            "files": Files.list,
             "vars": Vars.list,
+            "files": Files.list,
             "packages": Packages.list,
         }.get(resource, not_implemented)
 
@@ -27,23 +27,37 @@ class CLI(object):
     @credentials_check
     def add(self, resource, *args, **kwargs):
         add_func = {
-            "files": Files.add,
             "vars": Vars.add,
+            "files": Files.add,
             "packages": Packages.add,
+        }.get(resource, not_implemented)
+
+        add_func(*args, **kwargs)
+
+    @credentials_check
+    def remove(self, resource, *args, **kwargs):
+        add_func = {
+            "vars": Vars.remove,
+            "files": Files.remove,
+            "packages": Packages.remove,
         }.get(resource, not_implemented)
 
         add_func(*args, **kwargs)
 
     # Aliases
     @credentials_check
-    def upload(self, *args):
+    def upload(self, *args, **kwargs):
         if not len(args):
             args = ["."]
-        self.add("files", *args)
+        self.add("files", *args, **kwargs)
 
     @credentials_check
-    def ls(self):
-        self.list("files")
+    def ls(self, *args, **kwargs):
+        self.list("files", *args, **kwargs)
+
+    @credentials_check
+    def rm(self, *args, **kwargs):
+        self.remove("files", *args, **kwargs)
 
     @credentials_check
     def install(self, *args, **kwargs):

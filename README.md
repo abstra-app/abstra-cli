@@ -54,7 +54,7 @@ Adds remote resources on your workspace.
 Examples:
 ``` sh
 # Files
-abstra add files test.txt bar.log
+abstra add files foo.txt bar.log
 abstra add files foo/ ./
 
 # Vars
@@ -70,6 +70,18 @@ abstra add packages --file requirements.txt
 abstra add packages --requirement requirements.txt
 ```
 
+### Remove resource
+``` sh
+abstra remove RESOURCE [...OPTIONS]
+```
+Remove remote resources from your workspace.   
+Examples:
+``` sh
+abstra remove files foo.txt bar.log
+abstra remove vars ENVIROMENT VERSION
+abstra remove packages pandas numpy scipy
+```
+
 ### Aliases
 Some commands have aliases.   
 
@@ -83,6 +95,12 @@ abstra upload [FILES or DIRECTORIES, default: .]
 ``` sh
 # Alias for `abstra list files`
 abstra ls
+```
+
+#### rm
+``` sh
+# Alias for `abstra remove files`
+abstra rm
 ```
 
 #### install

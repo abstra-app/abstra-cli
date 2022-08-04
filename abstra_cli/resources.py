@@ -8,6 +8,9 @@ from .utils import digits, parse_env_var, parse_package
 from .apis import (
     add_workspace_packages,
     add_workspace_vars,
+    delete_file,
+    delete_workspace_packages,
+    delete_workspace_vars,
     list_workspace_files,
     list_workspace_vars,
     list_workspace_packages,
@@ -26,6 +29,11 @@ class Resource(ABC):
     def add(*args, **kwargs):
         pass
 
+    @staticmethod
+    @abstractmethod
+    def remove(*args, **kwargs):
+        pass
+
 
 class Files(Resource):
     @staticmethod
@@ -38,9 +46,6 @@ class Files(Resource):
 
     @staticmethod
     def add(*args, **kwargs):
-        if len(args) == 0:
-            return print("Nothing to upload")
-
         files: list[Path] = []
         for path in args:
             if os.path.isfile(path):
@@ -59,6 +64,20 @@ class Files(Resource):
                 bar.next()
         bar.finish()
         print(f"\nUploaded {len(files)} files successfully")
+
+    @staticmethod
+    def remove(*args, **kwargs):
+        # TODO: list first then delete
+        bar = show_progress("Deleting files", len(args))
+        for f in args:
+            ok = delete_file(f)
+            if not ok:
+                print(f"Error deleting file {f}")
+                return False
+            else:
+                bar.next()
+        bar.finish()
+        print(f"\nDeleted {len(args)} files successfully")
 
 
 class Vars(Resource):
@@ -94,6 +113,14 @@ class Vars(Resource):
         for var in added_vars:
             print_var(var)
         print(f"\nAdded {len(added_vars)} enviroment variables")
+
+    @staticmethod
+    def remove(*args, **kwargs):
+        deleted_vars = delete_workspace_vars(args)
+        deleted_vars.sort(key=lambda x: x["name"])
+        for var in deleted_vars:
+            print_var(var)
+        print(f"\nDeleted {len(deleted_vars)} vars")
 
 
 class Packages(Resource):
@@ -134,3 +161,11 @@ class Packages(Resource):
         for pkg in added_packages:
             print_package(pkg)
         print(f"\nAdded {len(added_packages)} packages")
+
+    @staticmethod
+    def remove(*args, **kwargs):
+        deleted_packages = delete_workspace_packages(args)
+        deleted_packages.sort(key=lambda x: x["name"])
+        for pkg in deleted_packages:
+            print_package(pkg)
+        print(f"\nDeleted {len(deleted_packages)} packages")

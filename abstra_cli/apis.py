@@ -38,6 +38,10 @@ def list_workspace_files():
     return hf_api_runner("GET", "files")
 
 
+def delete_file(filepath):
+    return hf_api_runner("DELETE", "file", {"filepath": filepath})
+
+
 HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
 
 
@@ -49,7 +53,7 @@ def hf_hasura_runner(query, variables={}):
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
     jsond = response.json()
-    print(jsond)
+    # print(jsond)
     return jsond["data"]
 
 
@@ -131,5 +135,41 @@ def add_workspace_packages(raw_packages):
     return (
         hf_hasura_runner(query, {"packages": packages})
         .get("insert_packages", {})
+        .get("returning", [])
+    )
+
+
+def delete_workspace_packages(packages):
+    query = """
+        mutation DeletePackages($packages: [String!]) {
+            delete_packages(where: {name: {_in: $packages}}) {
+                returning {
+                    name
+                    version
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"packages": packages})
+        .get("delete_packages", {})
+        .get("returning", [])
+    )
+
+
+def delete_workspace_vars(vars):
+    query = """
+        mutation DeleteVars($vars: [String!]) {
+            delete_environment_variables(where: {name: {_in: $vars}}) {
+                returning {
+                    name
+                    value
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"vars": vars})
+        .get("delete_environment_variables", {})
         .get("returning", [])
     )
