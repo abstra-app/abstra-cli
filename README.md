@@ -45,7 +45,7 @@ abstra list packages
 abstra list vars
 abstra list files
 
-# Saving to local folder
+# Saving envvars and packages
 abstra list packages > requirements.txt
 abstra list vars > .env
 ```
