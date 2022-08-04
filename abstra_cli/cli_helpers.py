@@ -21,7 +21,9 @@ def print_files(files):
     files.sort(key=lambda x: x["Key"])
     max_d = digits(max([f["Size"] for f in files]))
     for file in files:
-        print(f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}")
+        print(
+            f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}"
+        )
 
 
 def print_vars(vars):
