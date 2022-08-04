@@ -44,6 +44,10 @@ Examples:
 abstra list packages
 abstra list vars
 abstra list files
+
+# Saving to local folder
+abstra list packages > requirements.txt
+abstra list vars > .env
 ```
 
 ### Add resource
