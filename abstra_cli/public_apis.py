@@ -3,7 +3,7 @@ import requests
 from functools import lru_cache
 
 
-@lru_cache
+@lru_cache(maxsize=None)
 def get_workspace_from_token(api_token):
     response = requests.post(
         f"https://auth.abstra.cloud/abstra-cloud",
