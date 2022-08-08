@@ -38,7 +38,6 @@ def normalize_path(path):
 
 def files_from_directory(directory):
     ignored = [*get_ignore_files(directory), *get_ignore_files(os.getcwd())]
-    print(ignored)
     paths = Path(directory).rglob("*")
     paths = [
         path for path in paths if path.is_file() and not should_ignore(ignored, path)

@@ -46,7 +46,6 @@ class TestListing:
         self.add_file("ignored", "foo")
         tracked = self.add_file("tracked", "bar")
         files = files_from_directory(self.path)
-        print(files)
         assert files == [PosixPath(tracked)]
 
     def test_ignore_empty(self):
