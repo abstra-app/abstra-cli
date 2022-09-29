@@ -2,11 +2,18 @@ import os
 from pathlib import Path
 from abc import ABC, abstractmethod
 
-from .cli_helpers import print_files, print_packages, print_vars, show_progress
+from .cli_helpers import (
+    print_files,
+    print_packages,
+    print_forms,
+    print_vars,
+    show_progress
+)
 from .file_utils import files_from_directory
 from .utils import parse_env_var, parse_package
 from .apis import (
     add_workspace_packages,
+    add_workspace_form,
     add_workspace_vars,
     delete_file,
     delete_workspace_packages,
@@ -14,6 +21,7 @@ from .apis import (
     list_workspace_files,
     list_workspace_vars,
     list_workspace_packages,
+    list_workspace_forms,
     upload_file,
 )
 
@@ -154,3 +162,30 @@ class Packages(Resource):
         deleted_packages = delete_workspace_packages(args)
         print_packages(deleted_packages)
         print(f"\nDeleted {len(deleted_packages)} packages")
+
+class Forms(Resource):
+    @staticmethod
+    def list(*args, **kwargs):
+        forms = list_workspace_forms()
+        print_forms(forms)
+
+    @staticmethod
+    def add(*args, **kwargs):
+        name = kwargs.get("name") or kwargs.get("n")
+        file = kwargs.get("file") or kwargs.get("f")
+        with open(file, "r") as f:
+            code = f.read()
+        new_form = {
+            'title': name,
+            'script': {
+                'data': {
+                    'code': code
+                }
+            }
+        }
+        add_workspace_form(new_form)
+
+
+    @staticmethod
+    def remove(*args, **kwargs):
+        pass

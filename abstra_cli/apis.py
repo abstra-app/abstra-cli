@@ -52,8 +52,10 @@ def hf_hasura_runner(query, variables={}):
         data=json.dumps({"query": query, "variables": variables}),
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
+    if response.status_code >= 300:
+        raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    # print(jsond)
+    print(jsond)
     return jsond["data"]
 
 
@@ -67,6 +69,18 @@ def list_workspace_packages():
         }
     """
     return hf_hasura_runner(query).get("packages", [])
+
+
+def list_workspace_forms():
+    query = """
+        query GetForms {
+            forms {
+                id
+                title
+            }
+        }
+    """
+    return hf_hasura_runner(query).get("forms", [])
 
 
 def list_workspace_vars():
@@ -136,6 +150,33 @@ def add_workspace_packages(raw_packages):
         hf_hasura_runner(query, {"packages": packages})
         .get("insert_packages", {})
         .get("returning", [])
+    )
+
+def add_workspace_form(form_data):
+    _, workspace_id = get_auth_info()
+    form_data["workspace_id"] = workspace_id
+    form_data["script"]["data"]["workspace_id"] = workspace_id
+    form_data["script"]["data"]["name"] = form_data["title"]
+    query = """
+        mutation InsertForm($form_data: [forms_insert_input!]!) {
+            insert_forms(
+                objects: $form_data
+            ) {
+                returning {
+                    id
+                    title
+                    script {
+                        id
+                        code
+                    }
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"form_data": form_data})
+        .get("insert_forms_one", {})
+        .get("returning", {})
     )
 
 
