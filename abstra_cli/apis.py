@@ -55,7 +55,7 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    print(jsond)
+    # print(jsond)
     return jsond["data"]
 
 
@@ -152,11 +152,19 @@ def add_workspace_packages(raw_packages):
         .get("returning", [])
     )
 
-def add_workspace_form(form_data):
+def add_workspace_form(name, code):
     _, workspace_id = get_auth_info()
-    form_data["workspace_id"] = workspace_id
-    form_data["script"]["data"]["workspace_id"] = workspace_id
-    form_data["script"]["data"]["name"] = form_data["title"]
+    form_data = {
+        'title': name,
+        'workspace_id': workspace_id,
+        'script': {
+            'data': {
+                'code': code,
+                'workspace_id': workspace_id,
+                'name': name
+            }
+        }
+    }
     query = """
         mutation InsertForm($form_data: [forms_insert_input!]!) {
             insert_forms(
@@ -214,3 +222,14 @@ def delete_workspace_vars(vars):
         .get("delete_environment_variables", {})
         .get("returning", [])
     )
+
+def delete_workspace_form(form_id):
+    query = """
+    mutation DeleteForm($id: uuid!) {
+        delete_forms_by_pk(id: $id) {
+            id
+        }
+    }
+    """
+
+    return hf_hasura_runner(query, {'id': form_id})

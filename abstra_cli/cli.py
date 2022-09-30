@@ -42,6 +42,7 @@ class CLI(object):
             "vars": Vars.remove,
             "files": Files.remove,
             "packages": Packages.remove,
+            "form": Forms.remove
         }.get(resource, not_implemented)
 
         add_func(*args, **kwargs)

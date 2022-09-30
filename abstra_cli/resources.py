@@ -16,6 +16,7 @@ from .apis import (
     add_workspace_form,
     add_workspace_vars,
     delete_file,
+    delete_workspace_form,
     delete_workspace_packages,
     delete_workspace_vars,
     list_workspace_files,
@@ -172,20 +173,22 @@ class Forms(Resource):
     @staticmethod
     def add(*args, **kwargs):
         name = kwargs.get("name") or kwargs.get("n")
+        if not name:
+            print("required parameter: --name [name]")
         file = kwargs.get("file") or kwargs.get("f")
+        if not file:
+            print("required parameter: --file [file]")
+        if not name or not file:
+            exit()
         with open(file, "r") as f:
             code = f.read()
-        new_form = {
-            'title': name,
-            'script': {
-                'data': {
-                    'code': code
-                }
-            }
-        }
-        add_workspace_form(new_form)
+        add_workspace_form(name=name, code=code)
 
 
     @staticmethod
     def remove(*args, **kwargs):
-        pass
+        form_id = args[0]
+        if not form_id:
+            print("required parameter: [form_id]")
+            exit()
+        delete_workspace_form(args[0])

@@ -41,4 +41,4 @@ def print_packages(packages):
 def print_forms(forms):
     forms.sort(key=lambda x: x["title"])
     for form in forms:
-        print(f"{form['id'][:8]} {form['title']}")
+        print(f"{form['id']} {form['title']}")
