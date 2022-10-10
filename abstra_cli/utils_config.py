@@ -42,10 +42,10 @@ def credentials_check(f):
 
         if not api_token:
             raise Exception("No API token configured")
-        
+
         if not workspace_id:
             raise Exception("Bad token: no workspace found")
-        
+
         usage(f, args, kwargs, api_token, workspace_id)
         return f(*args, **kwargs)
 
