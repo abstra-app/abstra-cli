@@ -10,7 +10,7 @@ HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
 
 
 def hf_api_runner(method, path, data=None):
-    api_token, workspace_id = get_auth_info()
+    api_token, workspace_id, _ = get_auth_info()
     response = requests.request(
         method,
         f"{HACKERFORMS_API_URL}/workspaces/{workspace_id}/{path}",
@@ -82,7 +82,7 @@ def list_workspace_vars():
 
 
 def add_workspace_vars(raw_vars):
-    _, workspace_id = get_auth_info()
+    _, workspace_id, _ = get_auth_info()
     vars = [
         {"name": v["name"], "value": v["value"], "workspace_id": workspace_id}
         for v in raw_vars
@@ -111,7 +111,7 @@ def add_workspace_vars(raw_vars):
 
 
 def add_workspace_packages(raw_packages):
-    _, workspace_id = get_auth_info()
+    _, workspace_id, _ = get_auth_info()
     packages = [
         {"name": p["name"], "version": p["version"], "workspace_id": workspace_id}
         for p in raw_packages
