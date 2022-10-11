@@ -17,7 +17,6 @@ def add_form(name: str, code: str, **kwargs):
 
 
 def update_form(form_id: str, **kwargs):  
-  print(form_id, kwargs)
-  # data = update_workspace_form(form_id, **kwargs)
-  # form_updated_message(form_id)
+  update_workspace_form(form_id, **kwargs)
+  form_updated_message(form_id)
 

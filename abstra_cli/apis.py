@@ -4,7 +4,7 @@ import urllib.request
 import urllib.response
 
 from .utils_config import get_auth_info, get_credentials
-
+from .utils import remove_from_dict
 
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
 
@@ -190,7 +190,7 @@ def update_workspace_form(form_id, **fields_to_update):
     _, workspace_id = get_auth_info()
 
     form_query = """
-        mutation UpdateForm($id: uuid!, $fields: forms_set_input) {
+        mutation UpdateForm($id: uuid!, $fields: forms_set_input, $code: String = "",) {
             update_forms_by_pk(pk_columns: {id: $id}, _set: $fields) {
                 id
                 title
@@ -205,15 +205,19 @@ def update_workspace_form(form_id, **fields_to_update):
 
     code = fields_to_update.get('code')
     if code:
+        remove_from_dict(['code'], fields_to_update)
         script = """
-        
+            update_scripts(where: {form: {id: {_eq: $id}}}, _set: {code: $code}) {
+                returning {
+                    code
+                }
+            }
         """
         form_query = form_query.replace('$script_mutation', script)
     else:
         form_query = form_query.replace('$script_mutation', '')
-
     return (
-        hf_hasura_runner(form_query, {'id': form_id, 'fields': fields_to_update })
+        hf_hasura_runner(form_query, {'id': form_id, 'fields': fields_to_update, 'code': code  })
         .get("update_forms_by_pk", {})
     )
 def delete_workspace_packages(packages):

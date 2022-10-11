@@ -30,7 +30,8 @@ from .messages import (
     required_parameter,
     required_argument,
     invalid_variable,
-    duplicate_variable
+    duplicate_variable,
+    code_and_file_not_allowed
 )
 
 from .services import (
@@ -191,7 +192,14 @@ class Forms(Resource):
             required_parameter('name')
             exit()
 
+
         file = kwargs.get("file") or kwargs.get("f")
+        code = kwargs.get("code") or kwargs.get("c")
+
+        if file and code:
+            code_and_file_not_allowed()
+            exit()
+
         if file:
             with open(file, "r") as f:
                 code = f.read()
@@ -199,7 +207,6 @@ class Forms(Resource):
             add_form(name, code, **kwargs)
             exit()
 
-        code = kwargs.get("code") or kwargs.get("c")
         if code:
             remove_from_dict(['name', 'n', 'code', 'c'], kwargs)
             add_form(name, code, **kwargs)
@@ -217,21 +224,26 @@ class Forms(Resource):
             exit()
 
         name = kwargs.get('name') or kwargs.get("n")
+
         if name:
             kwargs['title'] = name
             parameters_to_remove.extend(['name', 'n'])
 
         file = kwargs.get("file") or kwargs.get("f")
+        code = kwargs.get("code") or kwargs.get("c")
+        
+        if file and code:
+            code_and_file_not_allowed()
+            exit()
+        
         if file:
             with open(file, "r") as f:
                 code = f.read()
                 kwargs['code'] = code
                 parameters_to_remove.extend(['file', 'f', 'c'])
-        else:
-            code = kwargs.get("c")                                
-            if code:
-                kwargs['code'] = code
-                parameters_to_remove.extend(['c'])
+        elif code:
+            kwargs['code'] = code
+            parameters_to_remove.extend(['c'])
             
         remove_from_dict(parameters_to_remove, kwargs)
         update_form(form_id, **kwargs)

@@ -19,3 +19,6 @@ def invalid_variable(argument):
 
 def duplicate_variable(argument):
   print(f"duplicate variable: {argument}")
+
+def code_and_file_not_allowed():
+  print("you can set either code or file parameters, but not both.")
