@@ -1,5 +1,4 @@
 import os
-
 from .public_apis import get_workspace_from_token
 
 ABSTRA_FOLDER = ".abstra/"

@@ -186,7 +186,36 @@ def add_workspace_form(name, code):
         .get("returning", {})
     )
 
+def update_workspace_form(form_id, **fields_to_update):
+    _, workspace_id = get_auth_info()
 
+    form_query = """
+        mutation UpdateForm($id: uuid!, $fields: forms_set_input) {
+            update_forms_by_pk(pk_columns: {id: $id}, _set: $fields) {
+                id
+                title
+                script {
+                    id
+                    code
+                }
+            }
+            $script_mutation
+        }
+    """
+
+    code = fields_to_update.get('code')
+    if code:
+        script = """
+        
+        """
+        form_query = form_query.replace('$script_mutation', script)
+    else:
+        form_query = form_query.replace('$script_mutation', '')
+
+    return (
+        hf_hasura_runner(form_query, {'id': form_id, 'fields': fields_to_update })
+        .get("update_forms_by_pk", {})
+    )
 def delete_workspace_packages(packages):
     query = """
         mutation DeletePackages($packages: [String!]) {

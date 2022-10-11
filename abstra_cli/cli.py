@@ -3,11 +3,7 @@ import fire
 from .cli_helpers import read_credentials
 from .utils_config import credentials_check, save_credentials
 from .resources import Files, Vars, Packages, Forms
-
-
-def not_implemented(*args, **kwargs):
-    print("Invalid command")
-
+from .messages import not_implemented
 
 class CLI(object):
     def configure(self, api_token=None):
@@ -37,15 +33,24 @@ class CLI(object):
         add_func(*args, **kwargs)
 
     @credentials_check
+    def update(self, resource, *args, **kwargs):
+        update_func = {
+            "form": Forms.update
+        }.get(resource, not_implemented)
+
+        update_func(*args, **kwargs)
+
+
+    @credentials_check
     def remove(self, resource, *args, **kwargs):
-        add_func = {
+        remove_func = {
             "vars": Vars.remove,
             "files": Files.remove,
             "packages": Packages.remove,
             "form": Forms.remove
         }.get(resource, not_implemented)
 
-        add_func(*args, **kwargs)
+        remove_func(*args, **kwargs)
 
     # Aliases
     @credentials_check

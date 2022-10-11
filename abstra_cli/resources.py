@@ -26,11 +26,16 @@ from .apis import (
 )
 
 from .messages import (
-    form_created_message
+    form_created_message,
+    required_parameter,
+    required_argument,
+    invalid_variable,
+    duplicate_variable
 )
 
 from .services import (
-    add_code
+    add_form,
+    update_form
 )
 
 
@@ -112,10 +117,10 @@ class Vars(Resource):
         for var in vars:
             name, value = parse_env_var(var)
             if not name or not value:
-                print(f"Invalid variable: {var}")
+                invalid_variable(var)
                 return False
             if name in processed_names:
-                print(f"Duplicate variable: {var}")
+                duplicate_variable(var)
                 return False
             processed_vars.append({"name": name, "value": value})
 
@@ -183,7 +188,7 @@ class Forms(Resource):
 
         name = kwargs.get("name") or kwargs.get("n")
         if not name:
-            print("required parameter: --name [name]")
+            required_parameter('name')
             exit()
 
         file = kwargs.get("file") or kwargs.get("f")
@@ -191,23 +196,51 @@ class Forms(Resource):
             with open(file, "r") as f:
                 code = f.read()
             remove_from_dict(['name', 'n', 'file', 'f'], kwargs)
-            add_code(name, code, **kwargs)
+            add_form(name, code, **kwargs)
             exit()
 
         code = kwargs.get("code") or kwargs.get("c")
         if code:
             remove_from_dict(['name', 'n', 'code', 'c'], kwargs)
-            add_code(name, code, **kwargs)
+            add_form(name, code, **kwargs)
             exit()
 
-        add_code(name, EMPTY_FORM)
+        add_form(name, EMPTY_FORM)
 
+    @staticmethod
+    def update(*args, **kwargs):
+        form_id = args[0]
+        parameters_to_remove = []
+        
+        if not form_id:
+            required_argument('form_id')
+            exit()
 
+        name = kwargs.get('name') or kwargs.get("n")
+        if name:
+            kwargs['title'] = name
+            parameters_to_remove.extend(['name', 'n'])
+
+        file = kwargs.get("file") or kwargs.get("f")
+        if file:
+            with open(file, "r") as f:
+                code = f.read()
+                kwargs['code'] = code
+                parameters_to_remove.extend(['file', 'f', 'c'])
+        else:
+            code = kwargs.get("c")                                
+            if code:
+                kwargs['code'] = code
+                parameters_to_remove.extend(['c'])
+            
+        remove_from_dict(parameters_to_remove, kwargs)
+        update_form(form_id, **kwargs)
+        
 
     @staticmethod
     def remove(*args, **kwargs):
         form_id = args[0]
         if not form_id:
-            print("required parameter: [form_id]")
+            required_argument('form_id')
             exit()
         delete_workspace_form(args[0])
