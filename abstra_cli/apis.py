@@ -55,7 +55,6 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    # print(jsond)
     return jsond["data"]
 
 
@@ -183,7 +182,7 @@ def add_workspace_form(name, code):
     """
     return (
         hf_hasura_runner(query, {"form_data": form_data})
-        .get("insert_forms_one", {})
+        .get("insert_forms", {})
         .get("returning", {})
     )
 

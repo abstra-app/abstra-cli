@@ -10,10 +10,9 @@ from .cli_helpers import (
     show_progress
 )
 from .file_utils import files_from_directory
-from .utils import parse_env_var, parse_package
+from .utils import parse_env_var, parse_package, remove_from_dict
 from .apis import (
     add_workspace_packages,
-    add_workspace_form,
     add_workspace_vars,
     delete_file,
     delete_workspace_form,
@@ -24,6 +23,14 @@ from .apis import (
     list_workspace_packages,
     list_workspace_forms,
     upload_file,
+)
+
+from .messages import (
+    form_created_message
+)
+
+from .services import (
+    add_code
 )
 
 
@@ -172,17 +179,29 @@ class Forms(Resource):
 
     @staticmethod
     def add(*args, **kwargs):
+        EMPTY_FORM = 'from hackerforms import *'
+
         name = kwargs.get("name") or kwargs.get("n")
         if not name:
             print("required parameter: --name [name]")
-        file = kwargs.get("file") or kwargs.get("f")
-        if not file:
-            print("required parameter: --file [file]")
-        if not name or not file:
             exit()
-        with open(file, "r") as f:
-            code = f.read()
-        add_workspace_form(name=name, code=code)
+
+        file = kwargs.get("file") or kwargs.get("f")
+        if file:
+            with open(file, "r") as f:
+                code = f.read()
+            remove_from_dict(['name', 'n', 'file', 'f'], kwargs)
+            add_code(name, code, **kwargs)
+            exit()
+
+        code = kwargs.get("code") or kwargs.get("c")
+        if code:
+            remove_from_dict(['name', 'n', 'code', 'c'], kwargs)
+            add_code(name, code, **kwargs)
+            exit()
+
+        add_code(name, EMPTY_FORM)
+
 
 
     @staticmethod
