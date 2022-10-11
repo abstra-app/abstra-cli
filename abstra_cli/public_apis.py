@@ -11,7 +11,7 @@ def get_info_from_token(api_token):
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
     response_json = response.json()
-    author_id =response_json.get("author_id")
+    author_id = response_json.get("author_id")
     workspaces = response_json.get("workspaces", [{}])
 
     workspace_id = None
