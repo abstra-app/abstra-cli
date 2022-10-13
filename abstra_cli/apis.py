@@ -152,7 +152,7 @@ def add_workspace_packages(raw_packages):
 
 
 def add_workspace_form(data):
-    _, workspace_id = get_auth_info()
+    _, workspace_id, _ = get_auth_info()
     form_data = {
         "title": data["name"],
         "workspace_id": workspace_id,
@@ -164,6 +164,7 @@ def add_workspace_form(data):
             }
         },
     }
+    print(data)
 
     data.pop("name")
     data.pop("code")

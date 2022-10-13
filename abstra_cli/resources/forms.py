@@ -14,7 +14,10 @@ from ..messages import (
     invalid_flag_parameter_value,
     invalid_non_flag_parameter_value,
     missing_parameters_to_update,
+    invalid_background_parameter_value
 )
+
+from ..utils import check_color
 
 NAME_PARAMETERS = ["name"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
@@ -40,7 +43,7 @@ NON_FLAG_PARAMETERS = (
 FORM_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
-def evaluate_parameter_name(parameters, form_data):
+def evaluate_parameter_name(parameters, form_data: dict) -> dict:
     name = parameters.get("name") or parameters.get("n")
     if not name:
         required_parameter("name")
@@ -50,7 +53,7 @@ def evaluate_parameter_name(parameters, form_data):
     return form_data
 
 
-def evaluate_parameters_file_and_code(parameters, form_data):
+def add_parameters_file_and_code(parameters: dict, form_data: dict) -> dict:
     EMPTY_FORM = "from hackerforms import *"
     file = parameters.get("file") or parameters.get("f")
     code = parameters.get("code") or parameters.get("c")
@@ -129,7 +132,17 @@ def evaluate_flag_parameters(parameters, form_data, flag_parameters):
 
     return form_data
 
+def evaluate_background_parameter_value(parameters: dict, form_data: dict):
+    background = parameters.get('background', None)
+    if not background:
+        return
 
+    if check_color(background):
+        form_data['theme'] = background
+        return form_data
+    invalid_background_parameter_value()
+    exit()
+        
 class Forms(Resource):
     @staticmethod
     def list(*args, **kwargs):
@@ -141,7 +154,8 @@ class Forms(Resource):
         form_data = {}
         check_valid_parameters(kwargs, FORM_PARAMETERS)
         form_data = evaluate_parameter_name(kwargs, form_data.copy())
-        form_data = evaluate_parameters_file_and_code(kwargs, form_data.copy())
+        form_data = add_parameters_file_and_code(kwargs, form_data.copy())
+        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
         form_data = evaluate_non_flag_parameters_values(
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS
@@ -164,6 +178,7 @@ class Forms(Resource):
         form_data = {}
         check_valid_parameters(kwargs, FORM_PARAMETERS)
         form_data = update_parameters_file_and_code(kwargs, form_data.copy())
+        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
         form_data = evaluate_non_flag_parameters_values(
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS

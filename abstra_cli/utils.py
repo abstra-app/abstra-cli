@@ -1,5 +1,8 @@
 import re
+from colour import Color
 
+SPACE = " "
+EMPTY = ""
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
@@ -37,3 +40,11 @@ def parse_package(pkg):
         return None, None
 
     return pkg, None
+
+def check_color(color: str) -> bool:
+    try:
+        color = color.replace(SPACE, EMPTY) if isinstance(color, str) else None
+        Color(color)
+        return True
+    except ValueError:
+        return False

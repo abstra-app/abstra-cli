@@ -35,6 +35,9 @@ def invalid_flag_parameter_value(parameter):
 def invalid_non_flag_parameter_value(parameter):
     print(f"invalid parameter value: --{parameter} [{parameter}] value must be string")
 
+def invalid_background_parameter_value():
+    print(f"invalid parameter value: --background [background] value must be a color or image path")
+
 
 def duplicate_variable(argument):
     print(f"duplicate variable: {argument}")
