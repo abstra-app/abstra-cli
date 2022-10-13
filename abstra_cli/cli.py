@@ -1,9 +1,15 @@
+
 import fire
 
-from .cli_helpers import read_credentials
-from .utils_config import credentials_check, save_credentials
-from .resources import Files, Vars, Packages, Forms
-from .messages import not_implemented
+from abstra_cli.cli_helpers import read_credentials
+from abstra_cli.utils_config import credentials_check, save_credentials
+from abstra_cli.messages import not_implemented
+
+from abstra_cli.resources import Forms
+from abstra_cli.resources import Files
+from abstra_cli.resources import Packages
+from abstra_cli.resources import Vars
+
 
 class CLI(object):
     def configure(self, api_token=None):

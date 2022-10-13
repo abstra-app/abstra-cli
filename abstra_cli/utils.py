@@ -37,7 +37,3 @@ def parse_package(pkg):
         return None, None
 
     return pkg, None
-
-def remove_from_dict(keys, obj):
-    for key in keys:
-        obj.pop(key, None)

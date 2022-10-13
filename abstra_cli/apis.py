@@ -4,10 +4,9 @@ import urllib.request
 import urllib.response
 
 from .utils_config import get_auth_info, get_credentials
-from .utils import remove_from_dict
 
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
-
+HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
 
 def hf_api_runner(method, path, data=None):
     api_token, workspace_id = get_auth_info()
@@ -42,9 +41,6 @@ def delete_file(filepath):
     return hf_api_runner("DELETE", "file", {"filepath": filepath})
 
 
-HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
-
-
 def hf_hasura_runner(query, variables={}):
     api_token = get_credentials()
     response = requests.post(
@@ -55,7 +51,9 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    return jsond["data"]
+    if "data" in jsond:
+        return jsond["data"]
+    return jsond['errors'] 
 
 
 def list_workspace_packages():
@@ -151,19 +149,24 @@ def add_workspace_packages(raw_packages):
         .get("returning", [])
     )
 
-def add_workspace_form(name, code):
+def add_workspace_form(data):
     _, workspace_id = get_auth_info()
     form_data = {
-        'title': name,
+        'title': data['name'],
         'workspace_id': workspace_id,
         'script': {
             'data': {
-                'code': code,
+                'code': data['code'],
                 'workspace_id': workspace_id,
-                'name': name
+                'name': data['name']
             }
         }
     }
+    
+    data.pop('name')
+    data.pop('code')
+    form_data.update(data)
+
     query = """
         mutation InsertForm($form_data: [forms_insert_input!]!) {
             insert_forms(
@@ -186,12 +189,30 @@ def add_workspace_form(name, code):
         .get("returning", {})
     )
 
-def update_workspace_form(form_id, **fields_to_update):
-    _, workspace_id = get_auth_info()
+def update_workspace_form(form_id, data):
+    form_data = {}
+    script_data = {}
+    name = data.get('name', None)
+    if name:
+        data.pop('name')
+        form_data['title'] =  name
+        script_data['name'] = name
+    
+    code = data.get('code', None)
+    if code:
+        data.pop('code')
+        if 'data' in script_data:
+            script_data['code'] = code
+        else:
+            script_data = {}
+            script_data['code'] = code
+    
+    for param, value in data.items():
+        form_data[param] = value
 
     form_query = """
-        mutation UpdateForm($id: uuid!, $fields: forms_set_input, $code: String = "",) {
-            update_forms_by_pk(pk_columns: {id: $id}, _set: $fields) {
+        mutation UpdateForm($id: uuid!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
+            update_forms_by_pk(pk_columns: {id: $id}, _set: $form_data) {
                 id
                 title
                 script {
@@ -203,12 +224,11 @@ def update_workspace_form(form_id, **fields_to_update):
         }
     """
 
-    code = fields_to_update.get('code')
-    if code:
-        remove_from_dict(['code'], fields_to_update)
+    if code or name:
         script = """
-            update_scripts(where: {form: {id: {_eq: $id}}}, _set: {code: $code}) {
+            update_scripts(where: {form: {id: {_eq: $id}}}, _set: $script_data) {
                 returning {
+                    name
                     code
                 }
             }
@@ -216,8 +236,9 @@ def update_workspace_form(form_id, **fields_to_update):
         form_query = form_query.replace('$script_mutation', script)
     else:
         form_query = form_query.replace('$script_mutation', '')
+    
     return (
-        hf_hasura_runner(form_query, {'id': form_id, 'fields': fields_to_update, 'code': code  })
+        hf_hasura_runner(form_query, {'id': form_id, 'form_data': form_data, 'script_data': script_data  })
         .get("update_forms_by_pk", {})
     )
 def delete_workspace_packages(packages):
