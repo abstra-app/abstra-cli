@@ -54,6 +54,14 @@ class CLI(object):
 
         remove_func(*args, **kwargs)
 
+    @credentials_check
+    def play(self, resource, *args, **kwargs):
+        play_func = {
+            "form": Forms.play,
+        }.get(resource, not_implemented)
+
+        play_func(*args, **kwargs)
+
     # Aliases
     def upload(self, *args, **kwargs):
         if not len(args):

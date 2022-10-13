@@ -1,3 +1,5 @@
+from webbrowser import open
+
 from abstra_cli.resources.resources import Resource
 from ..apis import (
     add_workspace_form,
@@ -5,6 +7,7 @@ from ..apis import (
     delete_workspace_form,
     update_workspace_form,
     asset_upload,
+    get_subdomain_by_form_id,
 )
 from ..cli_helpers import print_forms
 from ..messages import (
@@ -22,7 +25,13 @@ from ..messages import (
     form_updated_message,
 )
 
-from ..utils import check_color, check_is_image_path, slugify_filename, path_exists
+from ..utils import (
+    check_color,
+    check_is_image_path,
+    slugify_filename,
+    path_exists,
+    get_prod_form_url,
+)
 
 NAME_PARAMETERS = ["name"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
@@ -190,12 +199,12 @@ class Forms(Resource):
 
     @staticmethod
     def update(*args, **kwargs):
-        form_id = args[0]
 
-        if not form_id:
+        if not len(args):
             required_argument("form_id")
             exit()
 
+        form_id = args[0]
         if not len(kwargs):
             missing_parameters_to_update(form_id)
             exit()
@@ -216,8 +225,24 @@ class Forms(Resource):
 
     @staticmethod
     def remove(*args, **kwargs):
-        form_id = args[0]
-        if not form_id:
+        if not len(args):
             required_argument("form_id")
             exit()
-        delete_workspace_form(args[0])
+        form_id = args[0]
+        delete_workspace_form(form_id)
+
+    @staticmethod
+    def play(*args, **kwargs):
+        if not len(args):
+            required_argument("form_id")
+            exit()
+        form_id = args[0]
+        response = get_subdomain_by_form_id(form_id)
+        if not len(response):
+            print(
+                "There is no workspace related to this form id. Please, verify whether it is correct."
+            )
+            exit()
+        subdomain_name = response[0]["name"]
+        url = get_prod_form_url(subdomain_name, form_id)
+        open(url)

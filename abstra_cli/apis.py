@@ -80,7 +80,6 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    print(jsond)
     if "data" in jsond:
         return jsond["data"]
     return jsond["errors"]
@@ -120,6 +119,18 @@ def list_workspace_vars():
         }
     """
     return hf_hasura_runner(query).get("environment_variables", [])
+
+
+def get_subdomain_by_form_id(form_id: str):
+    query = """
+        query SubdomainByFormId($form_id: uuid!) {
+            subdomains(where: {workspace: {forms: {id: {_eq: $form_id}}}}) {
+                name
+            }
+        }
+    """
+
+    return hf_hasura_runner(query, {"form_id": form_id}).get("subdomains", [])
 
 
 def add_workspace_vars(raw_vars):
@@ -272,7 +283,6 @@ def update_workspace_form(form_id, data):
     else:
         form_query = form_query.replace("$script_mutation", "")
 
-    print(form_query)
     return hf_hasura_runner(form_query, request_data).get("update_forms_by_pk", {})
 
 
