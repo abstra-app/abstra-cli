@@ -7,6 +7,7 @@ from .utils_config import get_auth_info, get_credentials
 
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
 HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
+ABSTRA_ASSETS_UPLOAD_URL = "https://upload.abstra.cloud"
 
 
 def hf_api_runner(method, path, data=None):
@@ -28,6 +29,34 @@ def upload_file(filepath, file):
     res = urllib.request.urlopen(req)
     return res.status < 400
 
+def asset_upload(filepath, file):
+    response = requests.request(
+        "POST" ,
+        f"{ABSTRA_ASSETS_UPLOAD_URL}/asset/",
+        headers={
+            "cache-control": "no-cache",
+            "Pragma": "no-cache",
+            "content-type": "application/json",
+        },
+        data=json.dumps({"filepath": filepath})
+    )
+
+
+    response_json = response.json()
+    try:
+
+        req = urllib.request.Request(
+            url=response_json['putURL'], method="PUT", data=file
+        )
+        res = urllib.request.urlopen(req)
+        if res.status < 400:
+            return response_json['getURL']
+    except Exception as e:
+        print(e)
+    
+    raise Exception('Some error ocurred in asset upload')
+    
+    
 
 def get_file_signed_url(filepath):
     response_json = hf_api_runner("POST", "get-url", {"filepath": filepath})
@@ -52,6 +81,7 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
+    print(jsond)
     if "data" in jsond:
         return jsond["data"]
     return jsond["errors"]
@@ -164,7 +194,6 @@ def add_workspace_form(data):
             }
         },
     }
-    print(data)
 
     data.pop("name")
     data.pop("code")
@@ -189,7 +218,7 @@ def add_workspace_form(data):
     return (
         hf_hasura_runner(query, {"form_data": form_data})
         .get("insert_forms", {})
-        .get("returning", {})
+        .get("returning", {})[0]
     )
 
 
@@ -213,6 +242,8 @@ def update_workspace_form(form_id, data):
 
     for param, value in data.items():
         form_data[param] = value
+    
+    request_data = {"id": form_id, "form_data": form_data}
 
     form_query = """
         mutation UpdateForm($id: uuid!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
@@ -227,7 +258,7 @@ def update_workspace_form(form_id, data):
             $script_mutation
         }
     """
-
+    
     if code or name:
         script = """
             update_scripts(where: {form: {id: {_eq: $id}}}, _set: $script_data) {
@@ -238,11 +269,13 @@ def update_workspace_form(form_id, data):
             }
         """
         form_query = form_query.replace("$script_mutation", script)
+        request_data['script_data'] = script_data
     else:
         form_query = form_query.replace("$script_mutation", "")
 
+    print(form_query)
     return hf_hasura_runner(
-        form_query, {"id": form_id, "form_data": form_data, "script_data": script_data}
+        form_query, request_data
     ).get("update_forms_by_pk", {})
 
 

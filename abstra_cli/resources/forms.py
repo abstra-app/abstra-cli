@@ -4,6 +4,7 @@ from ..apis import (
     list_workspace_forms,
     delete_workspace_form,
     update_workspace_form,
+    asset_upload
 )
 from ..cli_helpers import print_forms
 from ..messages import (
@@ -14,10 +15,14 @@ from ..messages import (
     invalid_flag_parameter_value,
     invalid_non_flag_parameter_value,
     missing_parameters_to_update,
-    invalid_background_parameter_value
+    invalid_background_parameter_value,
+    file_path_does_not_exists_message,
+    error_upload_background_message,
+    form_created_message,
+    form_updated_message
 )
 
-from ..utils import check_color
+from ..utils import check_color, check_is_image_path, slugify_filename, path_exists
 
 NAME_PARAMETERS = ["name"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
@@ -140,6 +145,23 @@ def evaluate_background_parameter_value(parameters: dict, form_data: dict):
     if check_color(background):
         form_data['theme'] = background
         return form_data
+
+    if not path_exists(background):
+        file_path_does_not_exists_message(background)
+        exit()
+
+    if check_is_image_path(background):
+        filename = slugify_filename(background)
+        try:
+            with open(background, 'rb') as f:
+                file = f.read()
+                url = asset_upload(filename, file)
+                form_data['theme'] = url
+                return form_data
+        except Exception as e:
+            error_upload_background_message(background)
+            exit()
+
     invalid_background_parameter_value()
     exit()
         
@@ -161,7 +183,8 @@ class Forms(Resource):
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS
         )
         form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS)
-        add_workspace_form(form_data)
+        form_id = add_workspace_form(form_data)['id']
+        form_created_message(form_id)
 
     @staticmethod
     def update(*args, **kwargs):
@@ -187,6 +210,7 @@ class Forms(Resource):
             kwargs, form_data.copy(), OTHER_PARAMETERS + NAME_PARAMETERS
         )
         update_workspace_form(form_id, form_data)
+        form_updated_message(form_id)
 
     @staticmethod
     def remove(*args, **kwargs):
