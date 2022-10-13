@@ -6,7 +6,8 @@ from ..messages import (
     invalid_parameter, 
     required_argument, 
     required_parameter, 
-    invalid_flag_parameter, 
+    invalid_flag_parameter_value, 
+    invalid_non_flag_parameter_value,
     missing_parameters_to_update
 )
 
@@ -19,7 +20,9 @@ OTHER_PARAMETERS = [
     'main_color', 'start_button_text', 'logo_url',
     'log_messages', 'font_color', 'welcome_title', 'brand_name' 
 ]
-FORM_PARAMETERS = NAME_PARAMETERS + CODE_PARAMETERS + BACKGROUND_PARAMETERS + FLAG_PARAMETERS + OTHER_PARAMETERS
+NON_FLAG_PARAMETERS = NAME_PARAMETERS + CODE_PARAMETERS + BACKGROUND_PARAMETERS + OTHER_PARAMETERS
+
+FORM_PARAMETERS =  FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
 def evaluate_parameter_name(parameters, form_data):
@@ -80,22 +83,30 @@ def build_other_parameters(parameters, form_data, valid_parameters):
 
 
 def check_valid_parameters(parameters, valid_parameters):
-    for param in parameters:
+    for param in parameters.keys():
         if param not in valid_parameters:
             invalid_parameter(param)
             exit()
 
+def evaluate_non_flag_parameters_values(parameters, form_data, non_flag_parameters):
+    for param, value in parameters.items():
+        if param in non_flag_parameters and value in [True, False]:
+            invalid_non_flag_parameter_value(param)
+            exit()
+
+    return form_data
+
 def evaluate_flag_parameters(parameters, form_data, flag_parameters):
     for param, value in parameters.items():
         if param in flag_parameters:
-            if value == 'true':
+            if value == 'true' or value == True:
                 form_data[param] = True
                 continue
-            if value == 'false':
+            if value == 'false' or value == False:
                 form_data[param] = False
                 continue
         
-            invalid_flag_parameter(param)
+            invalid_flag_parameter_value(param)
             exit()
 
     return form_data
@@ -113,6 +124,7 @@ class Forms(Resource):
         form_data = evaluate_parameter_name(kwargs, form_data.copy())
         form_data = evaluate_parameters_file_and_code(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
+        form_data= evaluate_non_flag_parameters_values(kwargs, form_data.copy(), NON_FLAG_PARAMETERS)
         form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS)
         add_workspace_form(form_data)
 
@@ -133,8 +145,9 @@ class Forms(Resource):
         check_valid_parameters(kwargs, FORM_PARAMETERS)
         form_data = update_parameters_file_and_code(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
+        form_data= evaluate_non_flag_parameters_values(kwargs, form_data.copy(), NON_FLAG_PARAMETERS)
         form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS + NAME_PARAMETERS)
-        print(update_workspace_form(form_id, form_data))
+        update_workspace_form(form_id, form_data)
 
     @staticmethod
     def remove(*args, **kwargs):

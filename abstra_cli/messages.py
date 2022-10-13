@@ -19,8 +19,11 @@ def invalid_variable(argument):
 def invalid_parameter(parameter):
   print(f"invalid parameter: --{parameter} [{parameter}]")
 
-def invalid_flag_parameter(parameter):
+def invalid_flag_parameter_value(parameter):
   print(f"invalid parameter value: --{parameter} [{parameter}] value must be true or false")
+
+def invalid_non_flag_parameter_value(parameter):
+  print(f"invalid parameter value: --{parameter} [{parameter}] value must be string")
 
 def duplicate_variable(argument):
   print(f"duplicate variable: {argument}")
