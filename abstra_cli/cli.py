@@ -1,4 +1,3 @@
-
 import fire
 
 from abstra_cli.cli_helpers import read_credentials
@@ -33,19 +32,16 @@ class CLI(object):
             "vars": Vars.add,
             "files": Files.add,
             "packages": Packages.add,
-            "form": Forms.add
+            "form": Forms.add,
         }.get(resource, not_implemented)
 
         add_func(*args, **kwargs)
 
     @credentials_check
     def update(self, resource, *args, **kwargs):
-        update_func = {
-            "form": Forms.update
-        }.get(resource, not_implemented)
+        update_func = {"form": Forms.update}.get(resource, not_implemented)
 
         update_func(*args, **kwargs)
-
 
     @credentials_check
     def remove(self, resource, *args, **kwargs):
@@ -53,7 +49,7 @@ class CLI(object):
             "vars": Vars.remove,
             "files": Files.remove,
             "packages": Packages.remove,
-            "form": Forms.remove
+            "form": Forms.remove,
         }.get(resource, not_implemented)
 
         remove_func(*args, **kwargs)

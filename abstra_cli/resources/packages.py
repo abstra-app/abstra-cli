@@ -1,6 +1,10 @@
 from abstra_cli.utils import parse_package
 from abstra_cli.cli_helpers import print_packages
-from abstra_cli.apis import add_workspace_packages, list_workspace_packages, delete_workspace_packages
+from abstra_cli.apis import (
+    add_workspace_packages,
+    list_workspace_packages,
+    delete_workspace_packages,
+)
 from abstra_cli.resources.resources import Resource
 
 
