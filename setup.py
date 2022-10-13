@@ -30,7 +30,7 @@ setup(
         "fire",
         "simple_websocket_server",
         "progress",
-        "colour"
+        "colour",
     ],
     entry_points={
         "console_scripts": [
