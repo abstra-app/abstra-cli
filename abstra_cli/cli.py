@@ -59,21 +59,17 @@ class CLI(object):
         remove_func(*args, **kwargs)
 
     # Aliases
-    @credentials_check
     def upload(self, *args, **kwargs):
         if not len(args):
             args = ["."]
         self.add("files", *args, **kwargs)
 
-    @credentials_check
     def ls(self, *args, **kwargs):
         self.list("files", *args, **kwargs)
 
-    @credentials_check
     def rm(self, *args, **kwargs):
         self.remove("files", *args, **kwargs)
 
-    @credentials_check
     def install(self, *args, **kwargs):
         self.add("packages", *args, **kwargs)
 
