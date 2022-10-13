@@ -4,7 +4,7 @@ from ..apis import (
     list_workspace_forms,
     delete_workspace_form,
     update_workspace_form,
-    asset_upload
+    asset_upload,
 )
 from ..cli_helpers import print_forms
 from ..messages import (
@@ -19,7 +19,7 @@ from ..messages import (
     file_path_does_not_exists_message,
     error_upload_background_message,
     form_created_message,
-    form_updated_message
+    form_updated_message,
 )
 
 from ..utils import check_color, check_is_image_path, slugify_filename, path_exists
@@ -137,13 +137,14 @@ def evaluate_flag_parameters(parameters, form_data, flag_parameters):
 
     return form_data
 
+
 def evaluate_background_parameter_value(parameters: dict, form_data: dict):
-    background = parameters.get('background', None)
+    background = parameters.get("background", None)
     if not background:
         return
 
     if check_color(background):
-        form_data['theme'] = background
+        form_data["theme"] = background
         return form_data
 
     if not path_exists(background):
@@ -153,10 +154,10 @@ def evaluate_background_parameter_value(parameters: dict, form_data: dict):
     if check_is_image_path(background):
         filename = slugify_filename(background)
         try:
-            with open(background, 'rb') as f:
+            with open(background, "rb") as f:
                 file = f.read()
                 url = asset_upload(filename, file)
-                form_data['theme'] = url
+                form_data["theme"] = url
                 return form_data
         except Exception as e:
             error_upload_background_message(background)
@@ -164,7 +165,8 @@ def evaluate_background_parameter_value(parameters: dict, form_data: dict):
 
     invalid_background_parameter_value()
     exit()
-        
+
+
 class Forms(Resource):
     @staticmethod
     def list(*args, **kwargs):
@@ -183,7 +185,7 @@ class Forms(Resource):
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS
         )
         form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS)
-        form_id = add_workspace_form(form_data)['id']
+        form_id = add_workspace_form(form_data)["id"]
         form_created_message(form_id)
 
     @staticmethod

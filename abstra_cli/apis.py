@@ -29,34 +29,33 @@ def upload_file(filepath, file):
     res = urllib.request.urlopen(req)
     return res.status < 400
 
+
 def asset_upload(filepath, file):
     response = requests.request(
-        "POST" ,
+        "POST",
         f"{ABSTRA_ASSETS_UPLOAD_URL}/asset/",
         headers={
             "cache-control": "no-cache",
             "Pragma": "no-cache",
             "content-type": "application/json",
         },
-        data=json.dumps({"filepath": filepath})
+        data=json.dumps({"filepath": filepath}),
     )
-
 
     response_json = response.json()
     try:
 
         req = urllib.request.Request(
-            url=response_json['putURL'], method="PUT", data=file
+            url=response_json["putURL"], method="PUT", data=file
         )
         res = urllib.request.urlopen(req)
         if res.status < 400:
-            return response_json['getURL']
+            return response_json["getURL"]
     except Exception as e:
         print(e)
-    
-    raise Exception('Some error ocurred in asset upload')
-    
-    
+
+    raise Exception("Some error ocurred in asset upload")
+
 
 def get_file_signed_url(filepath):
     response_json = hf_api_runner("POST", "get-url", {"filepath": filepath})
@@ -242,7 +241,7 @@ def update_workspace_form(form_id, data):
 
     for param, value in data.items():
         form_data[param] = value
-    
+
     request_data = {"id": form_id, "form_data": form_data}
 
     form_query = """
@@ -258,7 +257,7 @@ def update_workspace_form(form_id, data):
             $script_mutation
         }
     """
-    
+
     if code or name:
         script = """
             update_scripts(where: {form: {id: {_eq: $id}}}, _set: $script_data) {
@@ -269,14 +268,12 @@ def update_workspace_form(form_id, data):
             }
         """
         form_query = form_query.replace("$script_mutation", script)
-        request_data['script_data'] = script_data
+        request_data["script_data"] = script_data
     else:
         form_query = form_query.replace("$script_mutation", "")
 
     print(form_query)
-    return hf_hasura_runner(
-        form_query, request_data
-    ).get("update_forms_by_pk", {})
+    return hf_hasura_runner(form_query, request_data).get("update_forms_by_pk", {})
 
 
 def delete_workspace_packages(packages):
