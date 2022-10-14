@@ -1,4 +1,4 @@
-from webbrowser import open
+import webbrowser
 
 from abstra_cli.resources.resources import Resource
 from ..apis import (
@@ -245,4 +245,4 @@ class Forms(Resource):
             exit()
         subdomain_name = response[0]["name"]
         url = get_prod_form_url(subdomain_name, form_id)
-        open(url)
+        webbrowser.open(url)
