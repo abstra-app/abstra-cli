@@ -9,6 +9,7 @@ from abstra_cli.resources import Files
 from abstra_cli.resources import Packages
 from abstra_cli.resources import Vars
 
+
 class CLI(object):
     """
     A CLI to manage your Abstra Cloud Workspace environment.
@@ -42,7 +43,7 @@ class CLI(object):
         list_func()
 
     def add(self, resource, *args, **kwargs):
-        credentials_check(self.add, *((resource,) + args) , **kwargs)
+        credentials_check(self.add, *((resource,) + args), **kwargs)
 
         add_func = {
             "vars": Vars.add,
@@ -54,13 +55,13 @@ class CLI(object):
         add_func(*args, **kwargs)
 
     def update(self, resource, *args, **kwargs):
-        credentials_check(self.update, *((resource,) + args) , **kwargs)
+        credentials_check(self.update, *((resource,) + args), **kwargs)
         update_func = {"form": Forms.update}.get(resource, not_implemented)
 
         update_func(*args, **kwargs)
 
     def remove(self, resource, *args, **kwargs):
-        credentials_check(self.remove, *((resource,) + args) , **kwargs)
+        credentials_check(self.remove, *((resource,) + args), **kwargs)
         remove_func = {
             "vars": Vars.remove,
             "files": Files.remove,
@@ -71,7 +72,7 @@ class CLI(object):
         remove_func(*args, **kwargs)
 
     def play(self, resource, *args, **kwargs):
-        credentials_check(self.play, *((resource,) + args) , **kwargs)
+        credentials_check(self.play, *((resource,) + args), **kwargs)
         play_func = {
             "form": Forms.play,
         }.get(resource, not_implemented)
