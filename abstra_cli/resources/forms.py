@@ -188,13 +188,14 @@ class Forms(Resource):
         check_valid_parameters(kwargs, FORM_PARAMETERS)
         form_data = evaluate_parameter_name(kwargs, form_data.copy())
         form_data = add_parameters_file_and_code(kwargs, form_data.copy())
-        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
         form_data = evaluate_non_flag_parameters_values(
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS
         )
         form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS)
-        form_id = add_workspace_form(form_data)["id"]
+        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
+        if form_data:
+            form_id = add_workspace_form(form_data)["id"]
         form_created_message(form_id)
 
     @staticmethod
@@ -212,7 +213,6 @@ class Forms(Resource):
         form_data = {}
         check_valid_parameters(kwargs, FORM_PARAMETERS)
         form_data = update_parameters_file_and_code(kwargs, form_data.copy())
-        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
         form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
         form_data = evaluate_non_flag_parameters_values(
             kwargs, form_data.copy(), NON_FLAG_PARAMETERS
@@ -220,7 +220,9 @@ class Forms(Resource):
         form_data = build_other_parameters(
             kwargs, form_data.copy(), OTHER_PARAMETERS + NAME_PARAMETERS
         )
-        update_workspace_form(form_id, form_data)
+        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
+        if form_data:
+            update_workspace_form(form_id, form_data)
         form_updated_message(form_id)
 
     @staticmethod
