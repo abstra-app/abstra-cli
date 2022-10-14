@@ -1,4 +1,16 @@
+import os
 import re
+from colour import Color
+
+IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".svg"]
+SPACE = " "
+EMPTY = ""
+DASH = "-"
+DOT = "."
+
+to_lower = lambda strs: list(map(lambda s: s.lower(), strs))
+to_kebab = lambda strs: f"{DASH}".join(to_lower(strs))
+reverse = lambda strs: strs[::-1]
 
 
 def remove_prefix(text, prefix):
@@ -37,3 +49,30 @@ def parse_package(pkg):
         return None, None
 
     return pkg, None
+
+
+def check_color(color: str) -> bool:
+    try:
+        color = color.replace(SPACE, EMPTY) if isinstance(color, str) else None
+        Color(color)
+        return True
+    except ValueError:
+        return False
+
+
+def slugify_filename(image_path: str) -> str:
+    filename = image_path.split("/")[-1]
+    extension, *filenames = reverse(filename.split("."))
+    return f"{DOT}".join(reverse([extension, to_kebab(filenames)]))
+
+
+def check_is_image_path(image_path: str) -> bool:
+    _, file_extension = os.path.splitext(image_path)
+    return file_extension in IMAGE_EXTENSIONS
+
+
+path_exists = lambda file_path: os.path.exists(file_path)
+
+get_prod_form_url = (
+    lambda subdomain_name, form_id: f"https://{subdomain_name}.abstra.run/{form_id}"
+)

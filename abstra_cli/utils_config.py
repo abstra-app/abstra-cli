@@ -1,5 +1,4 @@
 import os
-
 from .public_apis import get_info_from_token, usage
 
 ABSTRA_FOLDER = ".abstra/"

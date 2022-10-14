@@ -36,3 +36,9 @@ def print_packages(packages):
     packages.sort(key=lambda x: x["name"])
     for pkg in packages:
         print(f"{pkg['name']}{'==' + pkg['version'] if pkg['version'] else ''}")
+
+
+def print_forms(forms):
+    forms.sort(key=lambda x: x["title"])
+    for form in forms:
+        print(f"{form['id']} {form['title']}")

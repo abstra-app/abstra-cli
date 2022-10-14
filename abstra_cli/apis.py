@@ -5,8 +5,9 @@ import urllib.response
 
 from .utils_config import get_auth_info, get_credentials
 
-
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
+HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
+ABSTRA_ASSETS_UPLOAD_URL = "https://upload.abstra.cloud"
 
 
 def hf_api_runner(method, path, data=None):
@@ -29,6 +30,33 @@ def upload_file(filepath, file):
     return res.status < 400
 
 
+def asset_upload(filepath, file):
+    response = requests.request(
+        "POST",
+        f"{ABSTRA_ASSETS_UPLOAD_URL}/asset/",
+        headers={
+            "cache-control": "no-cache",
+            "Pragma": "no-cache",
+            "content-type": "application/json",
+        },
+        data=json.dumps({"filepath": filepath}),
+    )
+
+    response_json = response.json()
+    try:
+
+        req = urllib.request.Request(
+            url=response_json["putURL"], method="PUT", data=file
+        )
+        res = urllib.request.urlopen(req)
+        if res.status < 400:
+            return response_json["getURL"]
+    except Exception as e:
+        print(e)
+
+    raise Exception("Some error ocurred in asset upload")
+
+
 def get_file_signed_url(filepath):
     response_json = hf_api_runner("POST", "get-url", {"filepath": filepath})
     return response_json.get("getURL")
@@ -42,9 +70,6 @@ def delete_file(filepath):
     return hf_api_runner("DELETE", "file", {"filepath": filepath})
 
 
-HACKERFORMS_HASURA_URL = "https://hackerforms-hasura.abstra.cloud/v1/graphql"
-
-
 def hf_hasura_runner(query, variables={}):
     api_token = get_credentials()
     response = requests.post(
@@ -52,9 +77,12 @@ def hf_hasura_runner(query, variables={}):
         data=json.dumps({"query": query, "variables": variables}),
         headers={"content-type": "application/json", "API-Authorization": api_token},
     )
+    if response.status_code >= 300:
+        raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-    # print(jsond)
-    return jsond["data"]
+    if "data" in jsond:
+        return jsond["data"]
+    return jsond["errors"]
 
 
 def list_workspace_packages():
@@ -69,6 +97,18 @@ def list_workspace_packages():
     return hf_hasura_runner(query).get("packages", [])
 
 
+def list_workspace_forms():
+    query = """
+        query GetForms {
+            forms {
+                id
+                title
+            }
+        }
+    """
+    return hf_hasura_runner(query).get("forms", [])
+
+
 def list_workspace_vars():
     query = """
         query GetVars {
@@ -79,6 +119,18 @@ def list_workspace_vars():
         }
     """
     return hf_hasura_runner(query).get("environment_variables", [])
+
+
+def get_subdomain_by_form_id(form_id: str):
+    query = """
+        query SubdomainByFormId($form_id: uuid!) {
+            subdomains(where: {workspace: {forms: {id: {_eq: $form_id}}}}) {
+                name
+            }
+        }
+    """
+
+    return hf_hasura_runner(query, {"form_id": form_id}).get("subdomains", [])
 
 
 def add_workspace_vars(raw_vars):
@@ -139,6 +191,101 @@ def add_workspace_packages(raw_packages):
     )
 
 
+def add_workspace_form(data):
+    _, workspace_id, _ = get_auth_info()
+    form_data = {
+        "title": data["name"],
+        "workspace_id": workspace_id,
+        "script": {
+            "data": {
+                "code": data["code"],
+                "workspace_id": workspace_id,
+                "name": data["name"],
+            }
+        },
+    }
+
+    data.pop("name")
+    data.pop("code")
+    form_data.update(data)
+
+    query = """
+        mutation InsertForm($form_data: [forms_insert_input!]!) {
+            insert_forms(
+                objects: $form_data
+            ) {
+                returning {
+                    id
+                    title
+                    script {
+                        id
+                        code
+                    }
+                }
+            }
+        }
+    """
+    return (
+        hf_hasura_runner(query, {"form_data": form_data})
+        .get("insert_forms", {})
+        .get("returning", {})[0]
+    )
+
+
+def update_workspace_form(form_id, data):
+    form_data = {}
+    script_data = {}
+    name = data.get("name", None)
+    if name:
+        data.pop("name")
+        form_data["title"] = name
+        script_data["name"] = name
+
+    code = data.get("code", None)
+    if code:
+        data.pop("code")
+        if "data" in script_data:
+            script_data["code"] = code
+        else:
+            script_data = {}
+            script_data["code"] = code
+
+    for param, value in data.items():
+        form_data[param] = value
+
+    request_data = {"id": form_id, "form_data": form_data}
+
+    form_query = """
+        mutation UpdateForm($id: uuid!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
+            update_forms_by_pk(pk_columns: {id: $id}, _set: $form_data) {
+                id
+                title
+                script {
+                    id
+                    code
+                }
+            }
+            $script_mutation
+        }
+    """
+
+    if code or name:
+        script = """
+            update_scripts(where: {form: {id: {_eq: $id}}}, _set: $script_data) {
+                returning {
+                    name
+                    code
+                }
+            }
+        """
+        form_query = form_query.replace("$script_mutation", script)
+        request_data["script_data"] = script_data
+    else:
+        form_query = form_query.replace("$script_mutation", "")
+
+    return hf_hasura_runner(form_query, request_data).get("update_forms_by_pk", {})
+
+
 def delete_workspace_packages(packages):
     query = """
         mutation DeletePackages($packages: [String!]) {
@@ -173,3 +320,15 @@ def delete_workspace_vars(vars):
         .get("delete_environment_variables", {})
         .get("returning", [])
     )
+
+
+def delete_workspace_form(form_id):
+    query = """
+    mutation DeleteForm($id: uuid!) {
+        delete_forms_by_pk(id: $id) {
+            id
+        }
+    }
+    """
+
+    return hf_hasura_runner(query, {"id": form_id})
