@@ -33,7 +33,7 @@ def usage(f, args, kwargs, author_id, workspace_id):
                     "author_id": author_id,
                     "workspace_id": workspace_id,
                     "method": f.__name__,
-                    "arguments": {"args": args[1:], "kwags": list(kwargs.keys())},
+                    "arguments": {"args": args[1:], "kwargs": list(kwargs.keys())},
                 }
             ),
             headers={"content-type": "application/json"},

@@ -178,7 +178,7 @@ def evaluate_background_parameter_value(parameters: dict, form_data: dict):
 
 class Forms(Resource):
     @staticmethod
-    def list(*args, **kwargs):
+    def list():
         forms = list_workspace_forms()
         print_forms(forms)
 

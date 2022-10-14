@@ -10,7 +10,7 @@ from abstra_cli.resources.resources import Resource
 
 class Packages(Resource):
     @staticmethod
-    def list(*args, **kwargs):
+    def list():
         packages = list_workspace_packages()
         print_packages(packages)
 

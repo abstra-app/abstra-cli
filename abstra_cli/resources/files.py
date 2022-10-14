@@ -14,7 +14,7 @@ from abstra_cli.file_utils import files_from_directory
 
 class Files(Resource):
     @staticmethod
-    def list(*args, **kwargs):
+    def list():
         files = list_workspace_files()
         print_files(files)
 

@@ -15,12 +15,13 @@ from abstra_cli.messages import (
 
 class Vars(Resource):
     @staticmethod
-    def list(*args, **kwargs):
+    def list():
         vars = list_workspace_vars()
         print_vars(vars)
 
     @staticmethod
     def add(*args, **kwargs):
+        print(args, kwargs)
         vars = list(args)
         file = kwargs.get("f") or kwargs.get("file")
         if file:
