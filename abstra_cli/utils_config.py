@@ -35,13 +35,17 @@ def get_auth_info():
     return api_token, workspace_id, author_id
 
 
-def credentials_check(f, *args, **kwargs):
-    api_token, workspace_id, author_id = get_auth_info()
+def credentials_check(f):
+    def wrapper(*args, **kwargs):
+        api_token, workspace_id, author_id = get_auth_info()
 
-    if not api_token:
-        raise Exception("No API token configured")
+        if not api_token:
+            raise Exception("No API token configured")
 
-    if not workspace_id:
-        raise Exception("Bad token: no workspace found")
+        if not workspace_id:
+            raise Exception("Bad token: no workspace found")
 
-    usage(f, args, kwargs, author_id, workspace_id)
+        usage(f, args, kwargs, author_id, workspace_id)
+        return f(*args, **kwargs)
+
+    return wrapper

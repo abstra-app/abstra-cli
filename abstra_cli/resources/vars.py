@@ -21,7 +21,6 @@ class Vars(Resource):
 
     @staticmethod
     def add(*args, **kwargs):
-        print(args, kwargs)
         vars = list(args)
         file = kwargs.get("f") or kwargs.get("file")
         if file:

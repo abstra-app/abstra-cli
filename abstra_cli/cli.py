@@ -17,22 +17,13 @@ class CLI(object):
     usage: abstra <command> <resource> [<argument> ...] [parameters]
     """
 
+    @credentials_check
     def configure(self, api_token=None):
-        credentials_check(self.configure, **api_token)
         save_credentials(api_token or read_credentials())
         print("Done!")
 
+    @credentials_check
     def list(self, resource, **kwargs):
-        """List all items of a selected resource in the configured workspace
-
-        Args:
-            resource: Available resources are \n
-                - vars -> list all environment variables in workspace\n
-                - files -> list all file names in workspace\n
-                - packages -> list all packages in workspace\n
-                - forms -> list all forms in workspace
-        """
-        credentials_check(self.list, resource, **kwargs)
         list_func = {
             "vars": Vars.list,
             "files": Files.list,
@@ -42,9 +33,8 @@ class CLI(object):
 
         list_func()
 
+    @credentials_check
     def add(self, resource, *args, **kwargs):
-        credentials_check(self.add, *((resource,) + args), **kwargs)
-
         add_func = {
             "vars": Vars.add,
             "files": Files.add,
@@ -54,14 +44,14 @@ class CLI(object):
 
         add_func(*args, **kwargs)
 
+    @credentials_check
     def update(self, resource, *args, **kwargs):
-        credentials_check(self.update, *((resource,) + args), **kwargs)
         update_func = {"form": Forms.update}.get(resource, not_implemented)
 
         update_func(*args, **kwargs)
 
+    @credentials_check
     def remove(self, resource, *args, **kwargs):
-        credentials_check(self.remove, *((resource,) + args), **kwargs)
         remove_func = {
             "vars": Vars.remove,
             "files": Files.remove,
@@ -71,8 +61,8 @@ class CLI(object):
 
         remove_func(*args, **kwargs)
 
+    @credentials_check
     def play(self, resource, *args, **kwargs):
-        credentials_check(self.play, *((resource,) + args), **kwargs)
         play_func = {
             "form": Forms.play,
         }.get(resource, not_implemented)
