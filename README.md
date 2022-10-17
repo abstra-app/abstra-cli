@@ -106,24 +106,24 @@ Adds remote resources on your workspace.
 The current options for each resource are:
 
 - forms:
-  1.  \-\-name: string
-  2.  \-\-file\*: file_path
-  3.  \-\-code\*: string
-  4.  \-\-background: image_path or string
-  5.  \-\-main-color: string
-  6.  \-\-start-message: string
-  7.  \-\-error-message: string
-  8.  \-\-end-message: string
-  9.  \-\-start-button-text: string
-  10. \-\-timeout-message: string
-  11. \-\-logo-url: string
-  12. \-\-show-sidebar: boolean
-  13. \-\-log-messages: boolean
-  14. \-\-font-color: string
-  15. \-\-auto-start: boolean
-  16. \-\-allow-restart: boolean
-  17. \-\-welcome-title: string
-  18. \-\-brand-name: string
+  1.  `--name`: string
+  2.  `--file`: file_path
+  3.  `--code`: string
+  4.  `--background`: image_path or string
+  5.  `--main-color`: string
+  6.  `--start-message`: string
+  7.  `--error-message`: string
+  8.  `--end-message`: string
+  9.  `--start-button-text`: string
+  10. `--timeout-message`: string
+  11. `--logo-url`: string
+  12. `--show-sidebar`: boolean
+  13. `--log-messages`: boolean
+  14. `--font-color`: string
+  15. `--auto-start`: boolean
+  16. `--allow-restart`: boolean
+  17. `--welcome-title`: string
+  18. `--brand-name`: string
 
 \*note: set either file or code, but not both.
 
@@ -196,25 +196,25 @@ Adds remote resources on your workspace.
 The current options for each resource are:
 
 - forms:
-  1.  form_id: string (required parameter)
-  2.  \-\-name: string
-  3.  \-\-file\*: file_path
-  4.  \-\-code\*: string
-  5.  \-\-background: image_path or string
-  6.  \-\-main-color: string
-  7.  \-\-start-message: string
-  8.  \-\-error-message: string
-  9.  \-\-end-message: string
-  10. \-\-start-button-text: string
-  11. \-\-timeout-message: string
-  12. \-\-logo-url: string
-  13. \-\-show-sidebar: boolean
-  14. \-\-log-messages: boolean
-  15. \-\-font-color: string
-  16. \-\-auto-start: boolean
-  17. \-\-allow-restart: boolean
-  18. \-\-welcome-title: string
-  19. \-\-brand-name: string
+  1.  `form_id`: string (required parameter)
+  2.  `--name`: string
+  3.  `--file`: file_path
+  4.  `--code`: string
+  5.  `--background`: image_path or string
+  6.  `--main-color`: string
+  7.  `--start-message`: string
+  8.  `--error-message`: string
+  9.  `--end-message`: string
+  10. `--start-button-text`: string
+  11. `--timeout-message`: string
+  12. `--logo-url`: string
+  13. `--show-sidebar`: boolean
+  14. `--log-messages`: boolean
+  15. `--font-color`: string
+  16. `--auto-start`: boolean
+  17. `--allow-restart`: boolean
+  18. `--welcome-title`: string
+  19. `--brand-name`: string
 
 \*note: set either file or code, but not both.
 
