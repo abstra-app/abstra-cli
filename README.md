@@ -183,15 +183,19 @@ abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay
 
 ```
 
-### Update form
+### Update resource
+
+_currently only available for forms_
 
 ```sh
 
-abstra add RESOURCE [...OPTIONS]
+```sh
+
+abstra update [FORM_ID] [...OPTIONS]
 
 ```
 
-Adds remote resources on your workspace.
+Updates remote resources on your workspace.
 
 The current options for each resource are:
 
