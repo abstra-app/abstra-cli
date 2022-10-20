@@ -1,7 +1,11 @@
 import fire
 
 from abstra_cli.cli_helpers import read_credentials
-from abstra_cli.utils_config import credentials_check, save_credentials, configuration_check
+from abstra_cli.utils_config import (
+    credentials_check,
+    save_credentials,
+    configuration_check,
+)
 from abstra_cli.messages import not_implemented
 
 from abstra_cli.resources import Forms
