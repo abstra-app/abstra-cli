@@ -30,7 +30,7 @@ def get_credentials():
 def get_auth_info():
     api_token = get_credentials()
     if not api_token:
-        return None, None
+        return None, None, None
     workspace_id, author_id = get_info_from_token(api_token)
     return api_token, workspace_id, author_id
 
