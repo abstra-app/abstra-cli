@@ -12,6 +12,7 @@ from ..apis import (
 from ..cli_helpers import print_forms
 from ..messages import (
     code_and_file_not_allowed,
+    form_deleted_message,
     invalid_parameter,
     required_argument,
     required_parameter,
@@ -77,7 +78,7 @@ def check_valid_parameters(parameters):
 
 
 def evaluate_parameter_name(parameters: dict) -> dict:
-    name = parameters.get("name") or parameters.get("n")
+    name = parameters.get("name") or parameters.get("n") or "New Form"
     return {"name": name}
 
 
@@ -170,10 +171,6 @@ class Forms(Resource):
     def add(*args, **kwargs):
         check_valid_parameters(kwargs)
 
-        if not evaluate_parameter_name(kwargs):
-            required_parameter("name")
-            exit()
-
         form_data = {
             **evaluate_parameter_name(kwargs),
             **evaluate_parameter_path(kwargs),
@@ -226,7 +223,9 @@ class Forms(Resource):
             required_argument("path")
             exit()
 
-        delete_workspace_form(args[0])
+        path = args[0]
+        delete_workspace_form(path)
+        form_deleted_message(path)
 
     @staticmethod
     def play(*args, **kwargs):

@@ -10,6 +10,10 @@ def form_updated_message(form: str):
     print(f"Form updated successfully: {form}")
 
 
+def form_deleted_message(form: str):
+    print(f"Form deleted successfully: {form}")
+
+
 def form_update_failed(form: str):
     print(f"Failed to update form: {form}")
 

@@ -80,9 +80,11 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
+
     if "data" in jsond:
         return jsond["data"]
-    return jsond["errors"]
+    
+    raise Exception(jsond["errors"])
 
 
 def list_workspace_packages():
@@ -306,9 +308,11 @@ def delete_workspace_form(path):
     query = """
         mutation DeleteForm($path: String!) {
             delete_forms(where: {path: {_eq: $path}}) {
-                id
-                path
-                title
+                returning {
+                    id
+                    path
+                    title
+                }
             }
         }
     """
