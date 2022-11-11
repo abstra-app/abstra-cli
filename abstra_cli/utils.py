@@ -74,5 +74,5 @@ def check_is_image_path(image_path: str) -> bool:
 path_exists = lambda file_path: os.path.exists(file_path)
 
 get_prod_form_url = (
-    lambda subdomain_name, form_id: f"https://{subdomain_name}.abstra.run/{form_id}"
+    lambda subdomain_name, path: f"https://{subdomain_name}.abstra.run/{path}"
 )

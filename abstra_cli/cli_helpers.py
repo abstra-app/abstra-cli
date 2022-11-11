@@ -16,7 +16,6 @@ def read_credentials():
 def show_progress(message, max) -> FillingSquaresBar:
     return FillingSquaresBar(message, suffix="%(percent)d%%", max=max)
 
-
 def print_files(files):
     files.sort(key=lambda x: x["Key"])
     max_d = digits(max([f["Size"] for f in files]))
@@ -40,5 +39,6 @@ def print_packages(packages):
 
 def print_forms(forms):
     forms.sort(key=lambda x: x["title"])
+    max_d = max([len(f["path"]) for f in forms])
     for form in forms:
-        print(f"{form['id']} {form['title']}")
+        print(f"{format_digits(form['path'], max_d)} - {form['title']}")

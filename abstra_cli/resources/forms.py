@@ -7,7 +7,7 @@ from ..apis import (
     delete_workspace_form,
     update_workspace_form,
     asset_upload,
-    get_subdomain_by_form_id,
+    get_subdomain,
 )
 from ..cli_helpers import print_forms
 from ..messages import (
@@ -23,6 +23,9 @@ from ..messages import (
     error_upload_background_message,
     form_created_message,
     form_updated_message,
+    form_create_failed,
+    form_update_failed,
+    form_url
 )
 
 from ..utils import (
@@ -34,6 +37,7 @@ from ..utils import (
 )
 
 NAME_PARAMETERS = ["name"]
+PATH_PARAMETERS = ["path"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
 BACKGROUND_PARAMETERS = ["background"]
 FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar"]
@@ -51,23 +55,44 @@ OTHER_PARAMETERS = [
     "brand_name",
 ]
 NON_FLAG_PARAMETERS = (
-    NAME_PARAMETERS + CODE_PARAMETERS + BACKGROUND_PARAMETERS + OTHER_PARAMETERS
+    NAME_PARAMETERS
+    + PATH_PARAMETERS
+    + CODE_PARAMETERS
+    + BACKGROUND_PARAMETERS
+    + OTHER_PARAMETERS
 )
 
 FORM_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
-def evaluate_parameter_name(parameters, form_data: dict) -> dict:
+def check_valid_parameters(parameters):
+    for param in parameters.keys():
+        if param not in FORM_PARAMETERS:
+            invalid_parameter(param)
+            exit()
+    for param, value in parameters.items():
+        if param in NON_FLAG_PARAMETERS and value in [True, False]:
+            invalid_non_flag_parameter_value(param)
+            exit()
+
+
+def evaluate_parameter_name(parameters: dict) -> dict:
     name = parameters.get("name") or parameters.get("n")
     if not name:
         required_parameter("name")
         exit()
 
-    form_data["name"] = name
-    return form_data
+    return {"name": name}
 
 
-def add_parameters_file_and_code(parameters: dict, form_data: dict) -> dict:
+def evaluate_parameter_path(parameters: dict) -> dict:
+    path = parameters.get("path")
+    if not path:
+        return {}
+    return {"path": path}
+
+
+def evaluate_parameters_file_and_code(parameters: dict) -> dict:
     EMPTY_FORM = "from hackerforms import *"
     file = parameters.get("file") or parameters.get("f")
     code = parameters.get("code") or parameters.get("c")
@@ -78,83 +103,47 @@ def add_parameters_file_and_code(parameters: dict, form_data: dict) -> dict:
 
     if file:
         with open(file, "r") as f:
-            form_data["code"] = f.read()
-            return form_data
+            return {"code": f.read()}
 
     if code:
-        form_data["code"] = code
-        return form_data
+        return {"code": code}
 
-    form_data["code"] = EMPTY_FORM
-    return form_data
+    return {"code": EMPTY_FORM}
 
 
-def update_parameters_file_and_code(parameters, form_data):
-    file = parameters.get("file") or parameters.get("f")
-    code = parameters.get("code") or parameters.get("c")
-
-    if file and code:
-        code_and_file_not_allowed()
-        exit()
-
-    if file:
-        with open(file, "r") as f:
-            form_data["code"] = f.read()
-
-    if code:
-        form_data["code"] = code
-
-    return form_data
-
-
-def build_other_parameters(parameters, form_data, valid_parameters):
+def evaluate_flag_parameters(parameters: dict) -> dict:
+    evaluated_params = {}
     for param, value in parameters.items():
-        if param in valid_parameters:
-            form_data[param] = value
-
-    return form_data
-
-
-def check_valid_parameters(parameters, valid_parameters):
-    for param in parameters.keys():
-        if param not in valid_parameters:
-            invalid_parameter(param)
-            exit()
-
-
-def evaluate_non_flag_parameters_values(parameters, form_data, non_flag_parameters):
-    for param, value in parameters.items():
-        if param in non_flag_parameters and value in [True, False]:
-            invalid_non_flag_parameter_value(param)
-            exit()
-
-    return form_data
-
-
-def evaluate_flag_parameters(parameters, form_data, flag_parameters):
-    for param, value in parameters.items():
-        if param in flag_parameters:
+        if param in FLAG_PARAMETERS:
             if value == "true" or value == True:
-                form_data[param] = True
+                evaluated_params[param] = True
                 continue
             if value == "false" or value == False:
-                form_data[param] = False
+                evaluated_params[param] = False
                 continue
 
             invalid_flag_parameter_value(param)
             exit()
 
-    return form_data
+    return evaluated_params
 
 
-def evaluate_background_parameter_value(parameters: dict, form_data: dict):
+def evaluate_other_parameters(parameters) -> dict:
+    other_parameters = {}
+    for param, value in parameters.items():
+        if param in OTHER_PARAMETERS:
+            other_parameters[param] = value
+
+    return other_parameters
+
+
+def evaluate_background_parameter_value(parameters: dict) -> dict:
     background = parameters.get("background", None)
     if not background:
-        return
+        return {}
 
     if check_color(background):
-        form_data["theme"] = background
-        return form_data
+        return {"theme": background}
 
     if not path_exists(background):
         file_path_does_not_exists_message(background)
@@ -166,8 +155,7 @@ def evaluate_background_parameter_value(parameters: dict, form_data: dict):
             with open(background, "rb") as f:
                 file = f.read()
                 url = asset_upload(filename, file)
-                form_data["theme"] = url
-                return form_data
+                return {"theme": url}
         except Exception as e:
             error_upload_background_message(background)
             exit()
@@ -184,67 +172,71 @@ class Forms(Resource):
 
     @staticmethod
     def add(*args, **kwargs):
-        form_data = {}
-        check_valid_parameters(kwargs, FORM_PARAMETERS)
-        form_data = evaluate_parameter_name(kwargs, form_data.copy())
-        form_data = add_parameters_file_and_code(kwargs, form_data.copy())
-        form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
-        form_data = evaluate_non_flag_parameters_values(
-            kwargs, form_data.copy(), NON_FLAG_PARAMETERS
-        )
-        form_data = build_other_parameters(kwargs, form_data.copy(), OTHER_PARAMETERS)
-        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
+        check_valid_parameters(kwargs)
+
+        form_data = {
+            **evaluate_parameter_name(kwargs),
+            **evaluate_parameter_path(kwargs),
+            **evaluate_parameters_file_and_code(kwargs),
+            **evaluate_flag_parameters(kwargs),
+            **evaluate_other_parameters(kwargs),
+            **evaluate_background_parameter_value(kwargs),
+        }
+
         if form_data:
-            form_id = add_workspace_form(form_data)["id"]
-        form_created_message(form_id)
+            try:
+                path = add_workspace_form(form_data)["path"]
+                form_created_message(path)
+            except:
+                form_create_failed()
 
     @staticmethod
     def update(*args, **kwargs):
 
         if not len(args):
-            required_argument("form_id")
+            required_argument("path")
             exit()
+        path = args[0]
 
-        form_id = args[0]
         if not len(kwargs):
-            missing_parameters_to_update(form_id)
+            missing_parameters_to_update(path)
             exit()
 
-        form_data = {}
-        check_valid_parameters(kwargs, FORM_PARAMETERS)
-        form_data = update_parameters_file_and_code(kwargs, form_data.copy())
-        form_data = evaluate_flag_parameters(kwargs, form_data.copy(), FLAG_PARAMETERS)
-        form_data = evaluate_non_flag_parameters_values(
-            kwargs, form_data.copy(), NON_FLAG_PARAMETERS
-        )
-        form_data = build_other_parameters(
-            kwargs, form_data.copy(), OTHER_PARAMETERS + NAME_PARAMETERS
-        )
-        form_data = evaluate_background_parameter_value(kwargs, form_data.copy())
+        check_valid_parameters(kwargs)
+
+        form_data = {
+            **evaluate_parameter_name(kwargs),
+            **evaluate_parameter_path(kwargs),
+            **evaluate_parameters_file_and_code(kwargs),
+            **evaluate_flag_parameters(kwargs),
+            **evaluate_other_parameters(kwargs),
+            **evaluate_background_parameter_value(kwargs),
+        }
+
         if form_data:
-            update_workspace_form(form_id, form_data)
-        form_updated_message(form_id)
+            try:
+                update_workspace_form(path, form_data)
+                form_updated_message(path)
+            except:
+                form_update_failed(path)
+
 
     @staticmethod
     def remove(*args, **kwargs):
         if not len(args):
-            required_argument("form_id")
+            required_argument("path")
             exit()
-        form_id = args[0]
-        delete_workspace_form(form_id)
+
+        delete_workspace_form(args[0])
 
     @staticmethod
     def play(*args, **kwargs):
         if not len(args):
-            required_argument("form_id")
+            required_argument("path")
             exit()
-        form_id = args[0]
-        response = get_subdomain_by_form_id(form_id)
-        if not len(response):
-            print(
-                "There is no workspace related to this form id. Please, verify whether it is correct."
-            )
-            exit()
-        subdomain_name = response[0]["name"]
-        url = get_prod_form_url(subdomain_name, form_id)
+
+        path = args[0]
+        subdomain_name = get_subdomain()
+        url = get_prod_form_url(subdomain_name, path)
+        form_url(url)
         webbrowser.open(url)
