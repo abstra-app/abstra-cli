@@ -78,10 +78,6 @@ def check_valid_parameters(parameters):
 
 def evaluate_parameter_name(parameters: dict) -> dict:
     name = parameters.get("name") or parameters.get("n")
-    if not name:
-        required_parameter("name")
-        exit()
-
     return {"name": name}
 
 
@@ -173,6 +169,10 @@ class Forms(Resource):
     @staticmethod
     def add(*args, **kwargs):
         check_valid_parameters(kwargs)
+
+        if not evaluate_parameter_name(kwargs):
+            required_parameter("name")
+            exit()
 
         form_data = {
             **evaluate_parameter_name(kwargs),
