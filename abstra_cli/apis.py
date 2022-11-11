@@ -80,9 +80,11 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
+
     if "data" in jsond:
         return jsond["data"]
-    return jsond["errors"]
+
+    raise Exception(jsond["errors"])
 
 
 def list_workspace_packages():
@@ -101,7 +103,7 @@ def list_workspace_forms():
     query = """
         query GetForms {
             forms {
-                id
+                path
                 title
             }
         }
@@ -121,16 +123,21 @@ def list_workspace_vars():
     return hf_hasura_runner(query).get("environment_variables", [])
 
 
-def get_subdomain_by_form_id(form_id: str):
+def get_subdomain():
     query = """
-        query SubdomainByFormId($form_id: uuid!) {
-            subdomains(where: {workspace: {forms: {id: {_eq: $form_id}}}}) {
+        query Subdomains {
+            subdomains {
                 name
             }
         }
     """
 
-    return hf_hasura_runner(query, {"form_id": form_id}).get("subdomains", [])
+    subdomains = hf_hasura_runner(query, {}).get("subdomains", [])
+    if not len(subdomains):
+        print("Could not find subdomain.")
+        exit()
+
+    return subdomains[0]["name"]
 
 
 def add_workspace_vars(raw_vars):
@@ -215,12 +222,8 @@ def add_workspace_form(data):
                 objects: $form_data
             ) {
                 returning {
-                    id
+                    path
                     title
-                    script {
-                        id
-                        code
-                    }
                 }
             }
         }
@@ -232,58 +235,37 @@ def add_workspace_form(data):
     )
 
 
-def update_workspace_form(form_id, data):
-    form_data = {}
+def update_workspace_form(path, data):
+    form_data = data.copy()
     script_data = {}
-    name = data.get("name", None)
+
+    name = form_data.pop("name", None)
     if name:
-        data.pop("name")
         form_data["title"] = name
         script_data["name"] = name
 
-    code = data.get("code", None)
+    code = form_data.pop("code", None)
     if code:
-        data.pop("code")
-        if "data" in script_data:
-            script_data["code"] = code
-        else:
-            script_data = {}
-            script_data["code"] = code
+        script_data["code"] = code
 
-    for param, value in data.items():
-        form_data[param] = value
-
-    request_data = {"id": form_id, "form_data": form_data}
-
-    form_query = """
-        mutation UpdateForm($id: uuid!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
-            update_forms_by_pk(pk_columns: {id: $id}, _set: $form_data) {
-                id
-                title
-                script {
+    request_data = {"path": path, "form_data": form_data, "script_data": script_data}
+    update_query = """
+        mutation UpdateForm($path: String!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
+            update_forms(where: {path: {_eq: $path}}, _set: $form_data) {
+                returning {
                     id
-                    code
+                    path
+                    title
                 }
             }
-            $script_mutation
-        }
-    """
-
-    if code or name:
-        script = """
-            update_scripts(where: {form: {id: {_eq: $id}}}, _set: $script_data) {
+            update_scripts(where: {form: {path: {_eq: $path}}}, _set: $script_data) {
                 returning {
                     name
-                    code
                 }
             }
-        """
-        form_query = form_query.replace("$script_mutation", script)
-        request_data["script_data"] = script_data
-    else:
-        form_query = form_query.replace("$script_mutation", "")
-
-    return hf_hasura_runner(form_query, request_data).get("update_forms_by_pk", {})
+        }
+    """
+    return hf_hasura_runner(update_query, request_data)
 
 
 def delete_workspace_packages(packages):
@@ -322,13 +304,17 @@ def delete_workspace_vars(vars):
     )
 
 
-def delete_workspace_form(form_id):
+def delete_workspace_form(path):
     query = """
-    mutation DeleteForm($id: uuid!) {
-        delete_forms_by_pk(id: $id) {
-            id
+        mutation DeleteForm($path: String!) {
+            delete_forms(where: {path: {_eq: $path}}) {
+                returning {
+                    id
+                    path
+                    title
+                }
+            }
         }
-    }
     """
 
-    return hf_hasura_runner(query, {"id": form_id})
+    return hf_hasura_runner(query, {"path": path})

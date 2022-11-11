@@ -1,9 +1,21 @@
-def form_created_message(form_id: str):
-    print(f"Form created successfully: {form_id}")
+def form_created_message(form: str):
+    print(f"Form created successfully: {form}")
 
 
-def form_updated_message(form_id: str):
-    print(f"Form updated successfully: {form_id}")
+def form_create_failed():
+    print(f"Failed to create form")
+
+
+def form_updated_message(form: str):
+    print(f"Form updated successfully: {form}")
+
+
+def form_deleted_message(form: str):
+    print(f"Form deleted successfully: {form}")
+
+
+def form_update_failed(form: str):
+    print(f"Failed to update form: {form}")
 
 
 def not_implemented(*args, **kwargs):
@@ -52,8 +64,8 @@ def code_and_file_not_allowed():
     print("you can set either code or file parameters, but not both.")
 
 
-def missing_parameters_to_update(form_id):
-    print(f"missing parameters to be updated of form {form_id}")
+def missing_parameters_to_update(form):
+    print(f"missing parameters to be updated of form {form}")
 
 
 def file_path_does_not_exists_message(path):
@@ -62,3 +74,7 @@ def file_path_does_not_exists_message(path):
 
 def error_upload_background_message(path):
     print(f"Some error happened during background upload: {path}")
+
+
+def form_url(url):
+    print(f"Opening URL {url}")

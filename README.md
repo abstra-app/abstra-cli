@@ -81,6 +81,7 @@ abstra list vars
 
 abstra list files
 
+abstra list forms
 
 
 # Saving env vars and packages
@@ -104,24 +105,25 @@ Adds remote resources on your workspace.
 The current options for each resource are:
 
 - forms:
-  1.  `--name`: string
-  2.  `--file`: file_path
-  3.  `--code`: string
-  4.  `--background`: image_path or string
-  5.  `--main-color`: string
-  6.  `--start-message`: string
-  7.  `--error-message`: string
-  8.  `--end-message`: string
-  9.  `--start-button-text`: string
-  10. `--timeout-message`: string
-  11. `--logo-url`: string
-  12. `--show-sidebar`: boolean
-  13. `--log-messages`: boolean
-  14. `--font-color`: string
-  15. `--auto-start`: boolean
-  16. `--allow-restart`: boolean
-  17. `--welcome-title`: string
-  18. `--brand-name`: string
+  1.  `--name` or `--n` or `--title`: string
+  1.  `--path`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
+  1.  `--background`: image_path or string
+  1.  `--main-color`: string
+  1.  `--start-message`: string
+  1.  `--error-message`: string
+  1.  `--end-message`: string
+  1.  `--start-button-text`: string
+  1.  `--timeout-message`: string
+  1.  `--logo-url`: string
+  1.  `--show-sidebar`: boolean
+  1.  `--log-messages`: boolean
+  1.  `--font-color`: string
+  1.  `--auto-start`: boolean
+  1.  `--allow-restart`: boolean
+  1.  `--welcome-title`: string
+  1.  `--brand-name`: string
 
 \*note: set either file or code, but not both.
 
@@ -185,38 +187,39 @@ abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay
 
 _currently only available for forms_
 
-```sh
+````sh
 
 ```sh
 
-abstra update [FORM_ID] [...OPTIONS]
+abstra update [FORM_PATH] [...OPTIONS]
 
-```
+````
 
 Updates remote resources on your workspace.
 
 The current options for each resource are:
 
 - forms:
-  1.  `form_id`: string (required parameter)
+  1.  `form_path`: string (required parameter)
   2.  `--name`: string
-  3.  `--file`: file_path
-  4.  `--code`: string
-  5.  `--background`: image_path or string
-  6.  `--main-color`: string
-  7.  `--start-message`: string
-  8.  `--error-message`: string
-  9.  `--end-message`: string
-  10. `--start-button-text`: string
-  11. `--timeout-message`: string
-  12. `--logo-url`: string
-  13. `--show-sidebar`: boolean
-  14. `--log-messages`: boolean
-  15. `--font-color`: string
-  16. `--auto-start`: boolean
-  17. `--allow-restart`: boolean
-  18. `--welcome-title`: string
-  19. `--brand-name`: string
+  3.  `--path`: string
+  4.  `--file`: file_path
+  5.  `--code`: string
+  6.  `--background`: image_path or string
+  7.  `--main-color`: string
+  8.  `--start-message`: string
+  9.  `--error-message`: string
+  10. `--end-message`: string
+  11. `--start-button-text`: string
+  12. `--timeout-message`: string
+  13. `--logo-url`: string
+  14. `--show-sidebar`: boolean
+  15. `--log-messages`: boolean
+  16. `--font-color`: string
+  17. `--auto-start`: boolean
+  18. `--allow-restart`: boolean
+  19. `--welcome-title`: string
+  20. `--brand-name`: string
 
 \*note: set either file or code, but not both.
 
@@ -249,7 +252,7 @@ abstra remove vars ENVIROMENT VERSION
 
 abstra remove packages pandas numpy scipy
 
-abstra remove form 7e549274-0e59-4b56-ad08-21bf48793be2
+abstra remove form sales-onboarding
 
 ```
 

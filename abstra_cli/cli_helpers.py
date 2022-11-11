@@ -39,6 +39,7 @@ def print_packages(packages):
 
 
 def print_forms(forms):
-    forms.sort(key=lambda x: x["title"])
+    forms.sort(key=lambda x: x["path"])
+    max_d = max([len(f["path"]) for f in forms])
     for form in forms:
-        print(f"{form['id']} {form['title']}")
+        print(f"{format_digits(form['path'], max_d)} - {form['title']}")
