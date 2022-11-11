@@ -1,5 +1,5 @@
-from .utils_config import credentials_check
-from .apis import get_file_signed_url
+from abstra_cli.utils_config import credentials_check
+from abstra_cli.apis import get_file_signed_url
 
 
 @credentials_check

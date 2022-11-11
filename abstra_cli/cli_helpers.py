@@ -1,11 +1,11 @@
 from progress.bar import FillingSquaresBar
 
-from .utils import digits, format_digits
+import abstra_cli.utils as utils
 
 
 def read_credentials():
     print(
-        "Abstra API Tokens can be found in your workspace or at https://forms.abstra.run/737986ce-a8ed-4c7b-bd7e-5f0b11331b66."
+        "Abstra API Tokens can be found in your workspace or at https://forms.abstra.run/generate-token."
     )
     credentials = input(f"API Token: ")
     if not credentials:
@@ -19,10 +19,10 @@ def show_progress(message, max) -> FillingSquaresBar:
 
 def print_files(files):
     files.sort(key=lambda x: x["Key"])
-    max_d = digits(max([f["Size"] for f in files]))
+    max_d = utils.digits(max([f["Size"] for f in files]))
     for file in files:
         print(
-            f"{format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}"
+            f"{utils.format_digits(file['Size'], max_d)} - {file['LastModified']}: {file['Key']}"
         )
 
 
@@ -42,4 +42,4 @@ def print_forms(forms):
     forms.sort(key=lambda x: x["path"])
     max_d = max([len(f["path"]) for f in forms])
     for form in forms:
-        print(f"{format_digits(form['path'], max_d)} - {form['title']}")
+        print(f"{utils.format_digits(form['path'], max_d)} - {form['title']}")

@@ -1,17 +1,9 @@
 import fire
 
-from abstra_cli.cli_helpers import read_credentials
-from abstra_cli.utils_config import (
-    credentials_check,
-    save_credentials,
-    configuration_check,
-)
-from abstra_cli.messages import not_implemented
-
-from abstra_cli.resources import Forms
-from abstra_cli.resources import Files
-from abstra_cli.resources import Packages
-from abstra_cli.resources import Vars
+import abstra_cli.cli_helpers as cli_helpers
+import abstra_cli.utils_config as utils_config
+import abstra_cli.messages as messages
+from abstra_cli.resources import Forms, Files, Packages, Vars
 
 
 class CLI(object):
@@ -21,55 +13,55 @@ class CLI(object):
     usage: abstra <command> <resource> [<argument> ...] [parameters]
     """
 
-    @configuration_check
+    @utils_config.configuration_check
     def configure(self, api_token=None):
-        save_credentials(api_token or read_credentials())
+        utils_config.save_credentials(api_token or cli_helpers.read_credentials())
         print("Done!")
 
-    @credentials_check
+    @utils_config.credentials_check
     def list(self, resource, **kwargs):
         list_func = {
             "vars": Vars.list,
             "files": Files.list,
             "packages": Packages.list,
             "forms": Forms.list,
-        }.get(resource, not_implemented)
+        }.get(resource, messages.not_implemented)
 
         list_func()
 
-    @credentials_check
+    @utils_config.credentials_check
     def add(self, resource, *args, **kwargs):
         add_func = {
             "vars": Vars.add,
             "files": Files.add,
             "packages": Packages.add,
             "form": Forms.add,
-        }.get(resource, not_implemented)
+        }.get(resource, messages.not_implemented)
 
         add_func(*args, **kwargs)
 
-    @credentials_check
+    @utils_config.credentials_check
     def update(self, resource, *args, **kwargs):
-        update_func = {"form": Forms.update}.get(resource, not_implemented)
+        update_func = {"form": Forms.update}.get(resource, messages.not_implemented)
 
         update_func(*args, **kwargs)
 
-    @credentials_check
+    @utils_config.credentials_check
     def remove(self, resource, *args, **kwargs):
         remove_func = {
             "vars": Vars.remove,
             "files": Files.remove,
             "packages": Packages.remove,
             "form": Forms.remove,
-        }.get(resource, not_implemented)
+        }.get(resource, messages.not_implemented)
 
         remove_func(*args, **kwargs)
 
-    @credentials_check
+    @utils_config.credentials_check
     def play(self, resource, *args, **kwargs):
         play_func = {
             "form": Forms.play,
-        }.get(resource, not_implemented)
+        }.get(resource, messages.not_implemented)
 
         play_func(*args, **kwargs)
 

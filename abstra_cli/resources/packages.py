@@ -1,18 +1,14 @@
-from abstra_cli.utils import parse_package
-from abstra_cli.cli_helpers import print_packages
-from abstra_cli.apis import (
-    add_workspace_packages,
-    list_workspace_packages,
-    delete_workspace_packages,
-)
 from abstra_cli.resources.resources import Resource
+import abstra_cli.cli_helpers as cli_helpers
+import abstra_cli.utils as utils
+import abstra_cli.apis as apis
 
 
 class Packages(Resource):
     @staticmethod
     def list():
-        packages = list_workspace_packages()
-        print_packages(packages)
+        packages = apis.list_workspace_packages()
+        cli_helpers.print_packages(packages)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -30,7 +26,7 @@ class Packages(Resource):
         processed_packages = []
         processed_names = []
         for pkg in packages:
-            name, version = parse_package(pkg)
+            name, version = utils.parse_package(pkg)
             if not name:
                 print(f"Invalid package: {pkg}")
                 return False
@@ -39,12 +35,12 @@ class Packages(Resource):
                 return False
             processed_packages.append({"name": name, "version": version})
 
-        added_packages = add_workspace_packages(processed_packages)
-        print_packages(added_packages)
+        added_packages = apis.add_workspace_packages(processed_packages)
+        cli_helpers.print_packages(added_packages)
         print(f"\nAdded {len(added_packages)} packages")
 
     @staticmethod
     def remove(*args, **kwargs):
-        deleted_packages = delete_workspace_packages(args)
-        print_packages(deleted_packages)
+        deleted_packages = apis.delete_workspace_packages(args)
+        cli_helpers.print_packages(deleted_packages)
         print(f"\nDeleted {len(deleted_packages)} packages")
