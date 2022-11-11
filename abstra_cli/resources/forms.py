@@ -189,7 +189,8 @@ class Forms(Resource):
             try:
                 path = add_workspace_form(form_data)["path"]
                 form_created_message(path)
-            except:
+            except Exception as e:
+                print(e)
                 form_create_failed()
 
     @staticmethod
