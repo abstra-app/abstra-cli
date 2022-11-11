@@ -105,10 +105,10 @@ Adds remote resources on your workspace.
 The current options for each resource are:
 
 - forms:
-  1.  `--name`: string
+  1.  `--name` or `--n` or `--title`: string
   1.  `--path`: string
-  1.  `--file`: file_path
-  1.  `--code`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
   1.  `--background`: image_path or string
   1.  `--main-color`: string
   1.  `--start-message`: string

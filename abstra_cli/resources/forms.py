@@ -37,7 +37,7 @@ from ..utils import (
     get_prod_form_url,
 )
 
-NAME_PARAMETERS = ["name"]
+NAME_PARAMETERS = ["name", "title"]
 PATH_PARAMETERS = ["path"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
 BACKGROUND_PARAMETERS = ["background"]
@@ -78,7 +78,7 @@ def check_valid_parameters(parameters):
 
 
 def evaluate_parameter_name(parameters: dict) -> dict:
-    name = parameters.get("name") or parameters.get("n") or "New Form"
+    name = parameters.get("name") or parameters.get("n") or parameters.get("title") or "New Form"
     return {"name": name}
 
 
