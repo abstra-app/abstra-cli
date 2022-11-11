@@ -16,6 +16,7 @@ def read_credentials():
 def show_progress(message, max) -> FillingSquaresBar:
     return FillingSquaresBar(message, suffix="%(percent)d%%", max=max)
 
+
 def print_files(files):
     files.sort(key=lambda x: x["Key"])
     max_d = digits(max([f["Size"] for f in files]))

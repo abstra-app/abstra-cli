@@ -73,4 +73,4 @@ def error_upload_background_message(path):
 
 
 def form_url(url):
-    print(f'Opening URL {url}')
+    print(f"Opening URL {url}")

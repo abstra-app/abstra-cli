@@ -25,7 +25,7 @@ from ..messages import (
     form_updated_message,
     form_create_failed,
     form_update_failed,
-    form_url
+    form_url,
 )
 
 from ..utils import (
@@ -219,7 +219,6 @@ class Forms(Resource):
                 form_updated_message(path)
             except:
                 form_update_failed(path)
-
 
     @staticmethod
     def remove(*args, **kwargs):
