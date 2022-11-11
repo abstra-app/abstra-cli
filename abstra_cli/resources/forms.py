@@ -78,7 +78,12 @@ def check_valid_parameters(parameters):
 
 
 def evaluate_parameter_name(parameters: dict) -> dict:
-    name = parameters.get("name") or parameters.get("n") or parameters.get("title") or "New Form"
+    name = (
+        parameters.get("name")
+        or parameters.get("n")
+        or parameters.get("title")
+        or "New Form"
+    )
     return {"name": name}
 
 
@@ -214,7 +219,8 @@ class Forms(Resource):
             try:
                 update_workspace_form(path, form_data)
                 form_updated_message(path)
-            except:
+            except Exception as e:
+                print(e)
                 form_update_failed(path)
 
     @staticmethod

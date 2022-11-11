@@ -83,7 +83,7 @@ def hf_hasura_runner(query, variables={}):
 
     if "data" in jsond:
         return jsond["data"]
-    
+
     raise Exception(jsond["errors"])
 
 
