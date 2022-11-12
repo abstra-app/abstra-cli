@@ -145,6 +145,12 @@ class Forms(Resource):
 
     @staticmethod
     def add(*args, **kwargs):
+        upsert = kwargs.pop('upsert', False)
+        path = kwargs.get('path')
+        if upsert and not path:
+            messages.upsert_without_identifier("path")
+            exit()
+
         check_valid_parameters(kwargs)
 
         form_data = {
@@ -158,8 +164,12 @@ class Forms(Resource):
 
         if form_data:
             try:
-                path = apis.add_workspace_form(form_data)["path"]
-                messages.form_created_message(path)
+                if upsert:
+                    apis.upsert_workspace_form(form_data)
+                    messages.form_upserted_message(path)
+                else:
+                    path = apis.add_workspace_form(form_data)["path"]
+                    messages.form_created_message(path)
             except Exception as e:
                 print(e)
                 messages.form_create_failed()

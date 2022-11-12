@@ -44,6 +44,7 @@ def add_workspace_form(data):
             }
         }
     """
+
     return (
         api_main.hf_hasura_runner(query, {"form_data": form_data})
         .get("insert_forms", {})
@@ -82,6 +83,24 @@ def update_workspace_form(path, data):
         }
     """
     return api_main.hf_hasura_runner(update_query, request_data)
+
+
+def upsert_workspace_form(data):
+    path = data['path']
+
+    query = """
+        query FindForm($path: String!) {
+            forms(where: {path: {_eq: $path}}) {
+                path
+            }
+        }
+    """
+
+    forms = api_main.hf_hasura_runner(query, {"path": path}).get('forms')
+    if len(forms):
+        return update_workspace_form(path, data)
+    else:
+        return add_workspace_form(data)
 
 
 def delete_workspace_form(path):

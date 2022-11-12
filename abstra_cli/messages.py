@@ -2,6 +2,10 @@ def form_created_message(form: str):
     print(f"Form created successfully: {form}")
 
 
+def form_upserted_message(form: str):
+    print(f"Form upserted successfully: {form}")
+
+
 def form_create_failed():
     print(f"Failed to create form")
 
@@ -70,6 +74,10 @@ def missing_parameters_to_update(form):
 
 def file_path_does_not_exists_message(path):
     print(f"file path not found: {path}")
+
+
+def upsert_without_identifier(idt):
+    print(f"Failed to upsert without identifier: {idt}")
 
 
 def error_upload_background_message(path):

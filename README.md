@@ -124,6 +124,7 @@ The current options for each resource are:
   1.  `--allow-restart`: boolean
   1.  `--welcome-title`: string
   1.  `--brand-name`: string
+  1.  `--upsert`: boolean
 
 \*note: set either file or code, but not both.
 
