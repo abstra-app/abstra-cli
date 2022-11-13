@@ -8,6 +8,9 @@ def list_workspace_forms():
             forms {
                 path
                 title
+                script {
+                    enabled
+                }
             }
         }
     """
@@ -21,15 +24,17 @@ def add_workspace_form(data):
         "workspace_id": workspace_id,
         "script": {
             "data": {
-                "code": data["code"],
                 "workspace_id": workspace_id,
+                "enabled": data["enabled"],
+                "code": data["code"],
                 "name": data["name"],
             }
         },
     }
 
-    data.pop("name")
-    data.pop("code")
+    data.pop("name", None)
+    data.pop("code", None)
+    data.pop("enabled", None)
     form_data.update(data)
 
     query = """
@@ -64,6 +69,10 @@ def update_workspace_form(path, data):
     code = form_data.pop("code", None)
     if code:
         script_data["code"] = code
+
+    enabled = form_data.pop("enabled", None)
+    if enabled is not None:
+        script_data["enabled"] = enabled
 
     request_data = {"path": path, "form_data": form_data, "script_data": script_data}
     update_query = """

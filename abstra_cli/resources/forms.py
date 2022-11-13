@@ -12,7 +12,7 @@ NAME_PARAMETERS = ["name", "title"]
 PATH_PARAMETERS = ["path"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
 BACKGROUND_PARAMETERS = ["background"]
-FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar"]
+FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar", "enabled"]
 OTHER_PARAMETERS = [
     "start_message",
     "end_message",
@@ -48,14 +48,10 @@ def check_valid_parameters(parameters):
             exit()
 
 
-def evaluate_parameter_name(parameters: dict) -> dict:
-    name = (
-        parameters.get("name")
-        or parameters.get("n")
-        or parameters.get("title")
-        or "New Form"
-    )
-    return {"name": name}
+def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
+    name = parameters.get("name") or parameters.get("n") or parameters.get("title")
+    if not name and not use_default: return {}
+    return {"name": name or "New Form"}
 
 
 def evaluate_parameter_path(parameters: dict) -> dict:
@@ -65,7 +61,7 @@ def evaluate_parameter_path(parameters: dict) -> dict:
     return {"path": path}
 
 
-def evaluate_parameters_file_and_code(parameters: dict) -> dict:
+def evaluate_parameters_file_and_code(parameters: dict, use_default=True) -> dict:
     EMPTY_FORM = "from hackerforms import *"
     file = parameters.get("file") or parameters.get("f")
     code = parameters.get("code") or parameters.get("c")
@@ -81,7 +77,7 @@ def evaluate_parameters_file_and_code(parameters: dict) -> dict:
     if code:
         return {"code": code}
 
-    return {"code": EMPTY_FORM}
+    return {"code": EMPTY_FORM} if use_default else {}
 
 
 def evaluate_flag_parameters(parameters: dict) -> dict:
@@ -97,7 +93,6 @@ def evaluate_flag_parameters(parameters: dict) -> dict:
 
             messages.invalid_flag_parameter_value(param)
             exit()
-
     return evaluated_params
 
 
@@ -189,9 +184,9 @@ class Forms(Resource):
         check_valid_parameters(kwargs)
 
         form_data = {
-            **evaluate_parameter_name(kwargs),
+            **evaluate_parameter_name(kwargs, use_default=False),
             **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_file_and_code(kwargs),
+            **evaluate_parameters_file_and_code(kwargs, use_default=False),
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),

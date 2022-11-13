@@ -109,6 +109,7 @@ The current options for each resource are:
   1.  `--path`: string
   1.  `--file` or `--f`: file_path
   1.  `--code` or `--c`: string
+  1.  `--enabled`: boolean
   1.  `--background`: image_path or string
   1.  `--main-color`: string
   1.  `--start-message`: string
@@ -180,6 +181,8 @@ abstra add packages --requirement requirements.txt
 
 abstra add form --name="my_form" -f main.py --background '#fffeee'
 
+abstra add form --path=test -f test.py --enabled=False
+
 abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay('hello_world')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart
 
 ```
@@ -206,21 +209,22 @@ The current options for each resource are:
   3.  `--path`: string
   4.  `--file`: file_path
   5.  `--code`: string
-  6.  `--background`: image_path or string
-  7.  `--main-color`: string
-  8.  `--start-message`: string
-  9.  `--error-message`: string
-  10. `--end-message`: string
-  11. `--start-button-text`: string
-  12. `--timeout-message`: string
-  13. `--logo-url`: string
-  14. `--show-sidebar`: boolean
-  15. `--log-messages`: boolean
-  16. `--font-color`: string
-  17. `--auto-start`: boolean
-  18. `--allow-restart`: boolean
-  19. `--welcome-title`: string
-  20. `--brand-name`: string
+  6.  `--enabled`: boolean
+  7.  `--background`: image_path or string
+  8.  `--main-color`: string
+  9.  `--start-message`: string
+  10. `--error-message`: string
+  11. `--end-message`: string
+  12. `--start-button-text`: string
+  13. `--timeout-message`: string
+  14. `--logo-url`: string
+  15. `--show-sidebar`: boolean
+  16. `--log-messages`: boolean
+  17. `--font-color`: string
+  18. `--auto-start`: boolean
+  19. `--allow-restart`: boolean
+  20. `--welcome-title`: string
+  21. `--brand-name`: string
 
 \*note: set either file or code, but not both.
 

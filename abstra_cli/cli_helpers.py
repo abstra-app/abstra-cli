@@ -40,6 +40,8 @@ def print_packages(packages):
 
 def print_forms(forms):
     forms.sort(key=lambda x: x["path"])
-    max_d = max([len(f["path"]) for f in forms])
+    max_path = max([len(f["path"]) for f in forms])
+    max_title = max([len(f["title"]) for f in forms])
     for form in forms:
-        print(f"{utils.format_digits(form['path'], max_d)} - {form['title']}")
+        enabled = 'enabled' if form['script']['enabled'] else 'disabled'
+        print(f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})")
