@@ -199,7 +199,7 @@ abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay
 
 # hooks
 
-abstra add hook --name="my_hook" -f main.py --upsert
+abstra add hook --name="test hook" -f main.py --upsert
 
 abstra add hook --path=test -f test.py --enabled=False
 
@@ -247,12 +247,11 @@ The current options for each resource are:
 \*note: set either file or code, but not both.
 
 - hooks:
+  1.  `hook_path`: string (required parameter)
   1.  `--name` or `--n` or `--title`: string
-  1.  `--path`: string
   1.  `--file` or `--f`: file_path
   1.  `--code` or `--c`: string
   1.  `--enabled`: boolean
-  1.  `--upsert`: boolean
 
 Examples:
 
@@ -260,7 +259,9 @@ Examples:
 
 # Forms
 
-abstra update form 7e549274-0e59-4b56-ad08-21bf48793be2 --name="Another name" --allow-restart
+abstra update form new-onboarding --name="Another name" --allow-restart
+
+abstra update hook stripe-callback --enabled
 ```
 
 ### Remove resource
@@ -285,13 +286,17 @@ abstra remove packages pandas numpy scipy
 
 abstra remove form sales-onboarding
 
+abstra remove hook stripe-test
+
 ```
 
 ### Play resource
 
 ```sh
 
-abstra play form 7e549274-0e59-4b56-ad08-21bf48793be2
+abstra play form b2b-ingestion
+
+abstra play hook hasura-callback --method POST
 
 ```
 
