@@ -2,10 +2,10 @@ import abstra_cli.apis.main as api_main
 import abstra_cli.utils_config as utils_config
 
 
-def list_workspace_forms():
+def list_workspace_hooks():
     query = """
-        query GetForms {
-            forms {
+        query GetHooks {
+            hooks {
                 path
                 title
                 script {
@@ -14,14 +14,13 @@ def list_workspace_forms():
             }
         }
     """
-    return api_main.hf_hasura_runner(query).get("forms", [])
+    return api_main.hf_hasura_runner(query).get("hooks", [])
 
 
-def add_workspace_form(data):
+def add_workspace_hook(data):
     _, workspace_id, _ = utils_config.get_auth_info()
-    form_data = {
+    hook_data = {
         "title": data["name"],
-        "workspace_id": workspace_id,
         "script": {
             "data": {
                 "workspace_id": workspace_id,
@@ -35,12 +34,12 @@ def add_workspace_form(data):
     data.pop("name", None)
     data.pop("code", None)
     data.pop("enabled", None)
-    form_data.update(data)
+    hook_data.update(data)
 
     query = """
-        mutation InsertForm($form_data: [forms_insert_input!]!) {
-            insert_forms(
-                objects: $form_data
+        mutation InsertHook($hook_data: [hooks_insert_input!]!) {
+            insert_hooks(
+                objects: $hook_data
             ) {
                 returning {
                     path
@@ -51,40 +50,40 @@ def add_workspace_form(data):
     """
 
     return (
-        api_main.hf_hasura_runner(query, {"form_data": form_data})
-        .get("insert_forms", {})
+        api_main.hf_hasura_runner(query, {"hook_data": hook_data})
+        .get("insert_hooks", {})
         .get("returning", {})[0]
     )
 
 
-def update_workspace_form(path, data):
-    form_data = data.copy()
+def update_workspace_hook(path, data):
+    hook_data = data.copy()
     script_data = {}
 
-    name = form_data.pop("name", None)
+    name = hook_data.pop("name", None)
     if name:
-        form_data["title"] = name
+        hook_data["title"] = name
         script_data["name"] = name
 
-    code = form_data.pop("code", None)
+    code = hook_data.pop("code", None)
     if code:
         script_data["code"] = code
 
-    enabled = form_data.pop("enabled", None)
+    enabled = hook_data.pop("enabled", None)
     if enabled is not None:
         script_data["enabled"] = enabled
 
-    request_data = {"path": path, "form_data": form_data, "script_data": script_data}
+    request_data = {"path": path, "hook_data": hook_data, "script_data": script_data}
     update_query = """
-        mutation UpdateForm($path: String!, $form_data: forms_set_input, $script_data: scripts_set_input = {}) {
-            update_forms(where: {path: {_eq: $path}}, _set: $form_data) {
+        mutation UpdateHook($path: String!, $hook_data: hooks_set_input, $script_data: scripts_set_input = {}) {
+            update_hooks(where: {path: {_eq: $path}}, _set: $hook_data) {
                 returning {
                     id
                     path
                     title
                 }
             }
-            update_scripts(where: {form: {path: {_eq: $path}}}, _set: $script_data) {
+            update_scripts(where: {hook: {path: {_eq: $path}}}, _set: $script_data) {
                 returning {
                     name
                 }
@@ -94,28 +93,28 @@ def update_workspace_form(path, data):
     return api_main.hf_hasura_runner(update_query, request_data)
 
 
-def upsert_workspace_form(data):
+def upsert_workspace_hook(data):
     path = data["path"]
 
     query = """
-        query FindForm($path: String!) {
-            forms(where: {path: {_eq: $path}}) {
+        query FindHook($path: String!) {
+            hooks(where: {path: {_eq: $path}}) {
                 path
             }
         }
     """
 
-    forms = api_main.hf_hasura_runner(query, {"path": path}).get("forms")
-    if len(forms):
-        return update_workspace_form(path, data)
+    hooks = api_main.hf_hasura_runner(query, {"path": path}).get("hooks")
+    if len(hooks):
+        return update_workspace_hook(path, data)
     else:
-        return add_workspace_form(data)
+        return add_workspace_hook(data)
 
 
-def delete_workspace_form(path):
+def delete_workspace_hook(path):
     query = """
-        mutation DeleteForm($path: String!) {
-            delete_forms(where: {path: {_eq: $path}}) {
+        mutation DeleteHook($path: String!) {
+            delete_hooks(where: {path: {_eq: $path}}) {
                 returning {
                     id
                     path

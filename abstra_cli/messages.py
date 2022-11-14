@@ -1,25 +1,25 @@
-def form_created_message(form: str):
-    print(f"Form created successfully: {form}")
+def created_message(resource: str, form: str):
+    print(f"{resource} created successfully: {form}")
 
 
-def form_upserted_message(form: str):
-    print(f"Form upserted successfully: {form}")
+def upserted_message(resource: str, form: str):
+    print(f"{resource} upserted successfully: {form}")
 
 
-def form_create_failed():
-    print(f"Failed to create form")
+def create_failed(resource: str):
+    print(f"Failed to create {resource}")
 
 
-def form_updated_message(form: str):
-    print(f"Form updated successfully: {form}")
+def updated_message(resource: str, form: str):
+    print(f"{resource} updated successfully: {form}")
 
 
-def form_deleted_message(form: str):
-    print(f"Form deleted successfully: {form}")
+def deleted_message(resource: str, form: str):
+    print(f"{resource} deleted successfully: {form}")
 
 
-def form_update_failed(form: str):
-    print(f"Failed to update form: {form}")
+def update_failed(resource: str, form: str):
+    print(f"Failed to update {resource}: {form}")
 
 
 def not_implemented(*args, **kwargs):
@@ -86,3 +86,7 @@ def error_upload_background_message(path):
 
 def form_url(url):
     print(f"Opening URL {url}")
+
+
+def hook_url(url, method):
+    print(f"Making {method} request to URL {url}")

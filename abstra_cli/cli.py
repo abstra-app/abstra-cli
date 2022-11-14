@@ -3,7 +3,7 @@ import fire
 import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.utils_config as utils_config
 import abstra_cli.messages as messages
-from abstra_cli.resources import Forms, Files, Packages, Vars
+from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks
 
 
 class CLI(object):
@@ -23,8 +23,9 @@ class CLI(object):
         list_func = {
             "vars": Vars.list,
             "files": Files.list,
-            "packages": Packages.list,
             "forms": Forms.list,
+            "hooks": Hooks.list,
+            "packages": Packages.list,
         }.get(resource, messages.not_implemented)
 
         list_func()
@@ -33,16 +34,24 @@ class CLI(object):
     def add(self, resource, *args, **kwargs):
         add_func = {
             "vars": Vars.add,
+            "form": Forms.add,
+            "hook": Hooks.add,
+            "forms": Forms.add,
+            "hooks": Hooks.add,
             "files": Files.add,
             "packages": Packages.add,
-            "form": Forms.add,
         }.get(resource, messages.not_implemented)
 
         add_func(*args, **kwargs)
 
     @utils_config.credentials_check
     def update(self, resource, *args, **kwargs):
-        update_func = {"form": Forms.update}.get(resource, messages.not_implemented)
+        update_func = {
+            "form": Forms.update,
+            "hook": Hooks.update,
+            "forms": Forms.update,
+            "hooks": Hooks.update,
+        }.get(resource, messages.not_implemented)
 
         update_func(*args, **kwargs)
 
@@ -50,9 +59,12 @@ class CLI(object):
     def remove(self, resource, *args, **kwargs):
         remove_func = {
             "vars": Vars.remove,
+            "form": Forms.remove,
+            "hook": Hooks.remove,
+            "forms": Forms.remove,
+            "hooks": Hooks.remove,
             "files": Files.remove,
             "packages": Packages.remove,
-            "form": Forms.remove,
         }.get(resource, messages.not_implemented)
 
         remove_func(*args, **kwargs)
@@ -61,6 +73,9 @@ class CLI(object):
     def play(self, resource, *args, **kwargs):
         play_func = {
             "form": Forms.play,
+            "hook": Hooks.play,
+            "forms": Forms.play,
+            "hooks": Hooks.play,
         }.get(resource, messages.not_implemented)
 
         play_func(*args, **kwargs)
