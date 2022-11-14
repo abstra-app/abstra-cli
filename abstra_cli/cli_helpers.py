@@ -58,3 +58,15 @@ def print_hooks(hooks):
         print(
             f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
         )
+
+
+def print_jobs(jobs):
+    jobs.sort(key=lambda x: x["identifier"])
+    max_idt = max([len(f["identifier"]) for f in jobs])
+    max_title = max([len(f["title"]) for f in jobs])
+    max_schedule = max([len(f["schedule"]) for f in jobs])
+    for j in jobs:
+        enabled = "enabled" if j["script"]["enabled"] else "disabled"
+        print(
+            f"{utils.format_digits(j['identifier'], max_idt)} - {utils.format_digits(j['schedule'], max_schedule)} - {utils.format_digits(j['title'], max_title)} ({enabled})"
+        )

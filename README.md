@@ -57,7 +57,7 @@ usage: abstra \<command> \<resource> [\<argument>...] [--\<optional-argument-nam
 
 The available commands are: list, add, update*, remove and play*.
 \*note: update and play commands are currently only available for forms and hooks .
-Remote resources can be `forms`, `hooks`, `files`, `vars` or `packages`.
+Remote resources can be `forms`, `hooks`, `jobs`, `files`, `vars` or `packages`.
 
 You can manage remote resources with the following commands:
 
@@ -65,7 +65,7 @@ You can manage remote resources with the following commands:
 
 ```sh
 
-abstra list RESOURCE{forms, hooks, files, vars, packages}
+abstra list RESOURCE{forms, hooks, jobs, files, vars, packages}
 
 ```
 
@@ -84,6 +84,8 @@ abstra list files
 abstra list forms
 
 abstra list hooks
+
+abstra list jobs
 
 # Saving env vars and packages
 
@@ -133,6 +135,17 @@ The current options for each resource are:
 - hooks:
   1.  `--name` or `--n` or `--title`: string
   1.  `--path`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
+  1.  `--enabled`: boolean
+  1.  `--upsert`: boolean
+
+\*note: set either file or code, but not both.
+
+- jobs:
+  1.  `--name` or `--n` or `--title`: string
+  1.  `--identifier` or `--idt`: string
+  1.  `--schedule` or `--crontab`: string
   1.  `--file` or `--f`: file_path
   1.  `--code` or `--c`: string
   1.  `--enabled`: boolean
@@ -203,17 +216,23 @@ abstra add hook --name="test hook" -f main.py --upsert
 
 abstra add hook --path=test -f test.py --enabled=False
 
+# jobs
+
+abstra ad job --idt new-job --noenabled --name="Test Job" --upsert
+
+abstra ad job --idt daily --schedule="00 00 00 * *" --name="Every midnight"
+
 ```
 
 ### Update resource
 
-_currently only available for forms_
+_currently only available for forms, hooks and jobs_
 
 ````sh
 
 ```sh
 
-abstra update [FORM_PATH] [...OPTIONS]
+abstra update [IDENTIFIER OR PATH] [...OPTIONS]
 
 ````
 
@@ -222,6 +241,7 @@ Updates remote resources on your workspace.
 The current options for each resource are:
 
 - forms:
+
   1.  `form_path`: string (required parameter)
   2.  `--name`: string
   3.  `--path`: string
@@ -244,11 +264,20 @@ The current options for each resource are:
   20. `--welcome-title`: string
   21. `--brand-name`: string
 
-\*note: set either file or code, but not both.
-
 - hooks:
+
   1.  `hook_path`: string (required parameter)
   1.  `--name` or `--n` or `--title`: string
+  1.  `--path`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
+  1.  `--enabled`: boolean
+
+- jobs:
+  1.  `identifier`: string (required parameter)
+  1.  `--name` or `--n` or `--title`: string
+  1.  `--identifier` or `--idt`: string
+  1.  `--schedule` or `--crontab`: string
   1.  `--file` or `--f`: file_path
   1.  `--code` or `--c`: string
   1.  `--enabled`: boolean
@@ -262,6 +291,8 @@ Examples:
 abstra update form new-onboarding --name="Another name" --allow-restart
 
 abstra update hook stripe-callback --enabled
+
+abstra update job daily --schedule="00 00 5 * *"
 ```
 
 ### Remove resource
@@ -287,6 +318,8 @@ abstra remove packages pandas numpy scipy
 abstra remove form sales-onboarding
 
 abstra remove hook stripe-test
+
+abstra remove job monthly
 
 ```
 
