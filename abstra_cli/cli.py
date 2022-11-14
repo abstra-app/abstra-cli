@@ -3,7 +3,7 @@ import fire
 import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.utils_config as utils_config
 import abstra_cli.messages as messages
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks
+from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs
 
 
 class CLI(object):
@@ -22,6 +22,7 @@ class CLI(object):
     def list(self, resource, **kwargs):
         list_func = {
             "vars": Vars.list,
+            "jobs": Jobs.list,
             "files": Files.list,
             "forms": Forms.list,
             "hooks": Hooks.list,
@@ -36,6 +37,8 @@ class CLI(object):
             "vars": Vars.add,
             "form": Forms.add,
             "hook": Hooks.add,
+            "job": Jobs.add,
+            "jobs": Jobs.add,
             "forms": Forms.add,
             "hooks": Hooks.add,
             "files": Files.add,
@@ -51,6 +54,8 @@ class CLI(object):
             "hook": Hooks.update,
             "forms": Forms.update,
             "hooks": Hooks.update,
+            "job": Jobs.update,
+            "jobs": Jobs.update,
         }.get(resource, messages.not_implemented)
 
         update_func(*args, **kwargs)
@@ -61,6 +66,8 @@ class CLI(object):
             "vars": Vars.remove,
             "form": Forms.remove,
             "hook": Hooks.remove,
+            "job": Jobs.remove,
+            "jobs": Jobs.remove,
             "forms": Forms.remove,
             "hooks": Hooks.remove,
             "files": Files.remove,
