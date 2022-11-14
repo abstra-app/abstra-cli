@@ -74,7 +74,11 @@ def update_workspace_job(identifier, data):
     if enabled is not None:
         script_data["enabled"] = enabled
 
-    request_data = {"identifier": identifier, "job_data": job_data, "script_data": script_data}
+    request_data = {
+        "identifier": identifier,
+        "job_data": job_data,
+        "script_data": script_data,
+    }
     update_query = """
         mutation UpdateJob($identifier: String!, $job_data: jobs_set_input, $script_data: scripts_set_input = {}) {
             update_jobs(where: {identifier: {_eq: $identifier}}, _set: $job_data) {

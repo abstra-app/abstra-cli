@@ -12,7 +12,9 @@ NAME_PARAMETERS = ["name", "title"]
 IDT_PARAMETERS = ["identifier", "idt"]
 CODE_PARAMETERS = ["file", "f", "code", "c"]
 SCHEDULE_PARAMETERS = ["schedule", "crontab"]
-NON_FLAG_PARAMETERS = NAME_PARAMETERS + IDT_PARAMETERS + CODE_PARAMETERS + SCHEDULE_PARAMETERS
+NON_FLAG_PARAMETERS = (
+    NAME_PARAMETERS + IDT_PARAMETERS + CODE_PARAMETERS + SCHEDULE_PARAMETERS
+)
 FLAG_PARAMETERS = ["enabled"]
 JOB_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
@@ -49,7 +51,7 @@ def evaluate_parameter_schedule(parameters: dict, use_default=True) -> dict:
             CronTab(schedule)
             return {"schedule": schedule}
         except:
-            print('Bad crontab expression')
+            print("Bad crontab expression")
             exit()
 
     return {"schedule": "00 00 00 * *"} if use_default else {}
@@ -99,7 +101,7 @@ class Jobs(Resource):
     @staticmethod
     def add(*args, **kwargs):
         upsert = kwargs.pop("upsert", False)
-        idt = evaluate_parameter_idt(kwargs).get('identifier')
+        idt = evaluate_parameter_idt(kwargs).get("identifier")
         if upsert and not idt:
             messages.upsert_without_identifier("identifier")
             exit()
