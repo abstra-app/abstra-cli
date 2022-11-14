@@ -18,7 +18,7 @@ pip[x] install abstra-cli
 
 # Commands
 
-Most commands are authenticated. To authenticate you need to generate an API Token [here](https://forms.abstra.run/737986ce-a8ed-4c7b-bd7e-5f0b11331b66).
+Most commands are authenticated. To authenticate you need to generate an API Token [here](https://forms.abstra.run/generate-token).
 
 Authentication credentials are stored in the current directory at `.abstra/credentials`.
 
@@ -56,8 +56,8 @@ The general structure of the commands follows the pattern below:
 usage: abstra \<command> \<resource> [\<argument>...] [--\<optional-argument-name> \<optional-argument-value> ...]
 
 The available commands are: list, add, update*, remove and play*.
-\*note: update and play commands are currently only available to the forms resource .
-Remote resources can be `forms`, `files`, `vars` or `packages`.
+\*note: update and play commands are currently only available for forms and hooks .
+Remote resources can be `forms`, `hooks`, `files`, `vars` or `packages`.
 
 You can manage remote resources with the following commands:
 
@@ -65,7 +65,7 @@ You can manage remote resources with the following commands:
 
 ```sh
 
-abstra list RESOURCE{forms, files, vars, packages}
+abstra list RESOURCE{forms, hooks, files, vars, packages}
 
 ```
 
@@ -83,6 +83,7 @@ abstra list files
 
 abstra list forms
 
+abstra list hooks
 
 # Saving env vars and packages
 
@@ -125,6 +126,16 @@ The current options for each resource are:
   1.  `--allow-restart`: boolean
   1.  `--welcome-title`: string
   1.  `--brand-name`: string
+  1.  `--upsert`: boolean
+
+\*note: set either file or code, but not both.
+
+- hooks:
+  1.  `--name` or `--n` or `--title`: string
+  1.  `--path`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
+  1.  `--enabled`: boolean
   1.  `--upsert`: boolean
 
 \*note: set either file or code, but not both.
@@ -185,6 +196,13 @@ abstra add form --path=test -f test.py --enabled=False
 
 abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay('hello_world')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart
 
+
+# hooks
+
+abstra add hook --name="my_hook" -f main.py --upsert
+
+abstra add hook --path=test -f test.py --enabled=False
+
 ```
 
 ### Update resource
@@ -227,6 +245,14 @@ The current options for each resource are:
   21. `--brand-name`: string
 
 \*note: set either file or code, but not both.
+
+- hooks:
+  1.  `--name` or `--n` or `--title`: string
+  1.  `--path`: string
+  1.  `--file` or `--f`: file_path
+  1.  `--code` or `--c`: string
+  1.  `--enabled`: boolean
+  1.  `--upsert`: boolean
 
 Examples:
 

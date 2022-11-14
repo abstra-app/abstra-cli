@@ -43,5 +43,18 @@ def print_forms(forms):
     max_path = max([len(f["path"]) for f in forms])
     max_title = max([len(f["title"]) for f in forms])
     for form in forms:
-        enabled = 'enabled' if form['script']['enabled'] else 'disabled'
-        print(f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})")
+        enabled = "enabled" if form["script"]["enabled"] else "disabled"
+        print(
+            f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
+        )
+
+
+def print_hooks(hooks):
+    hooks.sort(key=lambda x: x["path"])
+    max_path = max([len(f["path"]) for f in hooks])
+    max_title = max([len(f["title"]) for f in hooks])
+    for form in hooks:
+        enabled = "enabled" if form["script"]["enabled"] else "disabled"
+        print(
+            f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
+        )
