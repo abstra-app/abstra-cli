@@ -31,6 +31,7 @@ setup(
         "simple_websocket_server",
         "progress",
         "colour",
+        "crontab",
     ],
     entry_points={
         "console_scripts": [
