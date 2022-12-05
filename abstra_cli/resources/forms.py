@@ -19,6 +19,7 @@ OTHER_PARAMETERS = [
     "timeout_mesage",
     "main_color",
     "start_button_text",
+    "restart_button_text",
     "logo_url",
     "log_messages",
     "font_color",
@@ -48,7 +49,8 @@ def check_valid_parameters(parameters: dict) -> None:
 
 
 def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
-    name = parameters.get("name") or parameters.get("n") or parameters.get("title")
+    name = parameters.get("name") or parameters.get(
+        "n") or parameters.get("title")
     if not name and not use_default:
         return {}
     return {"name": name or "New Form"}
