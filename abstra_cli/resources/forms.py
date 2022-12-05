@@ -19,6 +19,7 @@ OTHER_PARAMETERS = [
     "timeout_mesage",
     "main_color",
     "start_button_text",
+    "restart_button_text",
     "logo_url",
     "log_messages",
     "font_color",
