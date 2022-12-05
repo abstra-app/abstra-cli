@@ -31,12 +31,12 @@ echo 'removing files...'
 abstra remove files README.md
 
 echo 'adding new form...'
-form_id=$(abstra add form --name="Form name" --code "x = read('test')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart)
+form_id=$(abstra add form --name="Form name" --code "x = read('test')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --restart-button-text 'restart button text' --show-sidebar --allow-restart)
 
 form_id=$( echo $form_id | awk -F'Form created successfully: ' '{print $2}')
 
 echo 'updating form...'
-abstra update form $form_id --name="Another name" --code "x = read('another test')" --background '#fff555' --main-color blue --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart
+abstra update form $form_id --name="Another name" --code "x = read('another test')" --background '#fff555' --main-color blue --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --restart-button-text 'restart button text' --show-sidebar --allow-restart
 
 echo 'running form...'
 abstra play form $form_id
