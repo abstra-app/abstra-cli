@@ -119,6 +119,7 @@ The current options for each resource are:
   1.  `--error-message`: string
   1.  `--end-message`: string
   1.  `--start-button-text`: string
+  1.  `--restart-button-text`: string
   1.  `--timeout-message`: string
   1.  `--logo-url`: string
   1.  `--show-sidebar`: boolean
@@ -243,26 +244,27 @@ The current options for each resource are:
 - forms:
 
   1.  `form_path`: string (required parameter)
-  2.  `--name`: string
-  3.  `--path`: string
-  4.  `--file`: file_path
-  5.  `--code`: string
-  6.  `--enabled`: boolean
-  7.  `--background`: image_path or string
-  8.  `--main-color`: string
-  9.  `--start-message`: string
-  10. `--error-message`: string
-  11. `--end-message`: string
-  12. `--start-button-text`: string
-  13. `--timeout-message`: string
-  14. `--logo-url`: string
-  15. `--show-sidebar`: boolean
-  16. `--log-messages`: boolean
-  17. `--font-color`: string
-  18. `--auto-start`: boolean
-  19. `--allow-restart`: boolean
-  20. `--welcome-title`: string
-  21. `--brand-name`: string
+  1.  `--name`: string
+  1.  `--path`: string
+  1.  `--file`: file_path
+  1.  `--code`: string
+  1.  `--enabled`: boolean
+  1.  `--background`: image_path or string
+  1.  `--main-color`: string
+  1.  `--start-message`: string
+  1. `--error-message`: string
+  1. `--end-message`: string
+  1. `--start-button-text`: string
+  1. `--restart-button-text`: string
+  1. `--timeout-message`: string
+  1. `--logo-url`: string
+  1. `--show-sidebar`: boolean
+  1. `--log-messages`: boolean
+  1. `--font-color`: string
+  1. `--auto-start`: boolean
+  1. `--allow-restart`: boolean
+  1. `--welcome-title`: string
+  1. `--brand-name`: string
 
 - hooks:
 
