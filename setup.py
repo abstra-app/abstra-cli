@@ -15,6 +15,9 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+# The list of requirements
+requirements = (HERE / "requirements.txt").read_text().split('\n')
+
 setup(
     name="abstra-cli",
     version=version,
@@ -24,15 +27,7 @@ setup(
     url="https://github.com/abstra-app/abstra-cli",
     license="MIT",
     packages=["abstra_cli", "abstra_cli.resources", "abstra_cli.apis"],
-    install_requires=[
-        "setuptools",
-        "requests",
-        "fire",
-        "simple_websocket_server",
-        "progress",
-        "colour",
-        "crontab",
-    ],
+    install_requires=requirements,
     entry_points={
         "console_scripts": [
             "abstra=abstra_cli.cli:main",
