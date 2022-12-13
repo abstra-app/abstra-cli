@@ -52,7 +52,7 @@ The available commands are:
 - `remove`
 - `play`*
 
-Remote resources can be
+Remote resources can be:
 - `forms`
 - `hooks`
 - `jobs`
@@ -175,7 +175,7 @@ abstra ad job --idt new-job --noenabled --name="Test Job" --upsert
 abstra ad job --idt daily --schedule="00 00 00 * *" --name="Every midnight"
 ```
 
-### `files`
+#### `files`
 - file_path[]: list of file or directory paths
 
 Examples:
@@ -185,7 +185,7 @@ abstra add files foo.txt bar.log
 abstra add files foo/ ./
 ```
 
-### `vars`
+#### `vars`
 -  environment_variable[]: list of Key=Value env vars
 -  -f or \-\-file: file_path (ex. -f .env)
 
@@ -224,12 +224,10 @@ Updates remote resources on your workspace.
 _Currently only available for forms, hooks and jobs_
 
 ```sh
-
 abstra update [IDENTIFIER OR PATH] [...OPTIONS]
-
 ```
 
-The current options for each resource are:
+The options for each resource are:
 
 #### `forms`
 
@@ -261,7 +259,7 @@ Examples:
 abstra update form new-onboarding --name="Another name" --allow-restart
 ```
 
-#### jobs:
+#### `jobs`:
 - `identifier`: string (required parameter)
 - `--name` or `--n` or `--title`: string
 - `--identifier` or `--idt`: string
@@ -314,6 +312,7 @@ abstra remove packages pandas numpy scipy
 
 ### Play resource
 Run the resource on Abstra Cloud.
+_Currently only available for forms._
 
 ```sh
 abstra play RESOURCE [...OPTIONS]
@@ -322,8 +321,6 @@ abstra play RESOURCE [...OPTIONS]
 Examples:
 ```sh
 abstra play form b2b-ingestion
-
-abstra play hook hasura-callback --method POST
 ```
 
 ### Aliases
