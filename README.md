@@ -48,9 +48,9 @@ abstra <command> <resource> [<argument>...] [--<optional-argument-name> <optiona
 The available commands are:
 - `list`
 - `add`
-- `update`*
+- `update`
 - `remove`
-- `play`*
+- `play`
 
 Remote resources can be:
 - `forms`
@@ -59,8 +59,6 @@ Remote resources can be:
 - `files`
 - `vars`
 - `packages`
-
-\* Note: update and play commands are currently only available for forms and hooks.
 
 ### List resources
 
