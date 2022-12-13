@@ -1,80 +1,78 @@
-[![pypi](https://img.shields.io/pypi/v/abstra-cli.svg)](https://pypi.python.org/pypi/abstra-cli)
+[![pypi](https://img.shields.io/pypi/v/abstra-cli.svg)](https://pypi.python.org/pypi/abstra-cli) [![PyPI Downloads](https://img.shields.io/pypi/dm/abstra-cli.svg)](https://pypi.org/project/abstra-cli/) [![Code check](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml/badge.svg)](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml)
 
-[![PyPI Downloads](https://img.shields.io/pypi/dm/abstra-cli.svg)](https://pypi.org/project/abstra-cli/)
+# Abstra CLI
+Command Line Interface for Abstra Cloud
 
-[![Code check](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml/badge.svg)](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml)
+## Getting Started
 
-# abstra-cli
+### Installation
 
-# Install
-
-Download from pip (preferably using pipx):
+Download preferably using pipx:
 
 ```sh
-
-pip[x] install abstra-cli
-
+pipx install abstra-cli
 ```
 
-# Commands
-
-Most commands are authenticated. To authenticate you need to generate an API Token [here](https://forms.abstra.run/generate-token).
-
-Authentication credentials are stored in the current directory at `.abstra/credentials`.
-
-Alternatively you can set the `ABSTRA_API_TOKEN` environment variable.
-
-## Configure
+Or using pip: 
 
 ```sh
+pip install abstra-cli
+```
 
+### Authentication
+
+You will need to be authenticated to run most commands.
+
+1. Generate an API Token [here](https://forms.abstra.run/generate-token)
+
+2. Run command below with the generated token:
+
+```sh
 abstra configure [API_TOKEN]
-
 ```
 
-It configures the current working directory credentials. Credentials are stored at `.abstra/credentials`.
+- Credentials are stored at `.abstra/credentials` path inside current directory.
 
-## Ignoring files
+- Alternatively you can set the `ABSTRA_API_TOKEN` environment variable.
 
-You can ignore files placing a `.abstraignore` at the target directory:
 
-```
-
-__pycache__
-
-tests/
-
-*.ipynb
-
-```
-
-`.abstraignore` itself will always be ignored
-
-## Remote resources
+## Usage
 
 The general structure of the commands follows the pattern below:
-usage: abstra \<command> \<resource> [\<argument>...] [--\<optional-argument-name> \<optional-argument-value> ...]
 
-The available commands are: list, add, update*, remove and play*.
-\*note: update and play commands are currently only available for forms and hooks .
-Remote resources can be `forms`, `hooks`, `jobs`, `files`, `vars` or `packages`.
+```sh
+abstra <command> <resource> [<argument>...] [--<optional-argument-name> <optional-argument-value> ...]
+```
 
-You can manage remote resources with the following commands:
+
+The available commands are:
+- `list`
+- `add`
+- `update`*
+- `remove`
+- `play`*
+
+Remote resources can be
+- `forms`
+- `hooks`
+- `jobs`
+- `files`
+- `vars`
+- `packages`
+
+\* Note: update and play commands are currently only available for forms and hooks.
 
 ### List resources
 
-```sh
-
-abstra list RESOURCE{forms, hooks, jobs, files, vars, packages}
-
-```
-
 List remote resources on your workspace.
+
+```sh
+abstra list RESOURCE{forms, hooks, jobs, files, vars, packages}
+```
 
 Examples:
 
 ```sh
-
 abstra list packages
 
 abstra list vars
@@ -87,110 +85,128 @@ abstra list hooks
 
 abstra list jobs
 
-# Saving env vars and packages
-
+# Saving cloud packages to a requirements.txt file
 abstra list packages > requirements.txt
 
+# Saving cloud environment variables to a .env file
 abstra list vars > .env
-
 ```
 
 ### Add resource
+Adds remote resources on your workspace.
 
 ```sh
-
 abstra add RESOURCE [...OPTIONS]
-
 ```
-
-Adds remote resources on your workspace.
 
 The current options for each resource are:
 
-- forms:
-  1.  `--name` or `--n` or `--title`: string
-  1.  `--path`: string
-  1.  `--file` or `--f`: file_path
-  1.  `--code` or `--c`: string
-  1.  `--enabled`: boolean
-  1.  `--background`: image_path or string
-  1.  `--main-color`: string
-  1.  `--start-message`: string
-  1.  `--error-message`: string
-  1.  `--end-message`: string
-  1.  `--start-button-text`: string
-  1.  `--restart-button-text`: string
-  1.  `--timeout-message`: string
-  1.  `--logo-url`: string
-  1.  `--show-sidebar`: boolean
-  1.  `--log-messages`: boolean
-  1.  `--font-color`: string
-  1.  `--auto-start`: boolean
-  1.  `--allow-restart`: boolean
-  1.  `--welcome-title`: string
-  1.  `--brand-name`: string
-  1.  `--upsert`: boolean
+#### `forms`:
 
-\*note: set either file or code, but not both.
+-  `--name` or `--n` or `--title`: string
+-  `--path`: string
+-  `--file` or `--f`: file_path*
+-  `--code` or `--c`: string*
+-  `--enabled`: boolean
+-  `--background`: image_path or string
+-  `--main-color`: string
+-  `--start-message`: string
+-  `--error-message`: string
+-  `--end-message`: string
+-  `--start-button-text`: string
+-  `--restart-button-text`: string
+-  `--timeout-message`: string
+-  `--logo-url`: string
+-  `--show-sidebar`: boolean
+-  `--log-messages`: boolean
+-  `--font-color`: string
+-  `--auto-start`: boolean
+-  `--allow-restart`: boolean
+-  `--welcome-title`: string
+-  `--brand-name`: string
+-  `--upsert`: boolean
 
-- hooks:
-  1.  `--name` or `--n` or `--title`: string
-  1.  `--path`: string
-  1.  `--file` or `--f`: file_path
-  1.  `--code` or `--c`: string
-  1.  `--enabled`: boolean
-  1.  `--upsert`: boolean
-
-\*note: set either file or code, but not both.
-
-- jobs:
-  1.  `--name` or `--n` or `--title`: string
-  1.  `--identifier` or `--idt`: string
-  1.  `--schedule` or `--crontab`: string
-  1.  `--file` or `--f`: file_path
-  1.  `--code` or `--c`: string
-  1.  `--enabled`: boolean
-  1.  `--upsert`: boolean
-
-\*note: set either file or code, but not both.
-
-- files:
-
-  1. file_path[]: list of file or directory paths
-
-- vars:
-
-  1.  environment_variable[]: list of Key=Value env vars
-  2.  -f or \-\-file: file_path (ex. -f .env)
-
-- packages:
-  1. package_name[]: list of packages with optional version (ex. numpy=1.0.1)
-  2. -f or \-\-file: file_path (ex. --file requirements.txt)
+\* Note: set either file or code, not both.
 
 Examples:
 
 ```sh
+abstra add form --name="my_form" -f main.py --background '#fffeee'
 
-# Files
+abstra add form --path=test -f test.py --enabled=False
 
+abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay('hello_world')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart
+```
+
+#### `hooks`
+  -  `--name` or `--n` or `--title`: string
+  -  `--path`: string
+  -  `--file` or `--f`: file_path*
+  -  `--code` or `--c`: string*
+  -  `--enabled`: boolean
+  -  `--upsert`: boolean
+
+\* Note: set either file or code, but not both.
+
+Examples:
+
+```sh
+abstra add hook --name="test hook" -f main.py --upsert
+
+abstra add hook --path=test -f test.py --enabled=False
+```
+
+#### `jobs`
+  -  `--name` or `--n` or `--title`: string
+  -  `--identifier` or `--idt`: string
+  -  `--schedule` or `--crontab`: string
+  -  `--file` or `--f`: file_path
+  -  `--code` or `--c`: string
+  -  `--enabled`: boolean
+  -  `--upsert`: boolean
+
+\* Note: set either file or code, but not both.
+
+Examples:
+
+```sh
+abstra ad job --idt new-job --noenabled --name="Test Job" --upsert
+
+abstra ad job --idt daily --schedule="00 00 00 * *" --name="Every midnight"
+```
+
+### `files`
+- file_path[]: list of file or directory paths
+
+Examples:
+```sh
 abstra add files foo.txt bar.log
 
 abstra add files foo/ ./
+```
 
+### `vars`
+-  environment_variable[]: list of Key=Value env vars
+-  -f or \-\-file: file_path (ex. -f .env)
 
+Examples:
 
-# Vars
-
+```sh
 abstra add vars ENVIROMENT=production VERSION=1.0.0
 
 abstra add vars -f .env
 
 abstra add vars --file .env
+```
 
 
+#### `packages`
+  - package_name[]: list of packages with optional version (ex. numpy=1.0.1)
+  - -f or \-\-file: file_path (ex. --file requirements.txt)
 
-# Packages
+Examples:
 
+```sh
 abstra add packages pandas numpy=1.0.1 scipy>=1.0.1
 
 abstra add packages -f requirements.txt
@@ -200,181 +216,157 @@ abstra add packages -r requirements.txt
 abstra add packages --file requirements.txt
 
 abstra add packages --requirement requirements.txt
-
-
-# forms
-
-abstra add form --name="my_form" -f main.py --background '#fffeee'
-
-abstra add form --path=test -f test.py --enabled=False
-
-abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay('hello_world')" --background '#fffeee' --main-color red --start-message 'start message' --error-message 'error-message' --end-message 'end message' --start-button-text 'start button text' --show-sidebar --allow-restart
-
-
-# hooks
-
-abstra add hook --name="test hook" -f main.py --upsert
-
-abstra add hook --path=test -f test.py --enabled=False
-
-# jobs
-
-abstra ad job --idt new-job --noenabled --name="Test Job" --upsert
-
-abstra ad job --idt daily --schedule="00 00 00 * *" --name="Every midnight"
-
 ```
 
 ### Update resource
+Updates remote resources on your workspace.
 
-_currently only available for forms, hooks and jobs_
-
-````sh
+_Currently only available for forms, hooks and jobs_
 
 ```sh
 
 abstra update [IDENTIFIER OR PATH] [...OPTIONS]
 
-````
-
-Updates remote resources on your workspace.
+```
 
 The current options for each resource are:
 
-- forms:
+#### `forms`
 
-  1.  `form_path`: string (required parameter)
-  1.  `--name`: string
-  1.  `--path`: string
-  1.  `--file`: file_path
-  1.  `--code`: string
-  1.  `--enabled`: boolean
-  1.  `--background`: image_path or string
-  1.  `--main-color`: string
-  1.  `--start-message`: string
-  1. `--error-message`: string
-  1. `--end-message`: string
-  1. `--start-button-text`: string
-  1. `--restart-button-text`: string
-  1. `--timeout-message`: string
-  1. `--logo-url`: string
-  1. `--show-sidebar`: boolean
-  1. `--log-messages`: boolean
-  1. `--font-color`: string
-  1. `--auto-start`: boolean
-  1. `--allow-restart`: boolean
-  1. `--welcome-title`: string
-  1. `--brand-name`: string
-
-- hooks:
-
-  1.  `hook_path`: string (required parameter)
-  1.  `--name` or `--n` or `--title`: string
-  1.  `--path`: string
-  1.  `--file` or `--f`: file_path
-  1.  `--code` or `--c`: string
-  1.  `--enabled`: boolean
-
-- jobs:
-  1.  `identifier`: string (required parameter)
-  1.  `--name` or `--n` or `--title`: string
-  1.  `--identifier` or `--idt`: string
-  1.  `--schedule` or `--crontab`: string
-  1.  `--file` or `--f`: file_path
-  1.  `--code` or `--c`: string
-  1.  `--enabled`: boolean
+-  `form_path`: string (required parameter)
+-  `--name`: string
+-  `--path`: string
+-  `--file`: file_path
+-  `--code`: string
+-  `--enabled`: boolean
+-  `--background`: image_path or string
+-  `--main-color`: string
+-  `--start-message`: string
+- `--error-message`: string
+- `--end-message`: string
+- `--start-button-text`: string
+- `--restart-button-text`: string
+- `--timeout-message`: string
+- `--logo-url`: string
+- `--show-sidebar`: boolean
+- `--log-messages`: boolean
+- `--font-color`: string
+- `--auto-start`: boolean
+- `--allow-restart`: boolean
+- `--welcome-title`: string
+- `--brand-name`: string
 
 Examples:
-
 ```sh
-
-# Forms
-
 abstra update form new-onboarding --name="Another name" --allow-restart
+```
 
-abstra update hook stripe-callback --enabled
+#### jobs:
+- `identifier`: string (required parameter)
+- `--name` or `--n` or `--title`: string
+- `--identifier` or `--idt`: string
+- `--schedule` or `--crontab`: string
+- `--file` or `--f`: file_path
+- `--code` or `--c`: string
+- `--enabled`: boolean
 
+Example:
+```sh
 abstra update job daily --schedule="00 00 5 * *"
 ```
 
+#### `hooks`
+
+- `hook_path`: string (required parameter)
+- `--name` or `--n` or `--title`: string
+- `--path`: string
+- `--file` or `--f`: file_path
+- `--code` or `--c`: string
+- `--enabled`: boolean
+
+Examples:
+```sh
+abstra update hook stripe-callback --enabled
+```
 ### Remove resource
+Remove remote resources from your workspace.
 
 ```sh
-
 abstra remove RESOURCE [...OPTIONS]
-
 ```
 
-Remove remote resources from your workspace.
 
 Examples:
 
 ```sh
+abstra remove form sales-onboarding
+
+abstra remove job monthly
+
+abstra remove hook stripe-test
 
 abstra remove files foo.txt bar.log
 
 abstra remove vars ENVIROMENT VERSION
 
 abstra remove packages pandas numpy scipy
-
-abstra remove form sales-onboarding
-
-abstra remove hook stripe-test
-
-abstra remove job monthly
-
 ```
 
 ### Play resource
+Run the resource on Abstra Cloud.
 
 ```sh
+abstra play RESOURCE [...OPTIONS]
+```
 
+Examples:
+```sh
 abstra play form b2b-ingestion
 
 abstra play hook hasura-callback --method POST
-
 ```
 
 ### Aliases
 
 Some commands have aliases.
 
-#### upload
+#### `upload`
 
 ```sh
-
 # Alias for `abstra add files` with default argument `.`
-
 abstra upload [FILES or DIRECTORIES, default: .]
-
 ```
 
-#### ls
-
+#### `ls`
 ```sh
-
 # Alias for `abstra list files`
-
 abstra ls
-
 ```
 
-#### rm
+#### `rm`
 
 ```sh
-
 # Alias for `abstra remove files`
-
 abstra rm
-
 ```
 
-#### install
+#### `install`
 
 ```sh
-
 # Alias for `abstra add packages`
-
 abstra install [PACKAGES]
+```
 
+## Ignoring files
+
+You can ignore files placing a text file named `.abstraignore` at the target directory. The file `.abstraignore` itself will always be ignored.
+
+Example:
+
+```
+__pycache__
+
+tests/
+
+*.ipynb
 ```
