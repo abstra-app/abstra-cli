@@ -18,7 +18,7 @@ def list_workspace_hooks():
 
 
 def add_workspace_hook(data):
-    _, workspace_id, _ = utils.get_auth_info()
+    _, workspace_id, _ = api_main.get_auth_info()
     hook_data = {
         "title": data["name"],
         "script": {

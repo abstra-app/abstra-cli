@@ -18,7 +18,7 @@ def list_workspace_forms():
 
 
 def add_workspace_form(data):
-    _, workspace_id, _ = utils.get_auth_info()
+    _, workspace_id, _ = api_main.get_auth_info()
     form_data = {
         "title": data["name"],
         "workspace_id": workspace_id,

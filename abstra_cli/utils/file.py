@@ -2,12 +2,16 @@ import os
 import fnmatch
 from pathlib import Path
 
-from abstra_cli.utils import remove_prefix
-from abstra_cli.utils import ABSTRA_FOLDER
+from .main import remove_prefix
+
+
+ABSTRA_FOLDER = ".abstra/"
+ABSTRA_IGNORE = ".abstraignore"
+CREDENTIALS_FILE = ".abstra/credentials"
 
 
 def get_ignore_files(dir):
-    IGNOREFILE = os.path.join(dir, ".abstraignore")
+    IGNOREFILE = os.path.join(dir, ABSTRA_IGNORE)
     abstra_path = os.path.join(dir, ABSTRA_FOLDER)
     ignored = [IGNOREFILE, abstra_path]
     if os.path.exists(IGNOREFILE):

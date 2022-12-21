@@ -1,7 +1,8 @@
 import fire
 
-import abstra_cli.utils as utils
 import abstra_cli.messages as messages
+import abstra_cli.decorators as decorators
+import abstra_cli.credentials as credentials
 from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs
 
 
@@ -12,12 +13,12 @@ class CLI(object):
     usage: abstra <command> <resource> [<argument> ...] [parameters]
     """
 
-    @utils.configuration_check
+    @decorators.configuration_check
     def configure(self, api_token=None):
-        utils.save_credentials(api_token or messages.read_credentials())
+        credentials.save_credentials(api_token or messages.read_credentials())
         print("Done!")
 
-    @utils.credentials_check
+    @decorators.credentials_check
     def list(self, resource, **kwargs):
         list_func = {
             "vars": Vars.list,
@@ -30,7 +31,7 @@ class CLI(object):
 
         list_func()
 
-    @utils.credentials_check
+    @decorators.credentials_check
     def add(self, resource, *args, **kwargs):
         add_func = {
             "vars": Vars.add,
@@ -46,7 +47,7 @@ class CLI(object):
 
         add_func(*args, **kwargs)
 
-    @utils.credentials_check
+    @decorators.credentials_check
     def update(self, resource, *args, **kwargs):
         update_func = {
             "form": Forms.update,
@@ -59,7 +60,7 @@ class CLI(object):
 
         update_func(*args, **kwargs)
 
-    @utils.credentials_check
+    @decorators.credentials_check
     def remove(self, resource, *args, **kwargs):
         remove_func = {
             "vars": Vars.remove,
@@ -75,7 +76,7 @@ class CLI(object):
 
         remove_func(*args, **kwargs)
 
-    @utils.credentials_check
+    @decorators.credentials_check
     def play(self, resource, *args, **kwargs):
         play_func = {
             "form": Forms.play,

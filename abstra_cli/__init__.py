@@ -1,4 +1,4 @@
-from abstra_cli.utils import credentials_check
+from abstra_cli.decorators import credentials_check
 from abstra_cli.apis import get_file_signed_url
 
 

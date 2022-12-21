@@ -15,7 +15,7 @@ def list_workspace_vars():
 
 
 def add_workspace_vars(raw_vars):
-    _, workspace_id, _ = utils.get_auth_info()
+    _, workspace_id, _ = api_main.get_auth_info()
     vars = [
         {"name": v["name"], "value": v["value"], "workspace_id": workspace_id}
         for v in raw_vars
