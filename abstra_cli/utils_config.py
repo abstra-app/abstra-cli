@@ -1,5 +1,5 @@
 import os
-from abstra_cli.public_apis import get_info_from_token, usage
+from abstra_cli.apis import get_info_from_token, usage
 
 ABSTRA_FOLDER = ".abstra/"
 CREDENTIALS_FILE = ".abstra/credentials"
