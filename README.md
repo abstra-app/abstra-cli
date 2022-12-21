@@ -36,7 +36,7 @@ abstra configure [API_TOKEN]
 
 - Alternatively you can set the `ABSTRA_API_TOKEN` environment variable.
 
-## Usage
+## CRUD Commands
 
 The general structure of the commands follows the pattern below:
 
@@ -336,7 +336,87 @@ Examples:
 abstra play form b2b-ingestion
 ```
 
-### Aliases
+## Deploy Command
+
+This command allows you to specify several resources in a JSON file and deploy them in one command (great for CI/CD workflows).  
+The default path is `abstra.json` in the root directory.
+
+```sh
+abstra deploy [--file or -f]
+```
+
+Examples:
+
+```sh
+abstra deploy -f prod.json
+```
+
+The file shoud follow a structure similar to what you can pass in each resource add command (using deploy the upsert flag will be added).
+
+Example file:
+
+```json
+{
+  "forms": [
+    {
+      "name": "Main Form",
+      "path": "main",
+      "file": "forms/main.py"
+    },
+    {
+      "name": "Secondary Form",
+      "path": "secondary",
+      "code": "forms/secondary.py",
+      "enabled": false
+    }
+  ],
+  "hooks": [
+    {
+      "name": "Test",
+      "path": "test",
+      "file": "hooks/test.py"
+    },
+    {
+      "name": "Stripe",
+      "path": "stripe",
+      "file": "hooks/stripe.py"
+    }
+  ],
+  "jobs": [
+    {
+      "name": "Monthly",
+      "idt": "month",
+      "file": "jobs/month.py",
+      "schedule": "00 00 1 * *",
+      "enabled": false
+    },
+    {
+      "name": "Weekly",
+      "idt": "week",
+      "file": "jobs/week.py",
+      "schedule": "00 00 * * 1"
+    }
+  ],
+  "files": ["root.json", "files/"],
+  "packages": {
+    "file": "requirements.txt"
+  },
+  "vars": {
+    "file": ".env"
+  }
+}
+```
+
+For packages and vars you can also specify manually:
+
+```json
+{
+  "packages": ["pydash", "stripe==1.0.0"],
+  "vars": ["ABSTRA_CLOUD=test", "STRIPE_KEY=foobar"]
+}
+```
+
+## Aliases
 
 Some commands have aliases.
 
