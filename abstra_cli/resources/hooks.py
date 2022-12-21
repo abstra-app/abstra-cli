@@ -1,7 +1,6 @@
 import requests
 
 from abstra_cli.resources.resources import Resource
-import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
@@ -79,7 +78,7 @@ class Hooks(Resource):
     @staticmethod
     def list():
         hooks = apis.list_workspace_hooks()
-        cli_helpers.print_hooks(hooks)
+        messages.print_hooks(hooks)
 
     @staticmethod
     def add(*args, **kwargs):

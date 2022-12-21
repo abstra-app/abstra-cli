@@ -2,7 +2,6 @@ import webbrowser
 
 
 from abstra_cli.resources.resources import Resource
-import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
@@ -137,7 +136,7 @@ class Forms(Resource):
     @staticmethod
     def list():
         forms = apis.list_workspace_forms()
-        cli_helpers.print_forms(forms)
+        messages.print_forms(forms)
 
     @staticmethod
     def add(*args, **kwargs):

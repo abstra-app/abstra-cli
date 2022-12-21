@@ -1,6 +1,5 @@
 import fire
 
-import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.utils as utils
 import abstra_cli.messages as messages
 from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs
@@ -15,7 +14,7 @@ class CLI(object):
 
     @utils.configuration_check
     def configure(self, api_token=None):
-        utils.save_credentials(api_token or cli_helpers.read_credentials())
+        utils.save_credentials(api_token or messages.read_credentials())
         print("Done!")
 
     @utils.credentials_check

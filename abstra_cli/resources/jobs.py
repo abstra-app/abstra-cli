@@ -1,7 +1,6 @@
 from crontab import CronTab
 
 from abstra_cli.resources.resources import Resource
-import abstra_cli.cli_helpers as cli_helpers
 import abstra_cli.messages as messages
 import abstra_cli.apis as apis
 
@@ -94,7 +93,7 @@ class Jobs(Resource):
     @staticmethod
     def list():
         jobs = apis.list_workspace_jobs()
-        cli_helpers.print_jobs(jobs)
+        messages.print_jobs(jobs)
 
     @staticmethod
     def add(*args, **kwargs):

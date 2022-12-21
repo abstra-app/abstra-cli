@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from abstra_cli.resources.resources import Resource
-import abstra_cli.cli_helpers as cli_helpers
+import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
 
@@ -11,7 +11,7 @@ class Files(Resource):
     @staticmethod
     def list():
         files = apis.list_workspace_files()
-        cli_helpers.print_files(files)
+        messages.print_files(files)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -22,7 +22,7 @@ class Files(Resource):
             elif os.path.isdir(path):
                 files.extend(utils.files_from_directory(path))
 
-        bar = cli_helpers.show_progress("Uploading files", len(files))
+        bar = messages.show_progress("Uploading files", len(files))
         for path in files:
             filename = path.as_posix()
             ok = apis.upload_file(filename, path.open("rb"))
@@ -37,7 +37,7 @@ class Files(Resource):
     @staticmethod
     def remove(*args, **kwargs):
         # TODO: list first then delete
-        bar = cli_helpers.show_progress("Deleting files", len(args))
+        bar = messages.show_progress("Deleting files", len(args))
         for f in args:
             ok = apis.delete_file(f)
             if not ok:

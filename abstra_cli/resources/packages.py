@@ -1,5 +1,5 @@
 from abstra_cli.resources.resources import Resource
-import abstra_cli.cli_helpers as cli_helpers
+import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
 
@@ -8,7 +8,7 @@ class Packages(Resource):
     @staticmethod
     def list():
         packages = apis.list_workspace_packages()
-        cli_helpers.print_packages(packages)
+        messages.print_packages(packages)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -36,11 +36,11 @@ class Packages(Resource):
             processed_packages.append({"name": name, "version": version})
 
         added_packages = apis.add_workspace_packages(processed_packages)
-        cli_helpers.print_packages(added_packages)
+        messages.print_packages(added_packages)
         print(f"\nAdded {len(added_packages)} packages")
 
     @staticmethod
     def remove(*args, **kwargs):
         deleted_packages = apis.delete_workspace_packages(args)
-        cli_helpers.print_packages(deleted_packages)
+        messages.print_packages(deleted_packages)
         print(f"\nDeleted {len(deleted_packages)} packages")
