@@ -1,6 +1,7 @@
 [![pypi](https://img.shields.io/pypi/v/abstra-cli.svg)](https://pypi.python.org/pypi/abstra-cli) [![PyPI Downloads](https://img.shields.io/pypi/dm/abstra-cli.svg)](https://pypi.org/project/abstra-cli/) [![Code check](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml/badge.svg)](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml)
 
 # Abstra CLI
+
 Command Line Interface for Abstra Cloud
 
 ## Getting Started
@@ -13,7 +14,7 @@ Download preferably using pipx:
 pipx install abstra-cli
 ```
 
-Or using pip: 
+Or using pip:
 
 ```sh
 pip install abstra-cli
@@ -35,7 +36,6 @@ abstra configure [API_TOKEN]
 
 - Alternatively you can set the `ABSTRA_API_TOKEN` environment variable.
 
-
 ## Usage
 
 The general structure of the commands follows the pattern below:
@@ -44,8 +44,8 @@ The general structure of the commands follows the pattern below:
 abstra <command> <resource> [<argument>...] [--<optional-argument-name> <optional-argument-value> ...]
 ```
 
-
 The available commands are:
+
 - `list`
 - `add`
 - `update`
@@ -53,6 +53,7 @@ The available commands are:
 - `play`
 
 Remote resources can be:
+
 - `forms`
 - `hooks`
 - `jobs`
@@ -91,6 +92,7 @@ abstra list vars > .env
 ```
 
 ### Add resource
+
 Adds remote resources on your workspace.
 
 ```sh
@@ -101,28 +103,28 @@ The current options for each resource are:
 
 #### `forms`:
 
--  `--name` or `--n` or `--title`: string
--  `--path`: string
--  `--file` or `--f`: file_path*
--  `--code` or `--c`: string*
--  `--enabled`: boolean
--  `--background`: image_path or string
--  `--main-color`: string
--  `--start-message`: string
--  `--error-message`: string
--  `--end-message`: string
--  `--start-button-text`: string
--  `--restart-button-text`: string
--  `--timeout-message`: string
--  `--logo-url`: string
--  `--show-sidebar`: boolean
--  `--log-messages`: boolean
--  `--font-color`: string
--  `--auto-start`: boolean
--  `--allow-restart`: boolean
--  `--welcome-title`: string
--  `--brand-name`: string
--  `--upsert`: boolean
+- `--name` or `--n` or `--title`: string
+- `--path`: string
+- `--file` or `--f`: file_path\*
+- `--code` or `--c`: string\*
+- `--enabled`: boolean
+- `--background`: image_path or string
+- `--main-color`: string
+- `--start-message`: string
+- `--error-message`: string
+- `--end-message`: string
+- `--start-button-text`: string
+- `--restart-button-text`: string
+- `--timeout-message`: string
+- `--logo-url`: string
+- `--show-sidebar`: boolean
+- `--log-messages`: boolean
+- `--font-color`: string
+- `--auto-start`: boolean
+- `--allow-restart`: boolean
+- `--welcome-title`: string
+- `--brand-name`: string
+- `--upsert`: boolean
 
 \* Note: set either file or code, not both.
 
@@ -137,12 +139,13 @@ abstra add form --name="Form Name" --code "from hackerforms import * \n\ndisplay
 ```
 
 #### `hooks`
-  -  `--name` or `--n` or `--title`: string
-  -  `--path`: string
-  -  `--file` or `--f`: file_path*
-  -  `--code` or `--c`: string*
-  -  `--enabled`: boolean
-  -  `--upsert`: boolean
+
+- `--name` or `--n` or `--title`: string
+- `--path`: string
+- `--file` or `--f`: file_path\*
+- `--code` or `--c`: string\*
+- `--enabled`: boolean
+- `--upsert`: boolean
 
 \* Note: set either file or code, but not both.
 
@@ -155,28 +158,31 @@ abstra add hook --path=test -f test.py --enabled=False
 ```
 
 #### `jobs`
-  -  `--name` or `--n` or `--title`: string
-  -  `--identifier` or `--idt`: string
-  -  `--schedule` or `--crontab`: string
-  -  `--file` or `--f`: file_path
-  -  `--code` or `--c`: string
-  -  `--enabled`: boolean
-  -  `--upsert`: boolean
+
+- `--name` or `--n` or `--title`: string
+- `--identifier` or `--idt`: string
+- `--schedule` or `--crontab`: string
+- `--file` or `--f`: file_path
+- `--code` or `--c`: string
+- `--enabled`: boolean
+- `--upsert`: boolean
 
 \* Note: set either file or code, but not both.
 
 Examples:
 
 ```sh
-abstra ad job --idt new-job --noenabled --name="Test Job" --upsert
+abstra add job --idt new-job --noenabled --name="Test Job" --upsert
 
-abstra ad job --idt daily --schedule="00 00 00 * *" --name="Every midnight"
+abstra add job --idt daily --schedule="00 00 1 * *" --name="Every midnight"
 ```
 
 #### `files`
+
 - file_path[]: list of file or directory paths
 
 Examples:
+
 ```sh
 abstra add files foo.txt bar.log
 
@@ -184,8 +190,9 @@ abstra add files foo/ ./
 ```
 
 #### `vars`
--  environment_variable[]: list of Key=Value env vars
--  -f or \-\-file: file_path (ex. -f .env)
+
+- environment_variable[]: list of Key=Value env vars
+- -f or \-\-file: file_path (ex. -f .env)
 
 Examples:
 
@@ -197,10 +204,10 @@ abstra add vars -f .env
 abstra add vars --file .env
 ```
 
-
 #### `packages`
-  - package_name[]: list of packages with optional version (ex. numpy=1.0.1)
-  - -f or \-\-file: file_path (ex. --file requirements.txt)
+
+- package_name[]: list of packages with optional version (ex. numpy=1.0.1)
+- -f or \-\-file: file_path (ex. --file requirements.txt)
 
 Examples:
 
@@ -217,6 +224,7 @@ abstra add packages --requirement requirements.txt
 ```
 
 ### Update resource
+
 Updates remote resources on your workspace.
 
 _Currently only available for forms, hooks and jobs_
@@ -229,15 +237,15 @@ The options for each resource are:
 
 #### `forms`
 
--  `form_path`: string (required parameter)
--  `--name`: string
--  `--path`: string
--  `--file`: file_path
--  `--code`: string
--  `--enabled`: boolean
--  `--background`: image_path or string
--  `--main-color`: string
--  `--start-message`: string
+- `form_path`: string (required parameter)
+- `--name`: string
+- `--path`: string
+- `--file`: file_path
+- `--code`: string
+- `--enabled`: boolean
+- `--background`: image_path or string
+- `--main-color`: string
+- `--start-message`: string
 - `--error-message`: string
 - `--end-message`: string
 - `--start-button-text`: string
@@ -253,11 +261,13 @@ The options for each resource are:
 - `--brand-name`: string
 
 Examples:
+
 ```sh
 abstra update form new-onboarding --name="Another name" --allow-restart
 ```
 
 #### `jobs`:
+
 - `identifier`: string (required parameter)
 - `--name` or `--n` or `--title`: string
 - `--identifier` or `--idt`: string
@@ -267,6 +277,7 @@ abstra update form new-onboarding --name="Another name" --allow-restart
 - `--enabled`: boolean
 
 Example:
+
 ```sh
 abstra update job daily --schedule="00 00 5 * *"
 ```
@@ -281,16 +292,18 @@ abstra update job daily --schedule="00 00 5 * *"
 - `--enabled`: boolean
 
 Examples:
+
 ```sh
 abstra update hook stripe-callback --enabled
 ```
+
 ### Remove resource
+
 Remove remote resources from your workspace.
 
 ```sh
 abstra remove RESOURCE [...OPTIONS]
 ```
-
 
 Examples:
 
@@ -309,6 +322,7 @@ abstra remove packages pandas numpy scipy
 ```
 
 ### Play resource
+
 Run the resource on Abstra Cloud.
 _Currently only available for forms._
 
@@ -317,6 +331,7 @@ abstra play RESOURCE [...OPTIONS]
 ```
 
 Examples:
+
 ```sh
 abstra play form b2b-ingestion
 ```
@@ -333,6 +348,7 @@ abstra upload [FILES or DIRECTORIES, default: .]
 ```
 
 #### `ls`
+
 ```sh
 # Alias for `abstra list files`
 abstra ls

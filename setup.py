@@ -26,7 +26,12 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/abstra-app/abstra-cli",
     license="MIT",
-    packages=["abstra_cli", "abstra_cli.resources", "abstra_cli.apis"],
+    packages=[
+        "abstra_cli",
+        "abstra_cli.resources",
+        "abstra_cli.apis",
+        "abstra_cli.utils",
+    ],
     install_requires=requirements,
     entry_points={
         "console_scripts": [
