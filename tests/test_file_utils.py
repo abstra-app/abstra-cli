@@ -1,4 +1,4 @@
-from abstra_cli.file_utils import remove_filepath_prefix
+from abstra_cli.utils import remove_filepath_prefix
 
 
 class TestFileUtils:

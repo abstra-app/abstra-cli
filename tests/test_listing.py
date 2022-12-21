@@ -2,7 +2,7 @@ import os
 import shutil
 from uuid import uuid4
 from pathlib import PosixPath
-from abstra_cli.file_utils import files_from_directory
+from abstra_cli.utils import files_from_directory
 
 
 def generate_random_folder():

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from abstra_cli.resources.resources import Resource
 import abstra_cli.cli_helpers as cli_helpers
-import abstra_cli.file_utils as file_utils
+import abstra_cli.utils as utils
 import abstra_cli.apis as apis
 
 
@@ -20,7 +20,7 @@ class Files(Resource):
             if os.path.isfile(path):
                 files.append(Path(path))
             elif os.path.isdir(path):
-                files.extend(file_utils.files_from_directory(path))
+                files.extend(utils.files_from_directory(path))
 
         bar = cli_helpers.show_progress("Uploading files", len(files))
         for path in files:

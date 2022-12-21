@@ -2,7 +2,7 @@ import json
 import requests
 import urllib.request
 import urllib.response
-import abstra_cli.utils_config as utils_config
+import abstra_cli.utils as utils
 
 
 HACKERFORMS_API_URL = "https://hackerforms-api.abstra.cloud"
@@ -38,7 +38,7 @@ def asset_upload(filepath, file):
 
 
 def hf_api_runner(method, path, data=None):
-    api_token, workspace_id, _ = utils_config.get_auth_info()
+    api_token, workspace_id, _ = utils.get_auth_info()
     response = requests.request(
         method,
         f"{HACKERFORMS_API_URL}/workspaces/{workspace_id}/{path}",
@@ -49,7 +49,7 @@ def hf_api_runner(method, path, data=None):
 
 
 def hf_hasura_runner(query, variables={}):
-    api_token = utils_config.get_credentials()
+    api_token = utils.get_credentials()
     response = requests.post(
         HACKERFORMS_HASURA_URL,
         data=json.dumps({"query": query, "variables": variables}),

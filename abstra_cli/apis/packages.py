@@ -1,5 +1,5 @@
 import abstra_cli.apis.main as api_main
-import abstra_cli.utils_config as utils_config
+import abstra_cli.utils as utils
 
 
 def list_workspace_packages():
@@ -15,7 +15,7 @@ def list_workspace_packages():
 
 
 def add_workspace_packages(raw_packages):
-    _, workspace_id, _ = utils_config.get_auth_info()
+    _, workspace_id, _ = utils.get_auth_info()
     packages = [
         {"name": p["name"], "version": p["version"], "workspace_id": workspace_id}
         for p in raw_packages

@@ -1,6 +1,8 @@
-import os
-import re
+import os, re
 from colour import Color
+
+from .file import *
+from .config import *
 
 IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".svg"]
 SPACE = " "

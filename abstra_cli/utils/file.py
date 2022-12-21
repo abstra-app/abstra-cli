@@ -3,7 +3,7 @@ import fnmatch
 from pathlib import Path
 
 from abstra_cli.utils import remove_prefix
-from abstra_cli.utils_config import ABSTRA_FOLDER
+from abstra_cli.utils import ABSTRA_FOLDER
 
 
 def get_ignore_files(dir):

@@ -1,5 +1,5 @@
 import abstra_cli.apis.main as api_main
-import abstra_cli.utils_config as utils_config
+import abstra_cli.utils as utils
 
 
 def list_workspace_vars():
@@ -15,7 +15,7 @@ def list_workspace_vars():
 
 
 def add_workspace_vars(raw_vars):
-    _, workspace_id, _ = utils_config.get_auth_info()
+    _, workspace_id, _ = utils.get_auth_info()
     vars = [
         {"name": v["name"], "value": v["value"], "workspace_id": workspace_id}
         for v in raw_vars

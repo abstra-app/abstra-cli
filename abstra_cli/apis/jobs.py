@@ -1,5 +1,5 @@
 import abstra_cli.apis.main as api_main
-import abstra_cli.utils_config as utils_config
+import abstra_cli.utils as utils
 
 
 def list_workspace_jobs():
@@ -19,7 +19,7 @@ def list_workspace_jobs():
 
 
 def add_workspace_job(data):
-    _, workspace_id, _ = utils_config.get_auth_info()
+    _, workspace_id, _ = utils.get_auth_info()
     job_data = {
         "title": data["name"],
         "script": {

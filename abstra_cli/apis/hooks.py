@@ -1,5 +1,5 @@
 import abstra_cli.apis.main as api_main
-import abstra_cli.utils_config as utils_config
+import abstra_cli.utils as utils
 
 
 def list_workspace_hooks():
@@ -18,7 +18,7 @@ def list_workspace_hooks():
 
 
 def add_workspace_hook(data):
-    _, workspace_id, _ = utils_config.get_auth_info()
+    _, workspace_id, _ = utils.get_auth_info()
     hook_data = {
         "title": data["name"],
         "script": {
