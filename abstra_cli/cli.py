@@ -1,5 +1,6 @@
 import fire
 
+from abstra_cli.deploy import deploy
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
 import abstra_cli.credentials as credentials
@@ -86,6 +87,10 @@ class CLI(object):
         }.get(resource, messages.not_implemented)
 
         play_func(*args, **kwargs)
+
+    @decorators.credentials_check
+    def deploy(self, **kwargs):
+        deploy(**kwargs)
 
     # Aliases
     def upload(self, *args, **kwargs):
