@@ -411,7 +411,7 @@ For packages and vars you can also specify manually:
 
 ```json
 {
-  "packages": ["pydash", "stripe==1.0.0"],
+  "packages": ["pydash", "stripe==1.1.0"],
   "vars": ["ABSTRA_CLOUD=test", "STRIPE_KEY=foobar"]
 }
 ```
