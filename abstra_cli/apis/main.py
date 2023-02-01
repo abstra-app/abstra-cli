@@ -34,7 +34,6 @@ def asset_upload(filepath, file):
 
     response_json = response.json()
     try:
-
         req = urllib.request.Request(
             url=response_json["putURL"], method="PUT", data=file
         )

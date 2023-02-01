@@ -29,7 +29,6 @@ class TestUtils:
         assert parse_env_var("FOO=") == (None, None)
 
     def test_parse_package(self):
-
         assert parse_package("foo~=1.0") == ("foo", "1.0")
         assert parse_package("foo==1.0") == ("foo", "1.0")
         assert parse_package("foo>=1.0") == ("foo", "1.0")

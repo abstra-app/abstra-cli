@@ -129,7 +129,6 @@ class Jobs(Resource):
 
     @staticmethod
     def update(*args, **kwargs):
-
         if not len(args):
             messages.required_argument("identifier")
             exit()

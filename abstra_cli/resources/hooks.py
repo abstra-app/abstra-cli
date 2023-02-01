@@ -113,7 +113,6 @@ class Hooks(Resource):
 
     @staticmethod
     def update(*args, **kwargs):
-
         if not len(args):
             messages.required_argument("path")
             exit()
