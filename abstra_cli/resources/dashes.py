@@ -5,40 +5,38 @@ from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
+import os
+import json
+from glob import glob
 
 
 NAME_PARAMETERS = ["name", "title"]
 PATH_PARAMETERS = ["path"]
-CODE_PARAMETERS = ["file", "f", "code", "c"]
+CODE_PARAMETERS = ["code", "c"]
 BACKGROUND_PARAMETERS = ["background"]
 OTHER_PARAMETERS = [
-    "start_message",
-    "end_message",
-    "error_message",
-    "timeout_mesage",
     "main_color",
-    "start_button_text",
-    "restart_button_text",
+    "font_family",
     "logo_url",
     "log_messages",
-    "font_color",
-    "welcome_title",
     "brand_name",
 ]
+LAYOUT_PARAMETERS = ["layout"]
 NON_FLAG_PARAMETERS = (
     NAME_PARAMETERS
     + PATH_PARAMETERS
     + CODE_PARAMETERS
     + BACKGROUND_PARAMETERS
     + OTHER_PARAMETERS
+    + LAYOUT_PARAMETERS
 )
 FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar", "enabled"]
-FORM_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
+DASH_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
 def check_valid_parameters(parameters: dict) -> None:
     for param in parameters.keys():
-        if param not in FORM_PARAMETERS:
+        if param not in DASH_PARAMETERS:
             messages.invalid_parameter(param)
             exit()
     for param, value in parameters.items():
@@ -51,7 +49,7 @@ def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
     name = parameters.get("name") or parameters.get("n") or parameters.get("title")
     if not name and not use_default:
         return {}
-    return {"name": name or "New Form"}
+    return {"name": name or "New Dash"}
 
 
 def evaluate_parameter_path(parameters: dict) -> dict:
@@ -61,23 +59,21 @@ def evaluate_parameter_path(parameters: dict) -> dict:
     return {"path": path}
 
 
-def evaluate_parameters_file_and_code(parameters: dict, use_default=True) -> dict:
-    EMPTY_FORM = "from hackerforms import *"
-    file = parameters.get("file") or parameters.get("f")
+def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
+    EMPTY_DASH = ""
     code = parameters.get("code") or parameters.get("c")
 
-    if file and code:
-        messages.code_and_file_not_allowed()
-        exit()
+    if not code:
+        raise Exception("Code is required")
+    return {
+        "code_file_path": code
+    }
 
-    if file:
-        with open(file, "r") as f:
-            return {"code": f.read()}
-
-    if code:
-        return {"code": code}
-
-    return {"code": EMPTY_FORM} if use_default else {}
+def evaluate_parameter_layout(parameters: dict) -> dict:
+    layout = parameters.get("layout")
+    if not layout:
+        raise Exception("Layout is required")
+    return {"layout": layout}
 
 
 def evaluate_flag_parameters(parameters: dict) -> dict:
@@ -132,11 +128,11 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
     exit()
 
 
-class Forms(Resource):
+class Dashes(Resource):
     @staticmethod
     def list():
-        forms = apis.list_workspace_forms()
-        messages.print_forms(forms)
+        dashes = apis.list_workspace_dashes()
+        messages.print_dashes(dashes)
 
     @staticmethod
     def add(*args, **kwargs):
@@ -148,26 +144,27 @@ class Forms(Resource):
 
         check_valid_parameters(kwargs)
 
-        form_data = {
+        dash_data = {
             **evaluate_parameter_name(kwargs),
             **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_file_and_code(kwargs),
+            **evaluate_parameters_code(kwargs),
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
+            **evaluate_parameter_layout(kwargs)
         }
 
-        if form_data:
+        if dash_data:
             try:
                 if upsert:
-                    apis.upsert_workspace_form(form_data)
-                    messages.upserted_message("Form", path)
+                    apis.upsert_workspace_dash(dash_data)
+                    messages.upserted_message("Dash", path)
                 else:
-                    path = apis.add_workspace_form(form_data)["path"]
-                    messages.created_message("Form", path)
+                    path = apis.add_workspace_dash(dash_data)["path"]
+                    messages.created_message("Dash", path)
             except Exception as e:
                 print(e)
-                messages.create_failed("Form")
+                messages.create_failed("Dash")
 
     @staticmethod
     def update(*args, **kwargs):
@@ -177,27 +174,28 @@ class Forms(Resource):
         path = args[0]
 
         if not len(kwargs):
-            messages.missing_parameters_to_update("form", path)
+            messages.missing_parameters_to_update("dash", path)
             exit()
 
         check_valid_parameters(kwargs)
 
-        form_data = {
+        dash_data = {
             **evaluate_parameter_name(kwargs, use_default=False),
             **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_file_and_code(kwargs, use_default=False),
+            **evaluate_parameters_code(kwargs, use_default=False),
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
+            **evaluate_parameter_layout(kwargs)
         }
 
-        if form_data:
+        if dash_data:
             try:
-                apis.update_workspace_form(path, form_data)
-                messages.updated_message("Form", path)
+                apis.update_workspace_dash(path, dash_data)
+                messages.updated_message("Dash", path)
             except Exception as e:
                 print(e)
-                messages.update_failed("Form", path)
+                messages.update_failed("Dash", path)
 
     @staticmethod
     def remove(*args, **kwargs):
@@ -206,8 +204,8 @@ class Forms(Resource):
             exit()
 
         path = args[0]
-        apis.delete_workspace_form(path)
-        messages.deleted_message("Form", path)
+        apis.delete_workspace_dash(path)
+        messages.deleted_message("Dash", path)
 
     @staticmethod
     def play(*args, **kwargs):
@@ -217,6 +215,29 @@ class Forms(Resource):
 
         path = args[0]
         subdomain_name = apis.get_subdomain()
-        url = utils.get_prod_form_url(subdomain_name, path)
-        messages.form_url(url)
+        url = utils.get_prod_dash_url(subdomain_name, path)
+        messages.dash_url(url)
         webbrowser.open(url)
+    
+    @staticmethod
+    def list_dash_props(abstra_json_path):
+        abstra_json_dir = os.path.dirname(abstra_json_path)
+        with open(abstra_json_path, "r") as f:
+            workspace_json_data = json.load(f)
+        root_dir = workspace_json_data.get("workspace", {"root": "."})["root"]
+        dash_files = glob(os.path.join(abstra_json_dir, root_dir, "**", "*.abstradash.json"), recursive=True)
+        dash_props = []
+        for dash_file_path in dash_files:
+            common_path = dash_file_path.replace(".abstradash.json", "")
+            route = os.path.relpath(common_path, os.path.join(abstra_json_dir, root_dir)).replace("\\", "/")
+            script_path = common_path + ".py"
+            dash_json_data = json.load(open(dash_file_path, "r"))
+            prop = {
+                'name': dash_json_data["name"],
+                'layout': dash_json_data["layout"],
+                'background': workspace_json_data['workspace']['theme'],
+                'path': route,
+                'code': script_path
+            }
+            dash_props.append(prop)
+        return dash_props

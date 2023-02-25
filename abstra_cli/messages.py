@@ -48,15 +48,24 @@ def print_forms(forms):
             f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
         )
 
+def print_dashes(dashes):
+    dashes.sort(key=lambda x: x["path"])
+    max_path = max([len(f["path"]) for f in dashes])
+    max_title = max([len(f["title"]) for f in dashes])
+    for dash in dashes:
+        enabled = "enabled" if dash["script"]["enabled"] else "disabled"
+        print(
+            f"{utils.format_digits(dash['path'], max_path)} - {utils.format_digits(dash['title'], max_title)} ({enabled})"
+        )
 
 def print_hooks(hooks):
     hooks.sort(key=lambda x: x["path"])
     max_path = max([len(f["path"]) for f in hooks])
     max_title = max([len(f["title"]) for f in hooks])
-    for form in hooks:
-        enabled = "enabled" if form["script"]["enabled"] else "disabled"
+    for hook in hooks:
+        enabled = "enabled" if hook["script"]["enabled"] else "disabled"
         print(
-            f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
+            f"{utils.format_digits(hook['path'], max_path)} - {utils.format_digits(hook['title'], max_title)} ({enabled})"
         )
 
 
@@ -142,8 +151,8 @@ def code_and_file_not_allowed():
     print("you can set either code or file parameters, but not both.")
 
 
-def missing_parameters_to_update(form):
-    print(f"missing parameters to be updated of form {form}")
+def missing_parameters_to_update(resource_name, resource):
+    print(f"missing parameters to be updated of {resource_name} {resource}")
 
 
 def file_path_does_not_exists_message(path):
@@ -161,6 +170,8 @@ def error_upload_background_message(path):
 def form_url(url):
     print(f"Opening URL {url}")
 
+def dash_url(url):
+    print(f"Opening URL {url}")
 
 def hook_url(url, method):
     print(f"Making {method} request to URL {url}")

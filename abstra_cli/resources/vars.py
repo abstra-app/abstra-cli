@@ -32,7 +32,7 @@ class Vars(Resource):
 
         added_vars = apis.add_workspace_vars(processed_vars)
         messages.print_vars(added_vars)
-        print(f"\nAdded {len(added_vars)} enviroment variables")
+        print(f"\nAdded {len(added_vars)} environment variables")
 
     @staticmethod
     def remove(*args, **kwargs):

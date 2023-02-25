@@ -13,10 +13,10 @@ echo 'listing files...'
 abstra list files
 
 echo 'adding env vars...'
-abstra add vars ENVIROMENT=production
+abstra add vars ENVIRONMENT=production
 
 echo 'removing env vars...'
-abstra remove vars ENVIROMENT
+abstra remove vars ENVIRONMENT
 
 echo 'adding packages...'
 abstra add packages pandas

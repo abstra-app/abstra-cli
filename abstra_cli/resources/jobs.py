@@ -135,7 +135,7 @@ class Jobs(Resource):
         idt = args[0]
 
         if not len(kwargs):
-            messages.missing_parameters_to_update(idt)
+            messages.missing_parameters_to_update("job", idt)
             exit()
 
         check_valid_parameters(kwargs)

@@ -119,7 +119,7 @@ class Hooks(Resource):
         path = args[0]
 
         if not len(kwargs):
-            messages.missing_parameters_to_update(path)
+            messages.missing_parameters_to_update("hook", path)
             exit()
 
         check_valid_parameters(kwargs)

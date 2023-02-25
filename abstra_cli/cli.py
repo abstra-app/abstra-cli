@@ -4,7 +4,7 @@ from abstra_cli.deploy import deploy
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
 import abstra_cli.credentials as credentials
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs
+from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes
 
 
 class CLI(object):
@@ -27,6 +27,7 @@ class CLI(object):
             "files": Files.list,
             "forms": Forms.list,
             "hooks": Hooks.list,
+            "dashes": Dashes.list,
             "packages": Packages.list,
         }.get(resource, messages.not_implemented)
 
@@ -36,12 +37,14 @@ class CLI(object):
     def add(self, resource, *args, **kwargs):
         add_func = {
             "vars": Vars.add,
+            "dash": Dashes.add,
+            "dashes": Dashes.add,
             "form": Forms.add,
+            "forms": Forms.add,
             "hook": Hooks.add,
+            "hooks": Hooks.add,
             "job": Jobs.add,
             "jobs": Jobs.add,
-            "forms": Forms.add,
-            "hooks": Hooks.add,
             "files": Files.add,
             "packages": Packages.add,
         }.get(resource, messages.not_implemented)
@@ -51,9 +54,11 @@ class CLI(object):
     @decorators.credentials_check
     def update(self, resource, *args, **kwargs):
         update_func = {
+            "dash": Dashes.update,
+            "dashes": Dashes.update,
             "form": Forms.update,
-            "hook": Hooks.update,
             "forms": Forms.update,
+            "hook": Hooks.update,
             "hooks": Hooks.update,
             "job": Jobs.update,
             "jobs": Jobs.update,
@@ -65,12 +70,14 @@ class CLI(object):
     def remove(self, resource, *args, **kwargs):
         remove_func = {
             "vars": Vars.remove,
+            "dash": Dashes.remove,
+            "dashes": Dashes.remove,
             "form": Forms.remove,
+            "forms": Forms.remove,
             "hook": Hooks.remove,
+            "hooks": Hooks.remove,
             "job": Jobs.remove,
             "jobs": Jobs.remove,
-            "forms": Forms.remove,
-            "hooks": Hooks.remove,
             "files": Files.remove,
             "packages": Packages.remove,
         }.get(resource, messages.not_implemented)
@@ -80,6 +87,7 @@ class CLI(object):
     @decorators.credentials_check
     def play(self, resource, *args, **kwargs):
         play_func = {
+            "dash": Dashes.play,
             "form": Forms.play,
             "hook": Hooks.play,
             "forms": Forms.play,

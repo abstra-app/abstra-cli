@@ -77,6 +77,10 @@ get_prod_form_url = (
     lambda subdomain_name, path: f"https://{subdomain_name}.abstra.run/{path}"
 )
 
+get_prod_dash_url = (
+    lambda subdomain_name, path: f"https://{subdomain_name}.abstra.run/{path}"
+)
+
 get_prod_hook_url = (
     lambda subdomain_name, path: f"https://hooks.abstra.cloud/{subdomain_name}/{path}"
 )

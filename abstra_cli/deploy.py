@@ -1,12 +1,15 @@
 import json
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs
+from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes
 
 
-ACCEPTED_KEYS = ["files", "forms", "hooks", "jobs", "packages", "vars"]
+ACCEPTED_KEYS = ["files", "workspace", "forms", "hooks", "jobs", "packages", "vars"]
+
+def get_abstra_json_path(parameters: dict) -> str:
+    return parameters.get("file") or parameters.get("f") or "abstra.json"
 
 
 def evaluate_parameters_file(parameters: dict) -> dict:
-    file = parameters.get("file") or parameters.get("f") or "abstra.json"
+    file = get_abstra_json_path(parameters)
 
     data = None
     try:
@@ -17,14 +20,18 @@ def evaluate_parameters_file(parameters: dict) -> dict:
     except:
         raise Exception("Deploy file not found or not correct format")
 
-    if [key for key in data.keys() if key not in ACCEPTED_KEYS]:
-        raise Exception("Extra data in deploy file")
+    for key in data.keys():
+        if key not in ACCEPTED_KEYS:
+            raise Exception(f"Extra data in deploy file {file} not accepted")
 
     return data
 
 
 def deploy(**kwargs):
     deploy_data = evaluate_parameters_file(kwargs)
+
+    for dash_props in Dashes.list_dash_props(get_abstra_json_path(kwargs)):
+        Dashes.add(upsert=True, **dash_props)
 
     forms = deploy_data.pop("forms", None)
     if forms:

@@ -197,7 +197,7 @@ abstra add files foo/ ./
 Examples:
 
 ```sh
-abstra add vars ENVIROMENT=production VERSION=1.0.0
+abstra add vars ENVIRONMENT=production VERSION=1.0.0
 
 abstra add vars -f .env
 
@@ -316,7 +316,7 @@ abstra remove hook stripe-test
 
 abstra remove files foo.txt bar.log
 
-abstra remove vars ENVIROMENT VERSION
+abstra remove vars ENVIRONMENT VERSION
 
 abstra remove packages pandas numpy scipy
 ```
