@@ -48,6 +48,7 @@ def print_forms(forms):
             f"{utils.format_digits(form['path'], max_path)} - {utils.format_digits(form['title'], max_title)} ({enabled})"
         )
 
+
 def print_dashes(dashes):
     dashes.sort(key=lambda x: x["path"])
     max_path = max([len(f["path"]) for f in dashes])
@@ -57,6 +58,7 @@ def print_dashes(dashes):
         print(
             f"{utils.format_digits(dash['path'], max_path)} - {utils.format_digits(dash['title'], max_title)} ({enabled})"
         )
+
 
 def print_hooks(hooks):
     hooks.sort(key=lambda x: x["path"])
@@ -170,8 +172,10 @@ def error_upload_background_message(path):
 def form_url(url):
     print(f"Opening URL {url}")
 
+
 def dash_url(url):
     print(f"Opening URL {url}")
+
 
 def hook_url(url, method):
     print(f"Making {method} request to URL {url}")

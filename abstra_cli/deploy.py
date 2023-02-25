@@ -4,6 +4,7 @@ from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dash
 
 ACCEPTED_KEYS = ["files", "workspace", "forms", "hooks", "jobs", "packages", "vars"]
 
+
 def get_abstra_json_path(parameters: dict) -> str:
     return parameters.get("file") or parameters.get("f") or "abstra.json"
 

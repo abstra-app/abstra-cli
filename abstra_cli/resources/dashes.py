@@ -65,9 +65,8 @@ def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
 
     if not code:
         raise Exception("Code is required")
-    return {
-        "code_file_path": code
-    }
+    return {"code_file_path": code}
+
 
 def evaluate_parameter_layout(parameters: dict) -> dict:
     layout = parameters.get("layout")
@@ -151,7 +150,7 @@ class Dashes(Resource):
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
-            **evaluate_parameter_layout(kwargs)
+            **evaluate_parameter_layout(kwargs),
         }
 
         if dash_data:
@@ -186,7 +185,7 @@ class Dashes(Resource):
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
-            **evaluate_parameter_layout(kwargs)
+            **evaluate_parameter_layout(kwargs),
         }
 
         if dash_data:
@@ -218,26 +217,31 @@ class Dashes(Resource):
         url = utils.get_prod_dash_url(subdomain_name, path)
         messages.dash_url(url)
         webbrowser.open(url)
-    
+
     @staticmethod
     def list_dash_props(abstra_json_path):
         abstra_json_dir = os.path.dirname(abstra_json_path)
         with open(abstra_json_path, "r") as f:
             workspace_json_data = json.load(f)
         root_dir = workspace_json_data.get("workspace", {"root": "."})["root"]
-        dash_files = glob(os.path.join(abstra_json_dir, root_dir, "**", "*.abstradash.json"), recursive=True)
+        dash_files = glob(
+            os.path.join(abstra_json_dir, root_dir, "**", "*.abstradash.json"),
+            recursive=True,
+        )
         dash_props = []
         for dash_file_path in dash_files:
             common_path = dash_file_path.replace(".abstradash.json", "")
-            route = os.path.relpath(common_path, os.path.join(abstra_json_dir, root_dir)).replace("\\", "/")
+            route = os.path.relpath(
+                common_path, os.path.join(abstra_json_dir, root_dir)
+            ).replace("\\", "/")
             script_path = common_path + ".py"
             dash_json_data = json.load(open(dash_file_path, "r"))
             prop = {
-                'name': dash_json_data["name"],
-                'layout': dash_json_data["layout"],
-                'background': workspace_json_data['workspace']['theme'],
-                'path': route,
-                'code': script_path
+                "name": dash_json_data["name"],
+                "layout": dash_json_data["layout"],
+                "background": workspace_json_data["workspace"]["theme"],
+                "path": route,
+                "code": script_path,
             }
             dash_props.append(prop)
         return dash_props

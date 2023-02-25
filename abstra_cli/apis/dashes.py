@@ -58,7 +58,7 @@ def update_workspace_dash(path, data):
     dash_data = {
         "title": data["name"],
         "draft_layout": None,
-        "theme": data.get("theme", None)
+        "theme": data.get("theme", None),
     }
     script_data = {
         "enabled": data.get("enabled", True),
@@ -86,8 +86,8 @@ def update_workspace_dash(path, data):
     """
     return (
         api_main.hf_hasura_runner(update_query, request_data)
-            .get("update_dashes", {})
-            .get("returning", {})[0]
+        .get("update_dashes", {})
+        .get("returning", {})[0]
     )
 
 
