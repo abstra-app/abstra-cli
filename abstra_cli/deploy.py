@@ -49,7 +49,7 @@ def deploy(**kwargs):
         for job in jobs:
             Jobs.add(upsert=True, **job)
 
-    files = deploy_data.pop("files", None)
+    files = deploy_data.pop("files", [deploy_data.get("workspace", {"root": "."})["root"]])
     if files:
         if isinstance(files, dict):
             Files.add(**files)
