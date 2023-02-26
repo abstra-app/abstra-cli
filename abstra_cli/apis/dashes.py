@@ -22,7 +22,9 @@ def add_workspace_dash(data):
     dash_data = {
         "title": data["name"],
         "workspace_id": workspace_id,
+        "path": data["path"],
         "draft_layout": None,
+        "layout": data["layout"],
         "theme": data.get("theme", None),
         "script": {
             "data": {
@@ -57,6 +59,7 @@ def add_workspace_dash(data):
 def update_workspace_dash(path, data):
     dash_data = {
         "title": data["name"],
+        "layout": data["layout"],
         "draft_layout": None,
         "theme": data.get("theme", None),
     }
