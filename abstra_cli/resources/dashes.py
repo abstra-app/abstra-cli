@@ -60,11 +60,11 @@ def evaluate_parameter_path(parameters: dict) -> dict:
 
 
 def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
-    EMPTY_DASH = ""
     code = parameters.get("code") or parameters.get("c")
 
     if not code:
         raise Exception("Code is required")
+
     return {"code_file_path": code}
 
 
@@ -219,7 +219,7 @@ class Dashes(Resource):
         webbrowser.open(url)
 
     @staticmethod
-    def list_dash_props(abstra_json_path):
+    def get_deploy_data(abstra_json_path):
         abstra_json_dir = os.path.dirname(abstra_json_path)
         with open(abstra_json_path, "r") as f:
             workspace_json_data = json.load(f)

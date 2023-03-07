@@ -31,8 +31,22 @@ def evaluate_parameters_file(parameters: dict) -> dict:
 def deploy(**kwargs):
     deploy_data = evaluate_parameters_file(kwargs)
 
-    for dash_props in Dashes.list_dash_props(get_abstra_json_path(kwargs)):
-        Dashes.add(upsert=True, **dash_props)
+    dashes = Dashes.get_deploy_data(get_abstra_json_path(kwargs))
+    if len(dashes):
+        dashes_root_path = deploy_data.get("workspace", {"root": "."})["root"]
+
+        for dash_props in dashes:
+            Dashes.add(upsert=True, **dash_props)
+        Files.add(dashes_root_path)
+
+        remote_dashes_files = Files.list_dashes_files(dashes_root_path)
+        local_dashes_files = [d["code"].replace(".py", ".abstradash.json") for d in dashes]
+        deleted_dashes_files = [f for f in remote_dashes_files if f not in local_dashes_files]
+
+        for deleted_dash_file in deleted_dashes_files:
+            deleted_dash_path = deleted_dash_file.replace(".abstradash.json", "").replace(f'{dashes_root_path}/', "")
+            Dashes.remove(deleted_dash_path)
+            Files.remove(deleted_dash_file, deleted_dash_file.replace(".abstradash.json", ".py"))
 
     forms = deploy_data.pop("forms", None)
     if forms:
@@ -49,9 +63,7 @@ def deploy(**kwargs):
         for job in jobs:
             Jobs.add(upsert=True, **job)
 
-    files = deploy_data.pop(
-        "files", [deploy_data.get("workspace", {"root": "."})["root"]]
-    )
+    files = deploy_data.pop("files", None)
     if files:
         if isinstance(files, dict):
             Files.add(**files)

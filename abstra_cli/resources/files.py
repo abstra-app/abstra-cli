@@ -47,3 +47,8 @@ class Files(Resource):
                 bar.next()
         bar.finish()
         print(f"\nDeleted {len(args)} files successfully")
+
+    @staticmethod
+    def list_dashes_files(dashes_root_path):
+        files = apis.list_workspace_files()
+        return [f['Key'] for f in files if f['Key'].startswith(f'{dashes_root_path}/') and f['Key'].endswith('.abstradash.json')]
