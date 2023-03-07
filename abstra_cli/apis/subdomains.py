@@ -17,6 +17,7 @@ def get_subdomain():
 
     return subdomains[0]["name"]
 
+
 def update_subdomain(old_name, new_name):
     query = """
         mutation UpdateSubdomain($old_name: String!, $new_name: String!) {
@@ -32,5 +33,3 @@ def update_subdomain(old_name, new_name):
         .get("update_subdomains", {})
         .get("returning", [])
     )
-
-

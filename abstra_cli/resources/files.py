@@ -51,4 +51,9 @@ class Files(Resource):
     @staticmethod
     def list_dashes_files(dashes_root_path):
         files = apis.list_workspace_files()
-        return [f['Key'] for f in files if f['Key'].startswith(f'{dashes_root_path}/') and f['Key'].endswith('.abstradash.json')]
+        return [
+            f["Key"]
+            for f in files
+            if f["Key"].startswith(f"{dashes_root_path}/")
+            and f["Key"].endswith(".abstradash.json")
+        ]

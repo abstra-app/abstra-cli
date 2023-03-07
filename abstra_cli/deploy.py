@@ -40,13 +40,21 @@ def deploy(**kwargs):
         Files.add(dashes_root_path)
 
         remote_dashes_files = Files.list_dashes_files(dashes_root_path)
-        local_dashes_files = [d["code"].replace(".py", ".abstradash.json") for d in dashes]
-        deleted_dashes_files = [f for f in remote_dashes_files if f not in local_dashes_files]
+        local_dashes_files = [
+            d["code"].replace(".py", ".abstradash.json") for d in dashes
+        ]
+        deleted_dashes_files = [
+            f for f in remote_dashes_files if f not in local_dashes_files
+        ]
 
         for deleted_dash_file in deleted_dashes_files:
-            deleted_dash_path = deleted_dash_file.replace(".abstradash.json", "").replace(f'{dashes_root_path}/', "")
+            deleted_dash_path = deleted_dash_file.replace(
+                ".abstradash.json", ""
+            ).replace(f"{dashes_root_path}/", "")
             Dashes.remove(deleted_dash_path)
-            Files.remove(deleted_dash_file, deleted_dash_file.replace(".abstradash.json", ".py"))
+            Files.remove(
+                deleted_dash_file, deleted_dash_file.replace(".abstradash.json", ".py")
+            )
 
     forms = deploy_data.pop("forms", None)
     if forms:

@@ -4,7 +4,16 @@ from abstra_cli.deploy import deploy
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
 import abstra_cli.credentials as credentials
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes, Subdomains
+from abstra_cli.resources import (
+    Forms,
+    Files,
+    Packages,
+    Vars,
+    Hooks,
+    Jobs,
+    Dashes,
+    Subdomains,
+)
 
 
 class CLI(object):

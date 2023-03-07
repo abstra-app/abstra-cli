@@ -72,5 +72,3 @@ def hf_hasura_runner(query, variables={}):
         return jsond["data"]
 
     raise Exception(jsond["errors"])
-
-

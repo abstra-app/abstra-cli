@@ -82,6 +82,7 @@ def print_jobs(jobs):
             f"{utils.format_digits(j['identifier'], max_idt)} - {utils.format_digits(j['schedule'], max_schedule)} - {utils.format_digits(j['title'], max_title)} ({enabled})"
         )
 
+
 def print_subdomains(subdomain):
     print(f"workspace subdomain: {subdomain}")
 
