@@ -60,6 +60,7 @@ Remote resources can be:
 - `files`
 - `vars`
 - `packages`
+- `subdomain`
 
 ### List resources
 
@@ -83,6 +84,8 @@ abstra list forms
 abstra list hooks
 
 abstra list jobs
+
+abstra list subdomain
 
 # Saving cloud packages to a requirements.txt file
 abstra list packages > requirements.txt
@@ -295,6 +298,16 @@ Examples:
 
 ```sh
 abstra update hook stripe-callback --enabled
+```
+
+#### `subdomain`
+
+- `--name`: string (required parameter)
+
+Examples:
+
+```sh
+abstra update subdomain new-subdomain-name
 ```
 
 ### Remove resource

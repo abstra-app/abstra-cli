@@ -4,7 +4,7 @@ from abstra_cli.deploy import deploy
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
 import abstra_cli.credentials as credentials
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes
+from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes, Subdomains
 
 
 class CLI(object):
@@ -29,6 +29,7 @@ class CLI(object):
             "hooks": Hooks.list,
             "dashes": Dashes.list,
             "packages": Packages.list,
+            "subdomain": Subdomains.list,
         }.get(resource, messages.not_implemented)
 
         list_func()
@@ -62,6 +63,7 @@ class CLI(object):
             "hooks": Hooks.update,
             "job": Jobs.update,
             "jobs": Jobs.update,
+            "subdomain": Subdomains.update,
         }.get(resource, messages.not_implemented)
 
         update_func(*args, **kwargs)

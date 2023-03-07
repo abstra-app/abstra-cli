@@ -74,18 +74,3 @@ def hf_hasura_runner(query, variables={}):
     raise Exception(jsond["errors"])
 
 
-def get_subdomain():
-    query = """
-        query Subdomains {
-            subdomains {
-                name
-            }
-        }
-    """
-
-    subdomains = hf_hasura_runner(query, {}).get("subdomains", [])
-    if not len(subdomains):
-        print("Could not find subdomain.")
-        exit()
-
-    return subdomains[0]["name"]

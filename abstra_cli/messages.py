@@ -82,6 +82,9 @@ def print_jobs(jobs):
             f"{utils.format_digits(j['identifier'], max_idt)} - {utils.format_digits(j['schedule'], max_schedule)} - {utils.format_digits(j['title'], max_title)} ({enabled})"
         )
 
+def print_subdomains(subdomain):
+    print(f"workspace subdomain: {subdomain}")
+
 
 def created_message(resource: str, form: str):
     print(f"{resource} created successfully: {form}")
@@ -155,6 +158,10 @@ def code_and_file_not_allowed():
 
 def missing_parameters_to_update(resource_name, resource):
     print(f"missing parameters to be updated of {resource_name} {resource}")
+
+
+def conflict_name(resource_name, resource):
+    print(f"Conflict error: {resource_name} already exists for {resource}")
 
 
 def file_path_does_not_exists_message(path):

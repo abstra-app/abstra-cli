@@ -1,5 +1,4 @@
 import abstra_cli.apis.main as api_main
-import abstra_cli.utils as utils
 
 
 def list_workspace_packages():
