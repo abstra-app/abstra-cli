@@ -1,5 +1,5 @@
 setuptools
-websockets
+websocket-client
 requests
 progress
 crontab
