@@ -22,7 +22,7 @@ def get_info_from_token(api_token):
     return workspace_id, author_id
 
 
-def usage(f, args, kwargs, author_id, workspace_id):
+def usage(fname, args, kwargs, author_id, workspace_id):
     if os.getenv("DISABLE_USAGE_STATISTICS"):
         return
 
@@ -33,7 +33,7 @@ def usage(f, args, kwargs, author_id, workspace_id):
                 {
                     "author_id": author_id,
                     "workspace_id": workspace_id,
-                    "method": f.__name__,
+                    "method": fname,
                     "arguments": {"args": args[1:], "kwargs": list(kwargs.keys())},
                 }
             ),

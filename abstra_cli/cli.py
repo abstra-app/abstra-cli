@@ -3,7 +3,7 @@ import fire
 from abstra_cli.deploy import deploy
 from abstra_cli.login import configure, login
 import abstra_cli.messages as messages
-import abstra_cli.decorators as decorators
+import abstra_cli.checkers as checkers
 from abstra_cli.resources import (
     Forms,
     Files,
@@ -23,20 +23,20 @@ class CLI(object):
     usage: abstra <command> <resource> [<argument> ...] [parameters]
     """
 
-    @decorators.configuration_check
     def configure(self, api_token=None):
         configure(api_token)
+        checkers.configuration_check("configure", api_token)
 
-    @decorators.configuration_check
     def login(self):
         login()
+        checkers.configuration_check("login")
 
-    @decorators.credentials_check
     def deploy(self, **kwargs):
+        checkers.credentials_check("deploy", **kwargs)
         deploy(**kwargs)
 
-    @decorators.credentials_check
     def list(self, resource, **kwargs):
+        checkers.credentials_check("list", resource, **kwargs)
         list_func = {
             "vars": Vars.list,
             "jobs": Jobs.list,
@@ -50,8 +50,8 @@ class CLI(object):
 
         list_func()
 
-    @decorators.credentials_check
     def add(self, resource, *args, **kwargs):
+        checkers.credentials_check("add", resource, *args, **kwargs)
         add_func = {
             "vars": Vars.add,
             "dash": Dashes.add,
@@ -68,8 +68,8 @@ class CLI(object):
 
         add_func(*args, **kwargs)
 
-    @decorators.credentials_check
     def update(self, resource, *args, **kwargs):
+        checkers.credentials_check("update", resource, *args, **kwargs)
         update_func = {
             "dash": Dashes.update,
             "dashes": Dashes.update,
@@ -84,8 +84,8 @@ class CLI(object):
 
         update_func(*args, **kwargs)
 
-    @decorators.credentials_check
     def remove(self, resource, *args, **kwargs):
+        checkers.credentials_check("remove", resource, *args, **kwargs)
         remove_func = {
             "vars": Vars.remove,
             "dash": Dashes.remove,
@@ -102,8 +102,8 @@ class CLI(object):
 
         remove_func(*args, **kwargs)
 
-    @decorators.credentials_check
     def play(self, resource, *args, **kwargs):
+        checkers.credentials_check("play", resource, *args, **kwargs)
         play_func = {
             "dash": Dashes.play,
             "form": Forms.play,
