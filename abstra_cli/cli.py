@@ -1,6 +1,7 @@
 import fire
 
 from abstra_cli.deploy import deploy
+from abstra_cli.apis.public import get_info_from_token
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
 import abstra_cli.credentials as credentials
@@ -25,7 +26,11 @@ class CLI(object):
 
     @decorators.configuration_check
     def configure(self, api_token=None):
-        credentials.save_credentials(api_token or messages.read_credentials())
+        api_token = api_token or messages.read_credentials()
+        workspace_id, _ = get_info_from_token(api_token)
+        if not workspace_id:
+            return messages.invalid_credentials()
+        credentials.save_credentials(api_token)
         print("Done!")
 
     @decorators.credentials_check

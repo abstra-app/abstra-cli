@@ -187,3 +187,7 @@ def dash_url(url):
 
 def hook_url(url, method):
     print(f"Making {method} request to URL {url}")
+
+
+def invalid_credentials():
+    print("Invalid credentials")
