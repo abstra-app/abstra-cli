@@ -1,6 +1,4 @@
-import os
-import json
-import requests
+import os, json, requests, websocket as ws
 from functools import lru_cache
 
 
@@ -43,3 +41,18 @@ def usage(f, args, kwargs, author_id, workspace_id):
         )
     except Exception as e:
         pass
+
+
+def wait_for_api_token(cli_uuid):
+    ws_url = f"wss://pubsub.abstra.cloud/external/sub/cli-login-{cli_uuid}"
+    ws_client = None
+    try:
+        ws_client = ws.create_connection(ws_url)
+        result = ws_client.recv()
+        if result is None:
+            return None
+        return json.loads(result).get("api_token")
+    except Exception as e:
+        return None
+    finally:
+        ws_client and ws_client.close()

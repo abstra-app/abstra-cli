@@ -191,3 +191,15 @@ def hook_url(url, method):
 
 def invalid_credentials():
     print("Invalid credentials")
+
+
+def error_opening_browser(url):
+    print(f"Failed to auto open browser.\nOpen in your browser: {url}")
+
+
+def waiting_for_api_token():
+    print("Waiting for API token...")
+
+
+def failed_to_get_api_token():
+    print("Failed to get API token")

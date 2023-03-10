@@ -1,10 +1,9 @@
 import fire
 
 from abstra_cli.deploy import deploy
-from abstra_cli.apis.public import get_info_from_token
+from abstra_cli.login import configure, login
 import abstra_cli.messages as messages
 import abstra_cli.decorators as decorators
-import abstra_cli.credentials as credentials
 from abstra_cli.resources import (
     Forms,
     Files,
@@ -26,12 +25,15 @@ class CLI(object):
 
     @decorators.configuration_check
     def configure(self, api_token=None):
-        api_token = api_token or messages.read_credentials()
-        workspace_id, _ = get_info_from_token(api_token)
-        if not workspace_id:
-            return messages.invalid_credentials()
-        credentials.save_credentials(api_token)
-        print("Done!")
+        configure(api_token)
+
+    @decorators.configuration_check
+    def login(self):
+        login()
+
+    @decorators.credentials_check
+    def deploy(self, **kwargs):
+        deploy(**kwargs)
 
     @decorators.credentials_check
     def list(self, resource, **kwargs):
@@ -111,10 +113,6 @@ class CLI(object):
         }.get(resource, messages.not_implemented)
 
         play_func(*args, **kwargs)
-
-    @decorators.credentials_check
-    def deploy(self, **kwargs):
-        deploy(**kwargs)
 
     # Aliases
     def upload(self, *args, **kwargs):
