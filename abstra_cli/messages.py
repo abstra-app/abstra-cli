@@ -4,9 +4,6 @@ import abstra_cli.utils as utils
 
 
 def read_credentials():
-    print(
-        "Abstra API Tokens can be found in your workspace or at https://forms.abstra.run/generate-token."
-    )
     credentials = input(f"API Token: ")
     if not credentials:
         raise Exception("No API token configured")

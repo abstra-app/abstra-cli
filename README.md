@@ -24,17 +24,17 @@ pip install abstra-cli
 
 You will need to be authenticated to run most commands.
 
-1. Generate an API Token [here](https://forms.abstra.run/generate-token)
-
-2. Run command below with the generated token:
+1. Run command below:
 
 ```sh
-abstra configure [API_TOKEN]
+abstra login
 ```
 
 - Credentials are stored at `.abstra/credentials` path inside current directory.
 
 - Alternatively you can set the `ABSTRA_API_TOKEN` environment variable.
+
+- Alternatively you can run `abstra configure <token>` if you already have a token.
 
 ## CRUD Commands
 
