@@ -223,16 +223,15 @@ class Dashes(Resource):
         abstra_json_dir = os.path.dirname(abstra_json_path)
         with open(abstra_json_path, "r") as f:
             workspace_json_data = json.load(f)
-        root_dir = workspace_json_data.get("workspace", {"root": "."})["root"]
         dash_files = glob(
-            os.path.join(abstra_json_dir, root_dir, "**", "*.abstradash.json"),
+            os.path.join(abstra_json_dir, ".", "**", "*.abstradash.json"),
             recursive=True,
         )
         dash_props = []
         for dash_file_path in dash_files:
             common_path = dash_file_path.replace(".abstradash.json", "")
             route = os.path.relpath(
-                common_path, os.path.join(abstra_json_dir, root_dir)
+                common_path, os.path.join(abstra_json_dir, ".")
             ).replace("\\", "/")
             script_path = common_path + ".py"
             dash_json_data = json.load(open(dash_file_path, "r"))

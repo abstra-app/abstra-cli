@@ -33,13 +33,10 @@ def deploy(**kwargs):
 
     dashes = Dashes.get_deploy_data(get_abstra_json_path(kwargs))
     if len(dashes):
-        dashes_root_path = deploy_data.get("workspace", {"root": "."})["root"]
-
         for dash_props in dashes:
             Dashes.add(upsert=True, **dash_props)
-        Files.add(dashes_root_path)
 
-        remote_dashes_files = Files.list_dashes_files(dashes_root_path)
+        remote_dashes_files = Files.list_dashes_files(".")
         local_dashes_files = [
             d["code"].replace(".py", ".abstradash.json") for d in dashes
         ]
@@ -50,7 +47,7 @@ def deploy(**kwargs):
         for deleted_dash_file in deleted_dashes_files:
             deleted_dash_path = deleted_dash_file.replace(
                 ".abstradash.json", ""
-            ).replace(f"{dashes_root_path}/", "")
+            ).replace(f"./", "")
             Dashes.remove(deleted_dash_path)
             Files.remove(
                 deleted_dash_file, deleted_dash_file.replace(".abstradash.json", ".py")
