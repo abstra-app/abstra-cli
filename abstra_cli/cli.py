@@ -32,6 +32,10 @@ class CLI(object):
         checkers.configuration_check("login")
 
     def deploy(self, **kwargs):
+        should_login = kwargs.get("login", False)
+        if not checkers.is_logged() and should_login:
+            login()
+
         checkers.credentials_check("deploy", **kwargs)
         deploy(**kwargs)
 

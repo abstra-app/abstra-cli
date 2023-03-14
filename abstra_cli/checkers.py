@@ -19,3 +19,8 @@ def credentials_check(fname, *args, **kwargs):
 def configuration_check(fname, *args, **kwargs):
     api_token, workspace_id, author_id = get_auth_info()
     usage(fname, args, kwargs, author_id, workspace_id)
+
+
+def is_logged():
+    api_token, workspace_id, author_id = get_auth_info()
+    return api_token and workspace_id
