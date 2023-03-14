@@ -1,13 +1,9 @@
-import webbrowser
-
-
+import webbrowser, sys, os, json
+from glob import glob
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
-import os
-import json
-from glob import glob
 
 
 NAME_PARAMETERS = ["name", "title"]
@@ -38,11 +34,11 @@ def check_valid_parameters(parameters: dict) -> None:
     for param in parameters.keys():
         if param not in DASH_PARAMETERS:
             messages.invalid_parameter(param)
-            exit()
+            sys.exit(1)
     for param, value in parameters.items():
         if param in NON_FLAG_PARAMETERS and value in [True, False]:
             messages.invalid_non_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
 
 
 def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
@@ -63,7 +59,8 @@ def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
     code = parameters.get("code") or parameters.get("c")
 
     if not code:
-        raise Exception("Code is required")
+        print("Code is required")
+        sys.exit(1)
 
     return {"code_file_path": code}
 
@@ -71,7 +68,9 @@ def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
 def evaluate_parameter_layout(parameters: dict) -> dict:
     layout = parameters.get("layout")
     if not layout:
-        raise Exception("Layout is required")
+        print("Layout is required")
+        sys.exit(1)
+
     return {"layout": layout}
 
 
@@ -87,7 +86,7 @@ def evaluate_flag_parameters(parameters: dict) -> dict:
                 continue
 
             messages.invalid_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
     return evaluated_params
 
 
@@ -110,7 +109,7 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
 
     if not utils.path_exists(background):
         messages.file_path_does_not_exists_message(background)
-        exit()
+        sys.exit(1)
 
     if utils.check_is_image_path(background):
         filename = utils.slugify_filename(background)
@@ -121,10 +120,10 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
                 return {"theme": url}
         except Exception as e:
             messages.error_upload_background_message(background)
-            exit()
+            sys.exit(1)
 
     messages.invalid_background_parameter_value()
-    exit()
+    sys.exit(1)
 
 
 class Dashes(Resource):
@@ -139,7 +138,7 @@ class Dashes(Resource):
         path = kwargs.get("path")
         if upsert and not path:
             messages.upsert_without_identifier("path")
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -164,17 +163,18 @@ class Dashes(Resource):
             except Exception as e:
                 print(e)
                 messages.create_failed("Dash")
+                sys.exit(1)
 
     @staticmethod
     def update(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
         path = args[0]
 
         if not len(kwargs):
             messages.missing_parameters_to_update("dash", path)
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -195,12 +195,13 @@ class Dashes(Resource):
             except Exception as e:
                 print(e)
                 messages.update_failed("Dash", path)
+                sys.exit(1)
 
     @staticmethod
     def remove(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         path = args[0]
         apis.delete_workspace_dash(path)
@@ -210,7 +211,7 @@ class Dashes(Resource):
     def play(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         path = args[0]
         subdomain_name = apis.get_subdomain()

@@ -1,5 +1,4 @@
-import requests
-
+import requests, sys
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
@@ -18,11 +17,11 @@ def check_valid_parameters(parameters: dict) -> None:
     for param in parameters.keys():
         if param not in HOOK_PARAMETERS:
             messages.invalid_parameter(param)
-            exit()
+            sys.exit(1)
     for param, value in parameters.items():
         if param in NON_FLAG_PARAMETERS and value in [True, False]:
             messages.invalid_non_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
 
 
 def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
@@ -46,7 +45,7 @@ def evaluate_parameters_file_and_code(parameters: dict, use_default=True) -> dic
 
     if file and code:
         messages.code_and_file_not_allowed()
-        exit()
+        sys.exit(1)
 
     if file:
         with open(file, "r") as f:
@@ -70,7 +69,7 @@ def evaluate_flag_parameters(parameters: dict) -> dict:
                 continue
 
             messages.invalid_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
     return evaluated_params
 
 
@@ -86,7 +85,7 @@ class Hooks(Resource):
         path = kwargs.get("path")
         if upsert and not path:
             messages.upsert_without_identifier("path")
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -110,17 +109,18 @@ class Hooks(Resource):
                 messages.create_failed(
                     "Hook",
                 )
+                sys.exit(1)
 
     @staticmethod
     def update(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
         path = args[0]
 
         if not len(kwargs):
             messages.missing_parameters_to_update("hook", path)
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -138,12 +138,13 @@ class Hooks(Resource):
             except Exception as e:
                 print(e)
                 messages.update_failed("Hook", path)
+                sys.exit(1)
 
     @staticmethod
     def remove(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         path = args[0]
         apis.delete_workspace_hook(path)
@@ -154,7 +155,7 @@ class Hooks(Resource):
         # TODO: add body and headers
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         method = kwargs.get("method") or kwargs.get("m") or "POST"
         path = args[0]

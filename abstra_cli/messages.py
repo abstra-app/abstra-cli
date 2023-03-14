@@ -1,12 +1,13 @@
+import sys
 from progress.bar import FillingSquaresBar
-
 import abstra_cli.utils as utils
 
 
 def read_credentials():
     credentials = input(f"API Token: ")
     if not credentials:
-        raise Exception("No API token configured")
+        print("No API token configured")
+        sys.exit(1)
     return credentials
 
 

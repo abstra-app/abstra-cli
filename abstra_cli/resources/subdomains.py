@@ -1,5 +1,6 @@
-from abstra_cli.resources.resources import Resource
+import sys
 from abstra_cli.apis import get_subdomain, update_subdomain
+from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 
 
@@ -13,7 +14,7 @@ class Subdomains(Resource):
     def update(*args, **kwargs):
         if not len(args):
             messages.missing_parameters_to_update("name", "subdomain")
-            exit()
+            sys.exit(1)
 
         new_subdomain = args[0]
         old_subdomain = get_subdomain()
@@ -29,3 +30,4 @@ class Subdomains(Resource):
                 messages.conflict_name("name", "subdomain")
             else:
                 messages.update_failed("subdomain")
+            sys.exit(1)

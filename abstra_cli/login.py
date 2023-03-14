@@ -1,4 +1,4 @@
-import webbrowser, uuid
+import webbrowser, uuid, sys
 import abstra_cli.messages as messages
 import abstra_cli.credentials as credentials
 import abstra_cli.apis.public as public_apis
@@ -8,7 +8,9 @@ def configure(api_token=None):
     api_token = api_token or messages.read_credentials()
     workspace_id, _ = public_apis.get_info_from_token(api_token)
     if not workspace_id:
-        return messages.invalid_credentials()
+        messages.invalid_credentials()
+        sys.exit(1)
+
     credentials.save_credentials(api_token)
     print("Done!")
 
@@ -24,6 +26,7 @@ def login():
     messages.waiting_for_api_token()
     api_token = public_apis.wait_for_api_token(cli_uuid)
     if not api_token:
-        return messages.failed_to_get_api_token()
+        messages.failed_to_get_api_token()
+        sys.exit(1)
 
     configure(api_token)

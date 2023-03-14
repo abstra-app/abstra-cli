@@ -1,3 +1,4 @@
+import sys
 import abstra_cli.apis.main as api_main
 
 
@@ -13,7 +14,7 @@ def get_subdomain():
     subdomains = api_main.hf_hasura_runner(query, {}).get("subdomains", [])
     if not len(subdomains):
         print("Could not find subdomain.")
-        exit()
+        sys.exit(1)
 
     return subdomains[0]["name"]
 

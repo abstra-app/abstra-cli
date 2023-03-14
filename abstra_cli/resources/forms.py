@@ -1,6 +1,4 @@
-import webbrowser
-
-
+import webbrowser, sys
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
@@ -40,11 +38,11 @@ def check_valid_parameters(parameters: dict) -> None:
     for param in parameters.keys():
         if param not in FORM_PARAMETERS:
             messages.invalid_parameter(param)
-            exit()
+            sys.exit(1)
     for param, value in parameters.items():
         if param in NON_FLAG_PARAMETERS and value in [True, False]:
             messages.invalid_non_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
 
 
 def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
@@ -68,7 +66,7 @@ def evaluate_parameters_file_and_code(parameters: dict, use_default=True) -> dic
 
     if file and code:
         messages.code_and_file_not_allowed()
-        exit()
+        sys.exit(1)
 
     if file:
         with open(file, "r") as f:
@@ -92,7 +90,7 @@ def evaluate_flag_parameters(parameters: dict) -> dict:
                 continue
 
             messages.invalid_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
     return evaluated_params
 
 
@@ -115,7 +113,7 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
 
     if not utils.path_exists(background):
         messages.file_path_does_not_exists_message(background)
-        exit()
+        sys.exit(1)
 
     if utils.check_is_image_path(background):
         filename = utils.slugify_filename(background)
@@ -126,10 +124,10 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
                 return {"theme": url}
         except Exception as e:
             messages.error_upload_background_message(background)
-            exit()
+            sys.exit(1)
 
     messages.invalid_background_parameter_value()
-    exit()
+    sys.exit(1)
 
 
 class Forms(Resource):
@@ -144,7 +142,7 @@ class Forms(Resource):
         path = kwargs.get("path")
         if upsert and not path:
             messages.upsert_without_identifier("path")
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -168,17 +166,18 @@ class Forms(Resource):
             except Exception as e:
                 print(e)
                 messages.create_failed("Form")
+                sys.exit(1)
 
     @staticmethod
     def update(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
         path = args[0]
 
         if not len(kwargs):
             messages.missing_parameters_to_update("form", path)
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -198,12 +197,13 @@ class Forms(Resource):
             except Exception as e:
                 print(e)
                 messages.update_failed("Form", path)
+                sys.exit(1)
 
     @staticmethod
     def remove(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         path = args[0]
         apis.delete_workspace_form(path)
@@ -213,7 +213,7 @@ class Forms(Resource):
     def play(*args, **kwargs):
         if not len(args):
             messages.required_argument("path")
-            exit()
+            sys.exit(1)
 
         path = args[0]
         subdomain_name = apis.get_subdomain()

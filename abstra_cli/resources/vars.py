@@ -1,3 +1,4 @@
+import sys
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
@@ -24,10 +25,10 @@ class Vars(Resource):
             name, value = utils.parse_env_var(var)
             if not name or not value:
                 messages.invalid_variable(var)
-                return False
+                sys.exit(1)
             if name in processed_names:
                 messages.duplicate_variable(var)
-                return False
+                sys.exit(1)
             processed_vars.append({"name": name, "value": value})
 
         added_vars = apis.add_workspace_vars(processed_vars)

@@ -1,5 +1,5 @@
+import sys
 from crontab import CronTab
-
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.apis as apis
@@ -20,11 +20,11 @@ def check_valid_parameters(parameters: dict) -> None:
     for param in parameters.keys():
         if param not in JOB_PARAMETERS:
             messages.invalid_parameter(param)
-            exit()
+            sys.exit(1)
     for param, value in parameters.items():
         if param in NON_FLAG_PARAMETERS and value in [True, False]:
             messages.invalid_non_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
 
 
 def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
@@ -49,7 +49,7 @@ def evaluate_parameter_schedule(parameters: dict, use_default=True) -> dict:
             return {"schedule": schedule}
         except:
             print("Bad crontab expression")
-            exit()
+            sys.exit(1)
 
     return {"schedule": "00 00 00 * *"} if use_default else {}
 
@@ -61,7 +61,7 @@ def evaluate_parameters_file_and_code(parameters: dict, use_default=True) -> dic
 
     if file and code:
         messages.code_and_file_not_allowed()
-        exit()
+        sys.exit(1)
 
     if file:
         with open(file, "r") as f:
@@ -85,7 +85,7 @@ def evaluate_flag_parameters(parameters: dict) -> dict:
                 continue
 
             messages.invalid_flag_parameter_value(param)
-            exit()
+            sys.exit(1)
     return evaluated_params
 
 
@@ -101,7 +101,7 @@ class Jobs(Resource):
         idt = evaluate_parameter_idt(kwargs).get("identifier")
         if upsert and not idt:
             messages.upsert_without_identifier("identifier")
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -126,17 +126,18 @@ class Jobs(Resource):
                 messages.create_failed(
                     "Job",
                 )
+                sys.exit(1)
 
     @staticmethod
     def update(*args, **kwargs):
         if not len(args):
             messages.required_argument("identifier")
-            exit()
+            sys.exit(1)
         idt = args[0]
 
         if not len(kwargs):
             messages.missing_parameters_to_update("job", idt)
-            exit()
+            sys.exit(1)
 
         check_valid_parameters(kwargs)
 
@@ -155,12 +156,13 @@ class Jobs(Resource):
             except Exception as e:
                 print(e)
                 messages.update_failed("Job", idt)
+                sys.exit(1)
 
     @staticmethod
     def remove(*args, **kwargs):
         if not len(args):
             messages.required_argument("identifier")
-            exit()
+            sys.exit(1)
 
         idt = args[0]
         apis.delete_workspace_job(idt)

@@ -1,4 +1,4 @@
-import json
+import json, sys
 from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes
 
 
@@ -17,13 +17,16 @@ def evaluate_parameters_file(parameters: dict) -> dict:
         with open(file) as f:
             data = json.loads(f.read())
             if not isinstance(data, dict):
-                raise Exception("Bad data")
+                print("Bad data")
+                sys.exit(1)
     except:
-        raise Exception("Deploy file not found or not correct format")
+        print("Deploy file not found or not correct format")
+        sys.exit(1)
 
     for key in data.keys():
         if key not in ACCEPTED_KEYS:
-            raise Exception(f"Extra data in deploy file {file} not accepted")
+            print(f"Extra data in deploy file {file} not accepted")
+            sys.exit(1)
 
     return data
 
