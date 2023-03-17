@@ -10,6 +10,7 @@ import abstra_cli.apis as apis
 NAME_PARAMETERS = ["name", "title"]
 PATH_PARAMETERS = ["path"]
 CODE_PARAMETERS = ["code", "c"]
+SHOW_SIDEBAR_PARAMETERS = ["show_sidebar"]
 BACKGROUND_PARAMETERS = ["background"]
 OTHER_PARAMETERS = [
     "main_color",
@@ -18,6 +19,7 @@ OTHER_PARAMETERS = [
     "log_messages",
     "brand_name",
 ]
+
 LAYOUT_PARAMETERS = ["layout"]
 NON_FLAG_PARAMETERS = (
     NAME_PARAMETERS
@@ -26,8 +28,9 @@ NON_FLAG_PARAMETERS = (
     + BACKGROUND_PARAMETERS
     + OTHER_PARAMETERS
     + LAYOUT_PARAMETERS
+    + SHOW_SIDEBAR_PARAMETERS
 )
-FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar", "enabled"]
+FLAG_PARAMETERS = ["enabled"]
 DASH_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
