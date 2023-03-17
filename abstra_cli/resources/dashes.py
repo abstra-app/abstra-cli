@@ -41,11 +41,11 @@ def check_valid_parameters(parameters: dict) -> None:
             sys.exit(1)
 
 
-def evaluate_parameter_name(parameters: dict, use_default=True) -> dict:
-    name = parameters.get("name") or parameters.get("n") or parameters.get("title")
-    if not name and not use_default:
+def evaluate_parameter_title(parameters: dict, use_default=True) -> dict:
+    title = parameters.get("name") or parameters.get("n") or parameters.get("title")
+    if not title and not use_default:
         return {}
-    return {"name": name or "New Dash"}
+    return {"title": title or "New Dash"}
 
 
 def evaluate_parameter_path(parameters: dict) -> dict:
@@ -55,7 +55,14 @@ def evaluate_parameter_path(parameters: dict) -> dict:
     return {"path": path}
 
 
-def evaluate_parameters_code(parameters: dict, use_default=True) -> dict:
+def evaluate_parameter_show_sidebar(parameters: dict) -> dict:
+    show_sidebar = parameters.get("show_sidebar")
+    if not show_sidebar:
+        return {}
+    return {"show_sidebar": show_sidebar or False}
+
+
+def evaluate_parameters_code(parameters: dict) -> dict:
     code = parameters.get("code") or parameters.get("c")
 
     if not code:
@@ -143,9 +150,10 @@ class Dashes(Resource):
         check_valid_parameters(kwargs)
 
         dash_data = {
-            **evaluate_parameter_name(kwargs),
+            **evaluate_parameter_title(kwargs),
             **evaluate_parameter_path(kwargs),
             **evaluate_parameters_code(kwargs),
+            **evaluate_parameter_show_sidebar(kwargs),
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
@@ -179,9 +187,10 @@ class Dashes(Resource):
         check_valid_parameters(kwargs)
 
         dash_data = {
-            **evaluate_parameter_name(kwargs, use_default=False),
+            **evaluate_parameter_title(kwargs, use_default=False),
             **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_code(kwargs, use_default=False),
+            **evaluate_parameters_code(kwargs),
+            **evaluate_parameter_show_sidebar(kwargs),
             **evaluate_flag_parameters(kwargs),
             **evaluate_other_parameters(kwargs),
             **evaluate_background_parameter_value(kwargs),
@@ -237,11 +246,12 @@ class Dashes(Resource):
             script_path = common_path + ".py"
             dash_json_data = json.load(open(dash_file_path, "r"))
             prop = {
-                "name": dash_json_data["name"],
+                "title": dash_json_data.get("title") or route,
                 "layout": dash_json_data["layout"],
                 "background": workspace_json_data["workspace"]["theme"],
                 "path": route,
                 "code": script_path,
+                "show_sidebar": dash_json_data["showSidebar"],
             }
             dash_props.append(prop)
         return dash_props

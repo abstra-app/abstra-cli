@@ -20,7 +20,7 @@ def list_workspace_dashes():
 def add_workspace_dash(data):
     _, workspace_id, _ = api_main.get_auth_info()
     dash_data = {
-        "title": data["name"],
+        "title": data["title"],
         "workspace_id": workspace_id,
         "path": data["path"],
         "draft_layout": None,
@@ -31,7 +31,7 @@ def add_workspace_dash(data):
                 "workspace_id": workspace_id,
                 "enabled": data.get("enabled", True),
                 "file_path": data["code_file_path"],
-                "name": data["name"],
+                "name": data["title"],
             }
         },
     }
@@ -58,7 +58,7 @@ def add_workspace_dash(data):
 
 def update_workspace_dash(path, data):
     dash_data = {
-        "title": data["name"],
+        "title": data["title"],
         "layout": data["layout"],
         "draft_layout": None,
         "theme": data.get("theme", None),
@@ -67,7 +67,7 @@ def update_workspace_dash(path, data):
         "enabled": data.get("enabled", True),
         "file_path": data["code_file_path"],
         "code": None,
-        "name": data["name"],
+        "name": data["title"],
     }
 
     request_data = {"path": path, "dash_data": dash_data, "script_data": script_data}
