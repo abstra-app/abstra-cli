@@ -14,8 +14,13 @@ def get_ignore_files(dir):
     IGNOREFILE = os.path.join(dir, ABSTRA_IGNORE)
     abstra_path = os.path.join(dir, ABSTRA_FOLDER)
     ignored = [IGNOREFILE, abstra_path]
+
+    GITIGNORE = os.path.join(dir, ".gitignore")
     if os.path.exists(IGNOREFILE):
         with open(IGNOREFILE, "r") as f:
+            ignored.extend([os.path.join(dir, f) for f in f.read().split("\n") if f])
+    elif os.path.exists(GITIGNORE):
+        with open(GITIGNORE, "r") as f:
             ignored.extend([os.path.join(dir, f) for f in f.read().split("\n") if f])
     return ignored
 
