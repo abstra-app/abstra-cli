@@ -28,9 +28,8 @@ NON_FLAG_PARAMETERS = (
     + BACKGROUND_PARAMETERS
     + OTHER_PARAMETERS
     + LAYOUT_PARAMETERS
-    + SHOW_SIDEBAR_PARAMETERS
 )
-FLAG_PARAMETERS = ["enabled"]
+FLAG_PARAMETERS = ["enabled"] + SHOW_SIDEBAR_PARAMETERS
 DASH_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
@@ -63,7 +62,7 @@ def evaluate_parameter_show_sidebar(parameters: dict) -> dict:
     show_sidebar = parameters.get("show_sidebar")
     if show_sidebar is None:
         return {}
-    return {"show_sidebar": bool(show_sidebar)}
+    return {"show_sidebar": show_sidebar}
 
 
 def evaluate_parameters_code(parameters: dict) -> dict:
@@ -260,7 +259,7 @@ class Dashes(Resource):
                 "background": workspace_json_data["workspace"].get("theme"),
                 "path": route,
                 "code": script_path,
-                "show_sidebar": dash_json_data.get("show_sidebar"),
+                "show_sidebar": dash_json_data.get("show_sidebar", False),
             }
             dash_props.append(prop)
         return dash_props
