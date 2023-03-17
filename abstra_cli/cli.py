@@ -146,3 +146,7 @@ def _SeparateFlagArgs(args):
 def main():
     fire.core.parser.SeparateFlagArgs = _SeparateFlagArgs
     fire.Fire(CLI)
+
+
+if __name__ == "__main__":
+    main()
