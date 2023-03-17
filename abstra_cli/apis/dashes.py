@@ -26,11 +26,14 @@ def add_workspace_dash(data):
         "draft_layout": None,
         "layout": data["layout"],
         "theme": data.get("theme", None),
+        "show_sidebar": data.get("show_sidebar", False),
         "script": {
             "data": {
                 "workspace_id": workspace_id,
                 "enabled": data.get("enabled", True),
                 "file_path": data["code_file_path"],
+                "code": "# using CODE_FILE_PATH",
+                "draft": None,
                 "name": data["title"],
             }
         },
@@ -62,11 +65,13 @@ def update_workspace_dash(path, data):
         "layout": data["layout"],
         "draft_layout": None,
         "theme": data.get("theme", None),
+        "show_sidebar": data.get("show_sidebar", False),
     }
     script_data = {
         "enabled": data.get("enabled", True),
         "file_path": data["code_file_path"],
-        "code": None,
+        "code": "# using CODE_FILE_PATH",
+        "draft": None,
         "name": data["title"],
     }
 

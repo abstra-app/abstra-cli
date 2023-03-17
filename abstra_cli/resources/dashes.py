@@ -1,6 +1,7 @@
 import webbrowser, sys, os, json
 from glob import glob
 from abstra_cli.resources.resources import Resource
+from abstra_cli.resources.files import Files
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
@@ -57,9 +58,9 @@ def evaluate_parameter_path(parameters: dict) -> dict:
 
 def evaluate_parameter_show_sidebar(parameters: dict) -> dict:
     show_sidebar = parameters.get("show_sidebar")
-    if not show_sidebar:
+    if show_sidebar is None:
         return {}
-    return {"show_sidebar": show_sidebar or False}
+    return {"show_sidebar": bool(show_sidebar)}
 
 
 def evaluate_parameters_code(parameters: dict) -> dict:
@@ -68,6 +69,8 @@ def evaluate_parameters_code(parameters: dict) -> dict:
     if not code:
         print("Code is required")
         sys.exit(1)
+
+    Files.add(code)
 
     return {"code_file_path": code}
 
@@ -112,6 +115,9 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
         return {}
 
     if utils.check_color(background):
+        return {"theme": background}
+
+    if utils.check_is_url(background):
         return {"theme": background}
 
     if not utils.path_exists(background):
@@ -248,10 +254,10 @@ class Dashes(Resource):
             prop = {
                 "title": dash_json_data.get("title") or route,
                 "layout": dash_json_data["layout"],
-                "background": workspace_json_data["workspace"]["theme"],
+                "background": workspace_json_data["workspace"].get("theme"),
                 "path": route,
                 "code": script_path,
-                "show_sidebar": dash_json_data["showSidebar"],
+                "show_sidebar": dash_json_data.get("show_sidebar"),
             }
             dash_props.append(prop)
         return dash_props

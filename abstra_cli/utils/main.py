@@ -60,6 +60,10 @@ def check_color(color: str) -> bool:
         return False
 
 
+def check_is_url(url: str) -> bool:
+    return bool(re.match(r"^https?://", url))
+
+
 def slugify_filename(image_path: str) -> str:
     filename = image_path.split("/")[-1]
     extension, *filenames = reverse(filename.split("."))
