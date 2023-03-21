@@ -182,7 +182,7 @@ abstra add job --idt daily --schedule="00 00 1 * *" --name="Every midnight"
 
 #### `files`
 
-- file_path[]: list of file or directory paths
+- file_path[]: list of file or directory paths. Defaults to `.`
 
 Examples:
 
@@ -210,7 +210,7 @@ abstra add vars --file .env
 #### `packages`
 
 - package_name[]: list of packages with optional version (ex. numpy=1.0.1)
-- -f or \-\-file: file_path (ex. --file requirements.txt)
+- -f or \-\-file: file_path (ex. --file requirements.txt). Defaults to `requirements.txt`
 
 Examples:
 

@@ -201,3 +201,15 @@ def waiting_for_api_token():
 
 def failed_to_get_api_token():
     print("Failed to get API token")
+
+
+def no_variables():
+    print("No environment variables added")
+
+
+def no_packages():
+    print("No packages added")
+
+
+def no_files():
+    print("No files added")

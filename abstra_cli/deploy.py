@@ -78,7 +78,7 @@ def deploy(**kwargs):
         elif isinstance(files, list):
             Files.add(*files)
 
-    packages = deploy_data.pop("packages", None)
+    packages = deploy_data.pop("packages", {"requirement": "requirements.txt"})
     if packages:
         if isinstance(packages, dict):
             Packages.add(**packages)

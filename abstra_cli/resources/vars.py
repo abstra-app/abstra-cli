@@ -19,6 +19,10 @@ class Vars(Resource):
             with open(file, "r") as f:
                 vars.extend([v for v in f.read().split("\n") if v])
 
+        if len(vars) == 0:
+            messages.no_variables()
+            return
+
         processed_vars = []
         processed_names = []
         for var in vars:

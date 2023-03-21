@@ -22,6 +22,10 @@ class Files(Resource):
             elif os.path.isdir(path):
                 files.extend(utils.files_from_directory(path))
 
+        if len(files) == 0:
+            messages.no_files()
+            return
+
         bar = messages.show_progress("Uploading files", len(files))
         for path in files:
             filename = path.as_posix()

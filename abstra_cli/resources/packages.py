@@ -20,8 +20,15 @@ class Packages(Resource):
             or kwargs.get("requirement")
         )
         if file:
-            with open(file, "r") as f:
-                packages.extend([p for p in f.read().split("\n") if p])
+            try:
+                with open(file, "r") as f:
+                    packages.extend([p for p in f.read().split("\n") if p])
+            except:
+                print(f"Unable to read file: {file}")
+
+        if len(packages) == 0:
+            messages.no_packages()
+            return
 
         processed_packages = []
         processed_names = []
