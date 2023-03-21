@@ -8,3 +8,4 @@ from .packages import *
 from .public import *
 from .dashes import *
 from .subdomains import *
+from .memberships import *
