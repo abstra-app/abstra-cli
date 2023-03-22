@@ -1,13 +1,12 @@
 import os, json, requests, websocket as ws
 from functools import lru_cache
+from abstra_cli.credentials import get_auth_headers
 
 
 @lru_cache(maxsize=None)
 def get_info_from_token(api_token):
-    response = requests.get(
-        f"https://auth.abstra.cloud/abstra-cloud",
-        headers={"content-type": "application/json", "API-Authorization": api_token},
-    )
+    headers = get_auth_headers()
+    response = requests.get(f"https://auth.abstra.cloud/abstra-cloud", headers=headers)
     response_json = response.json()
     if response_json is None:
         return None, None

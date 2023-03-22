@@ -47,22 +47,23 @@ def asset_upload(filepath, file):
 
 
 def hf_api_runner(method, path, data=None):
-    api_token, workspace_id, _ = get_auth_info()
+    _, workspace_id, _ = get_auth_info()
+    headers = credentials.get_auth_headers()
     response = requests.request(
         method,
         f"{HACKERFORMS_API_URL}/workspaces/{workspace_id}/{path}",
         data=json.dumps(data) if data else None,
-        headers={"content-type": "application/json", "API-Authorization": api_token},
+        headers=headers,
     )
     return response.json()
 
 
 def hf_hasura_runner(query, variables={}):
-    api_token = credentials.get_credentials()
+    headers = credentials.get_auth_headers()
     response = requests.post(
         HACKERFORMS_HASURA_URL,
         data=json.dumps({"query": query, "variables": variables}),
-        headers={"content-type": "application/json", "API-Authorization": api_token},
+        headers=headers,
     )
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")

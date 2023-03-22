@@ -1,5 +1,14 @@
-import os
+import os, sys
 from abstra_cli.utils import ABSTRA_FOLDER, CREDENTIALS_FILE
+
+overwriten_auth_headers = {}
+
+
+def overwrite_auth_headers(headers):
+    if not isinstance(headers, dict):
+        raise ValueError("headers must be a dict")
+    global overwriten_auth_headers
+    overwriten_auth_headers = headers
 
 
 def create_abstra_dir():
@@ -22,3 +31,15 @@ def get_credentials():
 
     with open(CREDENTIALS_FILE) as f:
         return f.read().strip()
+
+
+def get_auth_headers():
+    if overwriten_auth_headers:
+        return {"content-type": "application/json", **overwriten_auth_headers}
+
+    api_token = get_credentials()
+    if api_token:
+        return {"content-type": "application/json", "API-Authorization": api_token}
+
+    print("No API token found. Please login with `abstra login`")
+    sys.exit(1)
