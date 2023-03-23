@@ -51,18 +51,11 @@ def evaluate_parameter_title(parameters: dict, use_default=True) -> dict:
     return {"title": title or "New Dash"}
 
 
-def evaluate_parameter_path(parameters: dict) -> dict:
-    path = parameters.get("path")
-    if not path:
+def evaluate_optional_parameter(parameter_name: str, parameters: dict) -> dict:
+    parameter_value = parameters.get(parameter_name)
+    if not parameter_value:
         return {}
-    return {"path": path}
-
-
-def evaluate_parameter_show_sidebar(parameters: dict) -> dict:
-    show_sidebar = parameters.get("show_sidebar")
-    if show_sidebar is None:
-        return {}
-    return {"show_sidebar": show_sidebar}
+    return {parameter_name: parameter_value}
 
 
 def evaluate_parameters_code(parameters: dict) -> dict:
@@ -141,6 +134,22 @@ def evaluate_background_parameter_value(parameters: dict) -> dict:
     sys.exit(1)
 
 
+def upsert_dash_data_from_kwargs(kwargs: dict) -> dict:
+    return {
+        **evaluate_parameters_code(kwargs),
+        **evaluate_flag_parameters(kwargs),
+        **evaluate_other_parameters(kwargs),
+        **evaluate_background_parameter_value(kwargs),
+        **evaluate_parameter_layout(kwargs),
+        **evaluate_optional_parameter("path", kwargs),
+        **evaluate_optional_parameter("show_sidebar", kwargs),
+        **evaluate_optional_parameter("main_color", kwargs),
+        **evaluate_optional_parameter("font_family", kwargs),
+        **evaluate_optional_parameter("logo_url", kwargs),
+        **evaluate_optional_parameter("brand_name", kwargs),
+    }
+
+
 class Dashes(Resource):
     @staticmethod
     def list():
@@ -159,13 +168,7 @@ class Dashes(Resource):
 
         dash_data = {
             **evaluate_parameter_title(kwargs),
-            **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_code(kwargs),
-            **evaluate_parameter_show_sidebar(kwargs),
-            **evaluate_flag_parameters(kwargs),
-            **evaluate_other_parameters(kwargs),
-            **evaluate_background_parameter_value(kwargs),
-            **evaluate_parameter_layout(kwargs),
+            **upsert_dash_data_from_kwargs(kwargs),
         }
 
         if dash_data:
@@ -196,13 +199,7 @@ class Dashes(Resource):
 
         dash_data = {
             **evaluate_parameter_title(kwargs, use_default=False),
-            **evaluate_parameter_path(kwargs),
-            **evaluate_parameters_code(kwargs),
-            **evaluate_parameter_show_sidebar(kwargs),
-            **evaluate_flag_parameters(kwargs),
-            **evaluate_other_parameters(kwargs),
-            **evaluate_background_parameter_value(kwargs),
-            **evaluate_parameter_layout(kwargs),
+            **upsert_dash_data_from_kwargs(kwargs),
         }
 
         if dash_data:
@@ -257,6 +254,10 @@ class Dashes(Resource):
                 "title": dash_json_data.get("title") or route,
                 "layout": dash_json_data["layout"],
                 "background": workspace_json_data["workspace"].get("theme"),
+                "main_color": workspace_json_data["workspace"].get("main_color"),
+                "font_family": workspace_json_data["workspace"].get("font_family"),
+                "brand_name": workspace_json_data["workspace"].get("brand_name"),
+                "logo_url": workspace_json_data["workspace"].get("logo_url"),
                 "path": route,
                 "code": script_path,
                 "show_sidebar": dash_json_data.get("show_sidebar", False),

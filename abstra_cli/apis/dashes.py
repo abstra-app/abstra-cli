@@ -17,24 +17,40 @@ def list_workspace_dashes():
     return api_main.hf_hasura_runner(query).get("dashes", [])
 
 
+def dash_upsert_data(deploy_data):
+    return {
+        "title": deploy_data["title"],
+        "layout": deploy_data["layout"],
+        "draft_layout": None,
+        "theme": deploy_data.get("theme", None),
+        "show_sidebar": deploy_data.get("show_sidebar", False),
+        "font_family": deploy_data.get("font_family", None),
+        "main_color": deploy_data.get("main_color", None),
+        "logo_url": deploy_data.get("logo_url", None),
+        "brand_name": deploy_data.get("brand_name", None),
+    }
+
+
+def dash_script_upsert_data(deploy_data):
+    return {
+        "enabled": deploy_data.get("enabled", True),
+        "file_path": deploy_data["code_file_path"],
+        "code": "# using CODE_FILE_PATH",
+        "draft": None,
+        "name": deploy_data["title"],
+    }
+
+
 def add_workspace_dash(data):
     _, workspace_id, _ = api_main.get_auth_info()
     dash_data = {
-        "title": data["title"],
-        "workspace_id": workspace_id,
         "path": data["path"],
-        "draft_layout": None,
-        "layout": data["layout"],
-        "theme": data.get("theme", None),
-        "show_sidebar": data.get("show_sidebar", False),
+        "workspace_id": workspace_id,
+        **dash_upsert_data(data),
         "script": {
             "data": {
                 "workspace_id": workspace_id,
-                "enabled": data.get("enabled", True),
-                "file_path": data["code_file_path"],
-                "code": "# using CODE_FILE_PATH",
-                "draft": None,
-                "name": data["title"],
+                **dash_script_upsert_data(data),
             }
         },
     }
@@ -60,20 +76,8 @@ def add_workspace_dash(data):
 
 
 def update_workspace_dash(path, data):
-    dash_data = {
-        "title": data["title"],
-        "layout": data["layout"],
-        "draft_layout": None,
-        "theme": data.get("theme", None),
-        "show_sidebar": data.get("show_sidebar", False),
-    }
-    script_data = {
-        "enabled": data.get("enabled", True),
-        "file_path": data["code_file_path"],
-        "code": "# using CODE_FILE_PATH",
-        "draft": None,
-        "name": data["title"],
-    }
+    dash_data = dash_upsert_data(data)
+    script_data = dash_script_upsert_data(data)
 
     request_data = {"path": path, "dash_data": dash_data, "script_data": script_data}
     update_query = """
