@@ -33,11 +33,11 @@ def get_credentials():
         return f.read().strip()
 
 
-def get_auth_headers():
+def get_auth_headers(api_token=None):
     if overwriten_auth_headers:
         return {"content-type": "application/json", **overwriten_auth_headers}
 
-    api_token = get_credentials()
+    api_token = api_token or get_credentials()
     if api_token:
         return {"content-type": "application/json", "API-Authorization": api_token}
 

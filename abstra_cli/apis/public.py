@@ -5,7 +5,7 @@ from abstra_cli.credentials import get_auth_headers
 
 @lru_cache(maxsize=None)
 def get_info_from_token(api_token):
-    headers = get_auth_headers()
+    headers = get_auth_headers(api_token)
     response = requests.get(f"https://auth.abstra.cloud/abstra-cloud", headers=headers)
     response_json = response.json()
     if response_json is None:
