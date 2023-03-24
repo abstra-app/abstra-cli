@@ -118,6 +118,14 @@ class CLI(object):
 
         play_func(*args, **kwargs)
 
+    def logs(self, resource, *args, **kwargs):
+        checkers.credentials_check("logs", resource, *args, **kwargs)
+        logs_func = {
+            "dash": Dashes.logs,
+        }.get(resource, messages.not_implemented)
+
+        logs_func(*args, **kwargs)
+
     # Aliases
     def upload(self, *args, **kwargs):
         if not len(args):

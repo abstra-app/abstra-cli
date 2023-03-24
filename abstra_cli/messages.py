@@ -85,6 +85,10 @@ def print_subdomains(subdomain):
     print(f"workspace subdomain: {subdomain}")
 
 
+def print_logs(logs):
+    print(logs)
+
+
 def created_message(resource: str, form: str):
     print(f"{resource} created successfully: {form}")
 

@@ -262,3 +262,19 @@ class Dashes(Resource):
             }
             dash_props.append(prop)
         return dash_props
+
+    @staticmethod
+    def logs(*args, **kwargs):
+        path = kwargs.pop("path", None)
+        limit = kwargs.pop("limit", 20)
+        offset = kwargs.pop("offset", 0)
+
+        if limit == 0:
+            limit = None
+        if path is None:
+            logs = apis.dashes.list_logs(limit=limit, offset=offset)
+        else:
+            logs = apis.dashes.list_logs_by_path(path, limit=limit, offset=offset)
+
+        serialized_logs = json.dumps(logs, default=str, indent=4)
+        messages.print_logs(serialized_logs)

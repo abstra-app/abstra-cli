@@ -135,3 +135,51 @@ def delete_workspace_dash(path):
     """
 
     return api_main.hf_hasura_runner(query, {"path": path})
+
+
+def list_logs(limit, offset):
+    query = """
+        query GetDashLogs {
+            dashes {
+                id
+                path
+                logs {
+                    id
+                    created_at
+                    execution_id
+                    search_term
+                    execution_type
+                    messages
+                }
+            }
+        }
+    """
+    dashes = api_main.hf_hasura_runner(query).get("dashes")
+    logs = utils.flat_dash_logs(dashes)
+
+    return {"logs": utils.sampling(logs, limit, offset)}
+
+
+def list_logs_by_path(path, limit, offset):
+    query = """
+        query GetDashLogs($limit: Int, $offset: Int, $path: String = "") {
+            dashes(where: {path: {_eq: $path}}) {
+                path
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
+                    id
+                    created_at
+                    dash_id
+                    execution_id
+                    search_term
+                    execution_type
+                    messages
+                }
+            }
+        }
+    """
+    dashes = api_main.hf_hasura_runner(
+        query, {"path": path, "limit": limit, "offset": offset}
+    ).get("dashes")
+    if dashes:
+        return {"logs": utils.flatten_list([dash.get("logs") for dash in dashes])}
+    return {"logs": []}

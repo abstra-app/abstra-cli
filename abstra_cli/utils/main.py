@@ -1,6 +1,6 @@
 import os, re
 from colour import Color
-
+import datetime
 
 IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".svg"]
 SPACE = " "
@@ -88,3 +88,16 @@ get_prod_dash_url = (
 get_prod_hook_url = (
     lambda subdomain_name, path: f"https://hooks.abstra.cloud/{subdomain_name}/{path}"
 )
+
+
+def flatten_list(list_of_lists):
+    return [item for sublist in list_of_lists for item in sublist]
+
+
+def parse_timestamp(timestamp):
+    date = re.findall(r"\d+", timestamp)[:-2]
+    return datetime.datetime(*[int(x) for x in date])
+
+
+def sampling(data, limit, offset):
+    return data[offset : offset + limit] if limit else data[offset:]

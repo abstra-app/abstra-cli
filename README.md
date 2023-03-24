@@ -51,6 +51,7 @@ The available commands are:
 - `update`
 - `remove`
 - `play`
+- `logs`
 
 Remote resources can be:
 
@@ -61,6 +62,7 @@ Remote resources can be:
 - `vars`
 - `packages`
 - `subdomain`
+- `dash`
 
 ### List resources
 
@@ -427,6 +429,28 @@ For packages and vars you can also specify manually:
   "packages": ["pydash", "stripe==1.1.0"],
   "vars": ["ABSTRA_CLOUD=test", "STRIPE_KEY=foobar"]
 }
+```
+
+## Logs Command
+
+This command allows you to see the logs of one resource in your workspace.
+
+```sh
+abstra logs RESOURCE [...OPTIONS]
+```
+
+The options for each resource are:
+
+#### `dashes`
+
+- `--path`: string (optional)
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+Examples:
+
+```sh
+abstra logs dash --path my-dash --limit 10 --offset 0
 ```
 
 ## Aliases
