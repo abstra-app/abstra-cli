@@ -65,8 +65,6 @@ def evaluate_parameters_code(parameters: dict) -> dict:
         print("Code is required")
         sys.exit(1)
 
-    Files.add(code)
-
     return {"code_file_path": code}
 
 
