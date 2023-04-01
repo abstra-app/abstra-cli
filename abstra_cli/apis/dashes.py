@@ -155,7 +155,7 @@ def list_logs(limit, offset):
         }
     """
     dashes = api_main.hf_hasura_runner(query).get("dashes")
-    logs = utils.flat_dash_logs(dashes)
+    logs = utils.flat_items_logs(dashes, path_or_id="path")
 
     return {"logs": utils.sampling(logs, limit, offset)}
 

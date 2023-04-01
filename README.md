@@ -441,7 +441,7 @@ abstra logs RESOURCE [...OPTIONS]
 
 The options for each resource are:
 
-#### `dashes`
+#### `dash`
 
 - `--path`: string (optional)
 - `--limit`: integer (optional, default to 20. To disable set to 0)
@@ -451,6 +451,47 @@ Examples:
 
 ```sh
 abstra logs dash --path my-dash --limit 10 --offset 0
+```
+
+#### `form`
+
+- `--id`: string (optional)
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs form --limit 10 --offset 0
+```
+
+#### `hook`
+
+- `--id`: string (optional)
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs hook --limit 10 --offset 0
+```
+
+#### `job`
+
+- `--id`: string (optional)
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs job --limit 10 --offset 0
+```
+
+#### `workspace`
+
+It lists the logs of all resources in your workspace.
+
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs workspace
 ```
 
 ## Aliases

@@ -101,3 +101,16 @@ def parse_timestamp(timestamp):
 
 def sampling(data, limit, offset):
     return data[offset : offset + limit] if limit else data[offset:]
+
+
+def flat_items_logs(items, path_or_id="path"):
+    """Ungroup items from the response of the list_logs query."""
+    logs = []
+    for item in items:
+        current_logs = item.get("logs")
+        for log in current_logs:
+            log[path_or_id] = item.get(path_or_id)
+            logs.append(log)
+
+    logs.sort(key=lambda x: parse_timestamp(x["created_at"]), reverse=True)
+    return logs

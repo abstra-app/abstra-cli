@@ -1,4 +1,4 @@
-import sys
+import sys, json
 from crontab import CronTab
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
@@ -167,3 +167,19 @@ class Jobs(Resource):
         idt = args[0]
         apis.delete_workspace_job(idt)
         messages.deleted_message("Job", idt)
+
+    @staticmethod
+    def logs(*args, **kwargs):
+        id = kwargs.get("id", None)
+        limit = kwargs.get("limit", 20)
+        offset = kwargs.get("offset", 0)
+
+        if limit == 0:
+            limit = None
+        if id is None:
+            logs = apis.jobs.list_logs(limit=limit, offset=offset)
+        else:
+            logs = apis.jobs.list_logs_by_id(id, limit=limit, offset=offset)
+
+        serialized_logs = json.dumps(logs, default=str, indent=4)
+        messages.print_logs(serialized_logs)

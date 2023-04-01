@@ -130,3 +130,66 @@ def delete_workspace_job(identifier):
     """
 
     return api_main.hf_hasura_runner(query, {"identifier": identifier})
+
+
+def list_logs(limit, offset):
+    query = """
+        query GetJobLogs {
+            jobs {
+                id
+                logs {
+                    id
+                    created_at
+                    search_term
+                    start_date
+                    end_date
+                    exit_code
+                    executed_by
+                    execution_id
+                    stderr_message
+                    stdout_message
+                    trigger
+                    status
+                    metadata
+                    job_id
+                }
+            }
+        }
+    """
+
+    jobs = api_main.hf_hasura_runner(query).get("jobs", [])
+    logs = utils.flat_items_logs(jobs, path_or_id="id")
+
+    return {"logs": utils.sampling(logs, limit, offset)}
+
+
+def list_logs_by_id(id, limit, offset):
+    query = """
+        query GetJobLogs($limit: Int, $offset: Int, $id: uuid) {
+            jobs(where: {id: {_eq: $id}}) {
+                id
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
+                    id
+                    created_at
+                    search_term
+                    start_date
+                    end_date
+                    exit_code
+                    executed_by
+                    execution_id
+                    stderr_message
+                    stdout_message
+                    trigger
+                    status
+                    metadata
+                    job_id
+                }
+            }
+        }
+    """
+    jobs = api_main.hf_hasura_runner(
+        query, {"id": id, "limit": limit, "offset": offset}
+    ).get("jobs")
+    if jobs:
+        return {"logs": utils.flatten_list([job.get("logs") for job in jobs])}
+    return {"logs": []}

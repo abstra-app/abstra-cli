@@ -1,4 +1,4 @@
-import webbrowser, sys
+import webbrowser, sys, json
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
@@ -220,3 +220,19 @@ class Forms(Resource):
         url = utils.get_prod_form_url(subdomain_name, path)
         messages.form_url(url)
         webbrowser.open(url)
+
+    @staticmethod
+    def logs(*args, **kwargs):
+        id = kwargs.get("id", None)
+        limit = kwargs.get("limit", 20)
+        offset = kwargs.get("offset", 0)
+
+        if limit == 0:
+            limit = None
+        if id is None:
+            logs = apis.forms.list_logs(limit=limit, offset=offset)
+        else:
+            logs = apis.forms.list_logs_by_id(id, limit=limit, offset=offset)
+
+        serialized_logs = json.dumps(logs, default=str, indent=4)
+        messages.print_logs(serialized_logs)

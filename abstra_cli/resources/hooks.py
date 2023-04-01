@@ -1,4 +1,4 @@
-import requests, sys
+import requests, sys, json
 from abstra_cli.resources.resources import Resource
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
@@ -166,3 +166,19 @@ class Hooks(Resource):
         messages.hook_url(url, method)
         r = requests.request(method, url)
         print("Response:\n", r.text)
+
+    @staticmethod
+    def logs(*args, **kwargs):
+        id = kwargs.get("id", None)
+        limit = kwargs.get("limit", 20)
+        offset = kwargs.get("offset", 0)
+
+        if limit == 0:
+            limit = None
+        if id is None:
+            logs = apis.hooks.list_logs(limit=limit, offset=offset)
+        else:
+            logs = apis.hooks.list_logs_by_id(id, limit=limit, offset=offset)
+
+        serialized_logs = json.dumps(logs, default=str, indent=4)
+        messages.print_logs(serialized_logs)

@@ -68,7 +68,6 @@ def hf_hasura_runner(query, variables={}):
     if response.status_code >= 300:
         raise Exception(f"Request error: {response.text}")
     jsond = response.json()
-
     if "data" in jsond:
         return jsond["data"]
 

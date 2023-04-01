@@ -126,3 +126,50 @@ def delete_workspace_form(path):
     """
 
     return api_main.hf_hasura_runner(query, {"path": path})
+
+
+def list_logs(limit, offset):
+    query = """
+        query GetFormLogs {
+            forms {
+                id
+                logs {
+                    id
+                    form_id
+                    created_at
+                    search_term
+                    execution_type
+                    messages
+                }
+            }
+        }
+    """
+
+    forms = api_main.hf_hasura_runner(query).get("forms", [])
+    logs = utils.flat_items_logs(forms, path_or_id="id")
+
+    return {"logs": utils.sampling(logs, limit, offset)}
+
+
+def list_logs_by_id(id, limit, offset):
+    query = """
+        query GetFormsLogs($limit: Int, $offset: Int, $id: uuid) {
+            forms(where: {id: {_eq: $id}}) {
+                id
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
+                    id
+                    created_at
+                    form_id
+                    search_term
+                    execution_type
+                    messages
+                }
+            }
+        }
+    """
+    forms = api_main.hf_hasura_runner(
+        query, {"id": id, "limit": limit, "offset": offset}
+    ).get("forms")
+    if forms:
+        return {"logs": utils.flatten_list([form.get("logs") for form in forms])}
+    return {"logs": []}

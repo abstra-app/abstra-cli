@@ -125,3 +125,69 @@ def delete_workspace_hook(path):
     """
 
     return api_main.hf_hasura_runner(query, {"path": path})
+
+
+def list_logs(limit, offset):
+    query = """
+        query GetHookLogs {
+            hooks {
+                id
+                logs {
+                    id
+                    hook_id
+                    created_at
+                    search_term
+                    start_date
+                    end_date
+                    exit_code
+                    executed_by
+                    execution_id
+                    request
+                    response
+                    stderr_message
+                    stdout_message
+                    trigger
+                    status
+
+                }
+            }
+        }
+    """
+
+    hooks = api_main.hf_hasura_runner(query).get("hooks", [])
+    logs = utils.flat_items_logs(hooks, path_or_id="id")
+
+    return {"logs": utils.sampling(logs, limit, offset)}
+
+
+def list_logs_by_id(id, limit, offset):
+    query = """
+        query GetHookLogs($limit: Int, $offset: Int, $id: uuid) {
+            hooks(where: {id: {_eq: $id}}) {
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
+                    id
+                    hook_id
+                    created_at
+                    search_term
+                    start_date
+                    end_date
+                    exit_code
+                    executed_by
+                    execution_id
+                    request
+                    response
+                    stderr_message
+                    stdout_message
+                    trigger
+                    status
+
+                }
+            }
+            }
+    """
+    hooks = api_main.hf_hasura_runner(
+        query, {"id": id, "limit": limit, "offset": offset}
+    ).get("hooks")
+    if hooks:
+        return {"logs": utils.flatten_list([hook.get("logs") for hook in hooks])}
+    return {"logs": []}

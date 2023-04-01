@@ -13,6 +13,7 @@ from abstra_cli.resources import (
     Jobs,
     Dashes,
     Subdomains,
+    Workspaces,
 )
 
 
@@ -122,6 +123,10 @@ class CLI(object):
         checkers.credentials_check("logs", resource, *args, **kwargs)
         logs_func = {
             "dash": Dashes.logs,
+            "form": Forms.logs,
+            "hook": Hooks.logs,
+            "job": Jobs.logs,
+            "workspace": Workspaces.logs,
         }.get(resource, messages.not_implemented)
 
         logs_func(*args, **kwargs)
