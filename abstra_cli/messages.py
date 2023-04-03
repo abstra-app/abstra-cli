@@ -217,3 +217,59 @@ def no_packages():
 
 def no_files():
     print("No files added")
+
+
+def start_dashes_deploy():
+    print("Deploying dashboards...")
+
+
+def no_dashes_to_deploy():
+    print("No dashboards to deploy")
+
+
+def start_forms_deploy():
+    print("Deploying forms...")
+
+
+def no_forms_to_deploy():
+    print("No forms to deploy")
+
+
+def start_hooks_deploy():
+    print("Deploying hooks...")
+
+
+def no_hooks_to_deploy():
+    print("No hooks to deploy")
+
+
+def start_jobs_deploy():
+    print("Deploying jobs...")
+
+
+def no_jobs_to_deploy():
+    print("No jobs to deploy")
+
+
+def start_files_deploy():
+    print("Deploying files...")
+
+
+def no_files_to_deploy():
+    print("No files to deploy")
+
+
+def start_packages_deploy():
+    print("Deploying packages...")
+
+
+def no_packages_to_deploy():
+    print("No packages to deploy")
+
+
+def start_vars_deploy():
+    print("Deploying variables...")
+
+
+def no_vars_to_deploy():
+    print("No variables to deploy")
