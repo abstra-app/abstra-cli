@@ -1,5 +1,14 @@
 import json, sys
-from abstra_cli.resources import Forms, Files, Packages, Vars, Hooks, Jobs, Dashes
+from abstra_cli.resources import (
+    Forms,
+    Files,
+    Packages,
+    Vars,
+    Hooks,
+    Jobs,
+    Dashes,
+    Workspaces,
+)
 
 import abstra_cli.messages as messages
 
@@ -121,3 +130,7 @@ def deploy(**kwargs):
     else:
         messages.no_vars_to_deploy()
         pass
+
+    workspace_deploy_data = Workspaces.get_deploy_data(get_abstra_json_path(kwargs))
+    if workspace_deploy_data:
+        Workspaces.update(**workspace_deploy_data)

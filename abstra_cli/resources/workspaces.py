@@ -1,4 +1,4 @@
-import json
+import json, sys, os
 
 from abstra_cli import messages
 from abstra_cli.utils import parse_timestamp, sampling
@@ -8,7 +8,25 @@ from abstra_cli.apis import (
     hooks as hooks_api,
     forms as forms_api,
     dashes as dashes_api,
+    workspaces as workspaces_api,
 )
+
+SIDEBAR_PARAMETERS = ["sidebar"]
+NON_FLAG_PARAMETERS = SIDEBAR_PARAMETERS
+
+
+def check_valid_parameters(parameters: dict) -> None:
+    for param, value in parameters.items():
+        if param in NON_FLAG_PARAMETERS and value in [True, False]:
+            messages.invalid_non_flag_parameter_value(param)
+            sys.exit(1)
+
+
+def evaluate_optional_parameter(parameter_name: str, parameters: dict) -> dict:
+    parameter_value = parameters.get(parameter_name)
+    if not parameter_value:
+        return {}
+    return {parameter_name: parameter_value}
 
 
 class Workspaces(Resource):
@@ -27,3 +45,34 @@ class Workspaces(Resource):
         logs = sampling(logs, limit, offset)
         serialized_logs = json.dumps(logs, default=str, indent=4)
         messages.print_logs(serialized_logs)
+
+    @staticmethod
+    def update(*args, **kwargs):
+        wid = workspaces_api.get_workspace_id()
+        if not wid:
+            messages.error_getting_workspace_id()
+            sys.exit(1)
+
+        check_valid_parameters(kwargs)
+
+        workspace_data = {
+            **evaluate_optional_parameter("sidebar", kwargs),
+        }
+
+        if workspace_data:
+            try:
+                workspaces_api.update_workspace(wid, workspace_data)
+                messages.updated_message("Workspace", wid)
+            except Exception as e:
+                print(e)
+                messages.update_failed("Workspace", wid)
+                sys.exit(1)
+
+    @staticmethod
+    def get_deploy_data(abstra_json_path):
+        with open(abstra_json_path, "r") as f:
+            workspace_json_data = json.load(f)
+
+        return {
+            "sidebar": workspace_json_data["workspace"].get("sidebar", None),
+        }

@@ -273,3 +273,7 @@ def start_vars_deploy():
 
 def no_vars_to_deploy():
     print("No variables to deploy")
+
+
+def error_getting_workspace_id():
+    print("Failed to get workspace id")
