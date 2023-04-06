@@ -10,7 +10,6 @@ import abstra_cli.apis as apis
 NAME_PARAMETERS = ["name", "title"]
 PATH_PARAMETERS = ["path"]
 CODE_PARAMETERS = ["code", "c"]
-SHOW_SIDEBAR_PARAMETERS = ["show_sidebar"]
 BACKGROUND_PARAMETERS = ["background"]
 OTHER_PARAMETERS = [
     "main_color",
@@ -29,7 +28,7 @@ NON_FLAG_PARAMETERS = (
     + OTHER_PARAMETERS
     + LAYOUT_PARAMETERS
 )
-FLAG_PARAMETERS = ["enabled"] + SHOW_SIDEBAR_PARAMETERS
+FLAG_PARAMETERS = ["enabled"]
 DASH_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 
@@ -140,7 +139,6 @@ def upsert_dash_data_from_kwargs(kwargs: dict) -> dict:
         **evaluate_background_parameter_value(kwargs),
         **evaluate_parameter_layout(kwargs),
         **evaluate_optional_parameter("path", kwargs),
-        **evaluate_optional_parameter("show_sidebar", kwargs),
         **evaluate_optional_parameter("main_color", kwargs),
         **evaluate_optional_parameter("font_family", kwargs),
         **evaluate_optional_parameter("logo_url", kwargs),
@@ -258,7 +256,6 @@ class Dashes(Resource):
                 "logo_url": workspace_json_data["workspace"].get("logo_url"),
                 "path": route,
                 "code": script_path,
-                "show_sidebar": dash_json_data.get("show_sidebar", False),
             }
             dash_props.append(prop)
         return dash_props

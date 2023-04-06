@@ -30,7 +30,7 @@ NON_FLAG_PARAMETERS = (
     + BACKGROUND_PARAMETERS
     + OTHER_PARAMETERS
 )
-FLAG_PARAMETERS = ["auto_start", "allow_restart", "show_sidebar", "enabled"]
+FLAG_PARAMETERS = ["auto_start", "allow_restart", "enabled"]
 FORM_PARAMETERS = FLAG_PARAMETERS + NON_FLAG_PARAMETERS
 
 

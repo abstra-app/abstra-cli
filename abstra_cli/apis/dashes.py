@@ -23,7 +23,6 @@ def dash_upsert_data(deploy_data):
         "layout": deploy_data["layout"],
         "draft_layout": None,
         "theme": deploy_data.get("theme", None),
-        "show_sidebar": deploy_data.get("show_sidebar", False),
         "font_family": deploy_data.get("font_family", None),
         "main_color": deploy_data.get("main_color", None),
         "logo_url": deploy_data.get("logo_url", None),
