@@ -1,7 +1,7 @@
 import webbrowser, sys, os, json
 from glob import glob
+
 from abstra_cli.resources.resources import Resource
-from abstra_cli.resources.files import Files
 import abstra_cli.messages as messages
 import abstra_cli.utils as utils
 import abstra_cli.apis as apis
@@ -230,10 +230,7 @@ class Dashes(Resource):
         webbrowser.open(url)
 
     @staticmethod
-    def get_deploy_data(abstra_json_path):
-        abstra_json_dir = os.path.dirname(abstra_json_path)
-        with open(abstra_json_path, "r") as f:
-            workspace_json_data = json.load(f)
+    def map_deploy_data(abstra_json_dir: str, workspace_json_data: dict):
         dash_files = glob(
             os.path.join(abstra_json_dir, ".", "**", "*.abstradash.json"),
             recursive=True,

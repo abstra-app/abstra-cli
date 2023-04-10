@@ -1,4 +1,4 @@
-import json, sys, os
+import json, sys
 
 from abstra_cli import messages
 from abstra_cli.utils import parse_timestamp, sampling
@@ -69,10 +69,7 @@ class Workspaces(Resource):
                 sys.exit(1)
 
     @staticmethod
-    def get_deploy_data(abstra_json_path):
-        with open(abstra_json_path, "r") as f:
-            workspace_json_data = json.load(f)
-
+    def map_deploy_data(workspace_json_data: dict):
         return {
             "sidebar": workspace_json_data["workspace"].get("sidebar", None),
         }

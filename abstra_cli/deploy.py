@@ -39,13 +39,13 @@ def evaluate_parameters_file(parameters: dict) -> dict:
             print(f"Extra data in deploy file {file} not accepted")
             sys.exit(1)
 
-    return data
+    return data, file
 
 
 def deploy(**kwargs):
-    deploy_data = evaluate_parameters_file(kwargs)
+    deploy_data, deploy_file_path = evaluate_parameters_file(kwargs)
 
-    dashes = Dashes.get_deploy_data(get_abstra_json_path(kwargs))
+    dashes = Dashes.map_deploy_data(deploy_file_path, deploy_data)
     if len(dashes):
         messages.start_dashes_deploy()
         for dash_props in dashes:
@@ -131,6 +131,6 @@ def deploy(**kwargs):
         messages.no_vars_to_deploy()
         pass
 
-    workspace_deploy_data = Workspaces.get_deploy_data(get_abstra_json_path(kwargs))
+    workspace_deploy_data = Workspaces.map_deploy_data(deploy_data)
     if workspace_deploy_data:
         Workspaces.update(**workspace_deploy_data)
