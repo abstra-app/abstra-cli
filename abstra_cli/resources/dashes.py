@@ -52,7 +52,7 @@ def evaluate_parameter_title(parameters: dict, use_default=True) -> dict:
 
 def evaluate_optional_parameter(parameter_name: str, parameters: dict) -> dict:
     parameter_value = parameters.get(parameter_name)
-    if not parameter_value:
+    if parameter_value is None:
         return {}
     return {parameter_name: parameter_value}
 
@@ -156,7 +156,7 @@ class Dashes(Resource):
     def add(*args, **kwargs):
         upsert = kwargs.pop("upsert", False)
         path = kwargs.get("path")
-        if upsert and not path:
+        if upsert and path is None:
             messages.upsert_without_identifier("path")
             sys.exit(1)
 
@@ -230,9 +230,10 @@ class Dashes(Resource):
         webbrowser.open(url)
 
     @staticmethod
-    def map_deploy_data(abstra_json_dir: str, workspace_json_data: dict):
+    def map_deploy_data(abstra_json_path: str, workspace_json_data: dict):
+        abstra_json_dir = os.path.dirname(abstra_json_path)
         dash_files = glob(
-            os.path.join(abstra_json_dir, ".", "**", "*.abstradash.json"),
+            os.path.join(abstra_json_dir, "**", "*.abstradash.json"),
             recursive=True,
         )
         dash_props = []
@@ -251,7 +252,7 @@ class Dashes(Resource):
                 "font_family": workspace_json_data["workspace"].get("font_family"),
                 "brand_name": workspace_json_data["workspace"].get("brand_name"),
                 "logo_url": workspace_json_data["workspace"].get("logo_url"),
-                "path": route,
+                "path": route if route != "main" else "",
                 "code": script_path,
             }
             dash_props.append(prop)
