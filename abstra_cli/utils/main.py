@@ -19,6 +19,12 @@ def remove_prefix(text, prefix):
     return text
 
 
+def remove_suffix(text, suffix):
+    if text.endswith(suffix):
+        return text[: -len(suffix)]
+    return text
+
+
 def digits(n):
     return len(str(n))
 

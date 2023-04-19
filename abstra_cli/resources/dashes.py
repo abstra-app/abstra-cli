@@ -232,6 +232,10 @@ class Dashes(Resource):
     @staticmethod
     def map_deploy_data(abstra_json_path: str, workspace_json_data: dict):
         abstra_json_dir = os.path.dirname(abstra_json_path)
+        base_path = utils.remove_suffix(
+            workspace_json_data["workspace"].get("base_path", ""), "/"
+        )
+
         dash_files = glob(
             os.path.join(abstra_json_dir, "**", "*.abstradash.json"),
             recursive=True,
@@ -242,6 +246,9 @@ class Dashes(Resource):
             route = os.path.relpath(
                 common_path, os.path.join(abstra_json_dir, ".")
             ).replace("\\", "/")
+
+            route = utils.remove_prefix(route, f"{base_path}/")
+
             script_path = common_path + ".py"
             dash_json_data = json.load(open(dash_file_path, "r"))
             prop = {
