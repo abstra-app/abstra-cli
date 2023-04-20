@@ -62,7 +62,10 @@ class Workspaces(Resource):
         if workspace_data:
             try:
                 workspaces_api.update_workspace(wid, workspace_data)
+                subdomain_name = workspaces_api.get_workspace_subdomain(wid)
                 messages.updated_message("Workspace", wid)
+                messages.workspace_url(subdomain_name)
+                messages.subdomain_helper()
             except Exception as e:
                 print(e)
                 messages.update_failed("Workspace", wid)

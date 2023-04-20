@@ -20,6 +20,24 @@ def get_workspace_id():
     )
 
 
+def get_workspace_subdomain(wid):
+    query = """
+        query GetWorkspaceSubdomain($wid: uuid!) {
+            workspaces(where: {id: {_eq: $wid}}) {
+                subdomain {
+                    name
+                }
+            }
+        }
+    """
+    return (
+        api_main.hf_hasura_runner(query, {"wid": wid})
+        .get("workspaces", [{"subdomain": {"name": None}}])[0]
+        .get("subdomain", {"name": None})
+        .get("name", None)
+    )
+
+
 def update_workspace(wid, data):
     workspace_data = update_workspace_data(data)
 

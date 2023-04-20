@@ -277,3 +277,13 @@ def no_vars_to_deploy():
 
 def error_getting_workspace_id():
     print("Failed to get workspace id")
+
+
+def workspace_url(workspace_subdomain):
+    print(f"Your workspace: https://{workspace_subdomain}.abstra.run")
+
+
+def subdomain_helper():
+    print(
+        "You can set the subdomain of your workspace using `abstra update subdomain [new-subdomain]`"
+    )
