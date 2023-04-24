@@ -42,6 +42,25 @@ def usage(fname, args, kwargs, author_id, workspace_id):
         pass
 
 
+def extension(ext_session_id, api_token):
+    if os.getenv("DISABLE_USAGE_STATISTICS"):
+        return
+
+    try:
+        requests.post(
+            "https://usage-api.abstra.cloud/api/rest/cli-extension",
+            data=json.dumps(
+                {
+                    "extension_session_id": ext_session_id,
+                    "api_token": api_token,
+                }
+            ),
+            headers={"content-type": "application/json"},
+        )
+    except Exception as e:
+        pass
+
+
 def wait_for_api_token(cli_uuid):
     ws_url = f"wss://pubsub.abstra.cloud/external/sub/cli-login-{cli_uuid}"
     ws_client = None

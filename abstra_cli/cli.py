@@ -37,8 +37,12 @@ class CLI(object):
         if not checkers.is_logged() and should_login:
             login()
 
+        checkers.extension_check(**kwargs)
         checkers.credentials_check("deploy", **kwargs)
         deploy(**kwargs)
+
+    def extension(self, **kwargs):
+        checkers.extension_check(**kwargs)
 
     def list(self, resource, **kwargs):
         checkers.credentials_check("list", resource, **kwargs)
