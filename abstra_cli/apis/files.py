@@ -23,3 +23,7 @@ def list_workspace_files():
 
 def delete_file(filepath):
     return api_main.hf_api_runner("DELETE", "file", {"filepath": filepath})
+
+
+def delete_folder(path):
+    return api_main.hf_api_runner("DELETE", "folder", {"path": path})

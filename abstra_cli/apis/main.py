@@ -3,7 +3,6 @@ import requests
 import urllib.request
 import urllib.response
 
-from .public import get_info_from_token
 import abstra_cli.credentials as credentials
 
 
@@ -14,9 +13,19 @@ ABSTRA_ASSETS_UPLOAD_URL = "https://upload.abstra.cloud"
 
 def get_auth_info():
     api_token = credentials.get_credentials()
-    if not api_token:
-        return None, None, None
-    workspace_id, author_id = get_info_from_token(api_token)
+    headers = credentials.get_auth_headers(api_token)
+    response = requests.get(f"https://auth.abstra.cloud/abstra-cloud", headers=headers)
+    response_json = response.json()
+    if response_json is None:
+        return api_token, None, None
+
+    author_id = response_json.get("author_id")
+    workspaces = response_json.get("workspaces", [{}])
+
+    workspace_id = None
+    if len(workspaces) != 0:
+        workspace_id = workspaces[0].get("id")
+
     return api_token, workspace_id, author_id
 
 
