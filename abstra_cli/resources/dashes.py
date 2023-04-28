@@ -171,10 +171,10 @@ class Dashes(Resource):
             try:
                 if upsert:
                     apis.upsert_workspace_dash(dash_data)
-                    messages.upserted_message("Dash", path)
+                    messages.upserted_message("Dash", path or "main")
                 else:
                     path = apis.add_workspace_dash(dash_data)["path"]
-                    messages.created_message("Dash", path)
+                    messages.created_message("Dash", path or "main")
             except Exception as e:
                 print(e)
                 messages.create_failed("Dash")
