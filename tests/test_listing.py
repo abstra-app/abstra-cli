@@ -72,3 +72,25 @@ class TestListing:
         self.add_file(".abstraignore", "*.ipynb")
         files = files_from_directory(self.path)
         assert files == [PosixPath(tracked)]
+
+    def test_ignore_abstra_folder(self):
+        abstra = self.add_folder(".abstra")
+        self.add_file("credentials", "SECRET", path=abstra)
+        files = files_from_directory(self.path)
+        assert files == []
+
+    def test_ignore_git_folder(self):
+        git = self.add_folder(".git")
+        self.add_file("somefile", "somecontent", path=git)
+        files = files_from_directory(self.path)
+        assert files == []
+
+    def test_ignore_abstra_ignore_file(self):
+        self.add_file(".abstraignore", "ignored")
+        files = files_from_directory(self.path)
+        assert files == []
+
+    def test_ignore_git_ignore_file(self):
+        self.add_file(".gitignore", "ignored")
+        files = files_from_directory(self.path)
+        assert files == []

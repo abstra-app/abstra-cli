@@ -5,17 +5,19 @@ from pathlib import Path
 from .main import remove_prefix
 
 
+GIT_FOLDER = ".git/"
 ABSTRA_FOLDER = ".abstra/"
 ABSTRA_IGNORE = ".abstraignore"
 CREDENTIALS_FILE = ".abstra/credentials"
 
 
 def get_ignore_files(dir):
-    IGNOREFILE = os.path.join(dir, ABSTRA_IGNORE)
-    abstra_path = os.path.join(dir, ABSTRA_FOLDER)
-    ignored = [IGNOREFILE, abstra_path]
-
     GITIGNORE = os.path.join(dir, ".gitignore")
+    IGNOREFILE = os.path.join(dir, ABSTRA_IGNORE)
+    git_path = os.path.join(dir, GIT_FOLDER)
+    abstra_path = os.path.join(dir, ABSTRA_FOLDER)
+    ignored = [IGNOREFILE, GITIGNORE, abstra_path, git_path]
+
     if os.path.exists(IGNOREFILE):
         with open(IGNOREFILE, "r") as f:
             ignored.extend([os.path.join(dir, f) for f in f.read().split("\n") if f])
