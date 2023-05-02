@@ -138,11 +138,11 @@ def delete_workspace_dash(path):
 
 def list_logs(limit, offset):
     query = """
-        query GetDashLogs {
+        query GetDashLogs($limit: Int, $offset: Int) {
             dashes {
                 id
                 path
-                logs {
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc})) {
                     id
                     created_at
                     execution_id

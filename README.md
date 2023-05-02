@@ -463,24 +463,48 @@ abstra logs dash --path my-dash --limit 10 --offset 0
 abstra logs form --limit 10 --offset 0
 ```
 
-#### `hook`
+#### `hooks`
 
-- `--id`: string (optional)
+It lists all the logs in your workspace.
+
 - `--limit`: integer (optional, default to 20. To disable set to 0)
 - `--offset`: integer (optional, default to 0)
 
 ```sh
-abstra logs hook --limit 10 --offset 0
+abstra logs hooks  --limit 10 --offset 0
+```
+
+#### `hook`
+
+- `--id` or `--log_id`: string
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs hook --id 6a7788c1-7eaf-46a6-93d5-13dfba962e90 --limit 10 --offset 0
+```
+
+#### `jobs`
+
+It lists all the logs in your workspace.
+
+- `--limit`: integer (optional, default to 20. To disable set to 0)
+- `--offset`: integer (optional, default to 0)
+
+```sh
+abstra logs jobs --limit 10 --offset 0
 ```
 
 #### `job`
 
-- `--id`: string (optional)
+It lists all the logs within a specific job or a specific log.
+
+- `--id` or `--log_id`: string
 - `--limit`: integer (optional, default to 20. To disable set to 0)
 - `--offset`: integer (optional, default to 0)
 
 ```sh
-abstra logs job --limit 10 --offset 0
+abstra logs job --id 6a7788c1-7eaf-46a6-93d5-13dfba962e90 --limit 10 --offset 0
 ```
 
 #### `workspace`

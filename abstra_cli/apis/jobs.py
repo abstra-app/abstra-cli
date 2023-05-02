@@ -132,12 +132,11 @@ def delete_workspace_job(identifier):
     return api_main.hf_hasura_runner(query, {"identifier": identifier})
 
 
-def list_logs(limit, offset):
+def list_logs(limit=20, offset=0):
     query = """
-        query GetJobLogs {
+        query GetJobLogs($limit: Int, $offset: Int) {
             jobs {
-                id
-                logs {
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
                     id
                     created_at
                     search_term
@@ -146,12 +145,13 @@ def list_logs(limit, offset):
                     exit_code
                     executed_by
                     execution_id
-                    stderr_message
-                    stdout_message
                     trigger
+                    job_id
                     status
                     metadata
-                    job_id
+                    execution {
+                        status
+                    }
                 }
             }
         }
@@ -163,11 +163,10 @@ def list_logs(limit, offset):
     return {"logs": utils.sampling(logs, limit, offset)}
 
 
-def list_logs_by_id(id, limit, offset):
+def list_logs_by_job_id(id, limit, offset):
     query = """
         query GetJobLogs($limit: Int, $offset: Int, $id: uuid) {
-            jobs(where: {id: {_eq: $id}}) {
-                id
+            jobs_by_pk(where: {id: {_eq: $id}}) {
                 logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
                     id
                     created_at
@@ -177,19 +176,40 @@ def list_logs_by_id(id, limit, offset):
                     exit_code
                     executed_by
                     execution_id
-                    stderr_message
-                    stdout_message
                     trigger
-                    status
                     metadata
                     job_id
+                    execution {
+                        status
+                    }
                 }
             }
         }
     """
-    jobs = api_main.hf_hasura_runner(
+    job = api_main.hf_hasura_runner(
         query, {"id": id, "limit": limit, "offset": offset}
-    ).get("jobs")
-    if jobs:
-        return {"logs": utils.flatten_list([job.get("logs") for job in jobs])}
+    ).get("jobs_by_pk", None)
+    if job:
+        return {"logs": utils.flatten_list([job.get("logs")])}
     return {"logs": []}
+
+
+def list_detailed_log_by_id(id):
+    query = """
+        query GetDetailedLog($id: uuid!) {
+            jobs {
+                logs(where: {id: {_eq: $id}}) {
+                    stderr_message
+                    stdout_message
+                    status
+                    execution {
+                        id
+                        status
+                    }
+                }
+            }
+        }
+    """
+    jobs = api_main.hf_hasura_runner(query, {"id": id}).get("jobs", None)
+    if jobs:
+        return {"detailed_log": utils.flatten_list([job.get("logs") for job in jobs])}

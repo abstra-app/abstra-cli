@@ -170,16 +170,32 @@ class Jobs(Resource):
 
     @staticmethod
     def logs(*args, **kwargs):
-        id = kwargs.get("id", None)
         limit = kwargs.get("limit", 20)
         offset = kwargs.get("offset", 0)
 
         if limit == 0:
             limit = None
-        if id is None:
-            logs = apis.jobs.list_logs(limit=limit, offset=offset)
-        else:
-            logs = apis.jobs.list_logs_by_id(id, limit=limit, offset=offset)
+        logs = apis.jobs.list_logs(limit=limit, offset=offset)
 
+        serialized_logs = json.dumps(logs, default=str, indent=4)
+        messages.print_logs(serialized_logs)
+
+    @staticmethod
+    def log(*args, **kwargs):
+        job_id = kwargs.get("id", None)
+        log_id = kwargs.get("log_id", None)
+        limit = kwargs.get("limit", 20)
+        offset = kwargs.get("offset", 0)
+
+        if job_id is None and log_id is None:
+            messages.required_argument("id or log_id")
+            sys.exit(1)
+
+        if limit == 0:
+            limit = None
+        if log_id is None:
+            logs = apis.jobs.list_logs_by_job_id(job_id, limit=limit, offset=offset)
+        else:
+            logs = apis.jobs.list_detailed_log_by_id(log_id)
         serialized_logs = json.dumps(logs, default=str, indent=4)
         messages.print_logs(serialized_logs)

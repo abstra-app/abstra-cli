@@ -128,8 +128,10 @@ class CLI(object):
         logs_func = {
             "dash": Dashes.logs,
             "form": Forms.logs,
-            "hook": Hooks.logs,
-            "job": Jobs.logs,
+            "hooks": Hooks.logs,
+            "hook": Hooks.log,
+            "jobs": Jobs.logs,
+            "job": Jobs.log,
             "workspace": Workspaces.logs,
         }.get(resource, messages.not_implemented)
 

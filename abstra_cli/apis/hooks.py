@@ -129,10 +129,9 @@ def delete_workspace_hook(path):
 
 def list_logs(limit, offset):
     query = """
-        query GetHookLogs {
+        query GetHookLogs($limit: Int, $offset: Int) {
             hooks {
-                id
-                logs {
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
                     id
                     hook_id
                     created_at
@@ -144,11 +143,11 @@ def list_logs(limit, offset):
                     execution_id
                     request
                     response
-                    stderr_message
-                    stdout_message
                     trigger
                     status
-
+                    execution {
+                        status
+                    }
                 }
             }
         }
@@ -160,7 +159,7 @@ def list_logs(limit, offset):
     return {"logs": utils.sampling(logs, limit, offset)}
 
 
-def list_logs_by_id(id, limit, offset):
+def list_logs_by_hook_id(id, limit, offset):
     query = """
         query GetHookLogs($limit: Int, $offset: Int, $id: uuid) {
             hooks(where: {id: {_eq: $id}}) {
@@ -180,7 +179,9 @@ def list_logs_by_id(id, limit, offset):
                     stdout_message
                     trigger
                     status
-
+                    execution {
+                        status
+                    }
                 }
             }
             }
@@ -191,3 +192,26 @@ def list_logs_by_id(id, limit, offset):
     if hooks:
         return {"logs": utils.flatten_list([hook.get("logs") for hook in hooks])}
     return {"logs": []}
+
+
+def list_detailed_log_by_id(id):
+    query = """
+        query GetDetailedLog($id: uuid!) {
+            hooks {
+                logs(where: {id: {_eq: $id}}) {
+                    stderr_message
+                    stdout_message
+                    status
+                    execution {
+                        id
+                        status
+                    }
+                }
+            }
+        }
+    """
+    hooks = api_main.hf_hasura_runner(query, {"id": id}).get("hooks", None)
+    if hooks:
+        return {
+            "detailed_log": utils.flatten_list([hook.get("logs") for hook in hooks])
+        }

@@ -130,10 +130,10 @@ def delete_workspace_form(path):
 
 def list_logs(limit, offset):
     query = """
-        query GetFormLogs {
+        query GetFormLogs($limit: Int, $offset: Int) {
             forms {
                 id
-                logs {
+                logs(offset: $offset, limit: $limit, order_by: {created_at: desc}) {
                     id
                     form_id
                     created_at
