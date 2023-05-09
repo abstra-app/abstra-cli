@@ -13,9 +13,11 @@ ABSTRA_ASSETS_UPLOAD_URL = "https://upload.abstra.cloud"
 
 def get_auth_info():
     api_token = credentials.get_credentials()
-    if not api_token:
-        return None, None, None
     headers = credentials.get_auth_headers(api_token)
+
+    if headers is None:
+        return None, None, None
+
     response = requests.get(f"https://auth.abstra.cloud/abstra-cloud", headers=headers)
     response_json = response.json()
     if response_json is None:

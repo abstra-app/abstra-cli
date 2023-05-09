@@ -42,4 +42,4 @@ def get_auth_headers(api_token=None):
         return {"content-type": "application/json", "API-Authorization": api_token}
 
     print("No API token found. Please login with `abstra login`")
-    sys.exit(1)
+    return None
