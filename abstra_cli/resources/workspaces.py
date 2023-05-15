@@ -72,7 +72,11 @@ class Workspaces(Resource):
                 sys.exit(1)
 
     @staticmethod
-    def map_deploy_data(workspace_json_data: dict):
+    def map_deploy_data(abstra_json_data: dict):
+        workspace_data = abstra_json_data.get("workspace")
+        if not workspace_data:
+            return {}
+
         return {
-            "sidebar": workspace_json_data["workspace"].get("sidebar", None),
+            "sidebar": abstra_json_data["workspace"].get("sidebar", None),
         }

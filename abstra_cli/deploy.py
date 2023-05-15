@@ -43,9 +43,9 @@ def evaluate_parameters_file(parameters: dict) -> dict:
 
 
 def deploy(**kwargs):
-    deploy_data, deploy_file_path = evaluate_parameters_file(kwargs)
+    abstra_json_data, abstra_json_path = evaluate_parameters_file(kwargs)
 
-    dashes = Dashes.map_deploy_data(deploy_file_path, deploy_data)
+    dashes = Dashes.map_deploy_data(abstra_json_path, abstra_json_data)
     if len(dashes):
         messages.start_dashes_deploy()
         for dash_props in dashes:
@@ -71,7 +71,7 @@ def deploy(**kwargs):
         messages.no_dashes_to_deploy()
         pass
 
-    forms = deploy_data.pop("forms", None)
+    forms = abstra_json_data.pop("forms", None)
     if forms:
         messages.start_forms_deploy()
         for form in forms:
@@ -80,7 +80,7 @@ def deploy(**kwargs):
         messages.no_forms_to_deploy()
         pass
 
-    hooks = deploy_data.pop("hooks", None)
+    hooks = abstra_json_data.pop("hooks", None)
     if hooks:
         messages.start_hooks_deploy()
         for hook in hooks:
@@ -89,7 +89,7 @@ def deploy(**kwargs):
         messages.no_hooks_to_deploy()
         pass
 
-    jobs = deploy_data.pop("jobs", None)
+    jobs = abstra_json_data.pop("jobs", None)
     if jobs:
         messages.start_jobs_deploy()
         for job in jobs:
@@ -98,7 +98,7 @@ def deploy(**kwargs):
         messages.no_jobs_to_deploy()
         pass
 
-    files = deploy_data.pop("files", ["."])  # review security implications
+    files = abstra_json_data.pop("files", ["."])  # review security implications
     if files:
         messages.start_files_deploy()
         if isinstance(files, dict):
@@ -109,7 +109,7 @@ def deploy(**kwargs):
         messages.no_files_to_deploy()
         pass
 
-    packages = deploy_data.pop("packages", {"requirement": "requirements.txt"})
+    packages = abstra_json_data.pop("packages", {"requirement": "requirements.txt"})
     if packages:
         messages.start_packages_deploy()
         if isinstance(packages, dict):
@@ -120,7 +120,7 @@ def deploy(**kwargs):
         messages.no_packages_to_deploy()
         pass
 
-    vars = deploy_data.pop("vars", None)
+    vars = abstra_json_data.pop("vars", None)
     if vars:
         messages.start_vars_deploy()
         if isinstance(vars, dict):
@@ -131,6 +131,6 @@ def deploy(**kwargs):
         messages.no_vars_to_deploy()
         pass
 
-    workspace_deploy_data = Workspaces.map_deploy_data(deploy_data)
+    workspace_deploy_data = Workspaces.map_deploy_data(abstra_json_data)
     if workspace_deploy_data:
         Workspaces.update(**workspace_deploy_data)

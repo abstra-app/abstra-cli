@@ -230,11 +230,13 @@ class Dashes(Resource):
         webbrowser.open(url)
 
     @staticmethod
-    def map_deploy_data(abstra_json_path: str, workspace_json_data: dict):
+    def map_deploy_data(abstra_json_path: str, abstra_json_data: dict):
+        workspace_data = abstra_json_data.get("workspace")
+        if not workspace_data:
+            return []
+
         abstra_json_dir = os.path.dirname(abstra_json_path)
-        base_path = utils.remove_suffix(
-            workspace_json_data["workspace"].get("base_path", ""), "/"
-        )
+        base_path = utils.remove_suffix(workspace_data.get("base_path", ""), "/")
 
         dash_files = glob(
             os.path.join(abstra_json_dir, "**", "*.abstradash.json"),
@@ -254,11 +256,11 @@ class Dashes(Resource):
             prop = {
                 "title": dash_json_data.get("title") or route,
                 "layout": dash_json_data["layout"],
-                "background": workspace_json_data["workspace"].get("theme"),
-                "main_color": workspace_json_data["workspace"].get("main_color"),
-                "font_family": workspace_json_data["workspace"].get("font_family"),
-                "brand_name": workspace_json_data["workspace"].get("brand_name"),
-                "logo_url": workspace_json_data["workspace"].get("logo_url"),
+                "background": workspace_data.get("theme"),
+                "main_color": workspace_data.get("main_color"),
+                "font_family": workspace_data.get("font_family"),
+                "brand_name": workspace_data.get("brand_name"),
+                "logo_url": workspace_data.get("logo_url"),
                 "path": route if route != "main" else "",
                 "code": script_path,
             }
