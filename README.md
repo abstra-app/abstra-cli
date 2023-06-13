@@ -1,3 +1,7 @@
+# DEPRECATION NOTICE
+
+This project has been moved to [!abstra lib](https://github.com/abstra-app/abstra-lib)],
+
 [![pypi](https://img.shields.io/pypi/v/abstra-cli.svg)](https://pypi.python.org/pypi/abstra-cli) [![PyPI Downloads](https://img.shields.io/pypi/dm/abstra-cli.svg)](https://pypi.org/project/abstra-cli/) [![Code check](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml/badge.svg)](https://github.com/abstra-app/abstra-cli/actions/workflows/code_check.yml)
 
 # Abstra CLI
